@@ -20,6 +20,16 @@ class CreateConsultationAction
                 }
             }
 
+            // Create prescription if items are provided
+            if (!empty($data['prescription_items'])) {
+                $consultation->prescription()->create([
+                    'patient_id' => $data['patient_id'],
+                    'doctor_id' => $data['doctor_id'],
+                    'items' => $data['prescription_items'],
+                    'general_instructions' => $data['prescription_instructions'] ?? null,
+                ]);
+            }
+
             return $consultation;
         });
     }

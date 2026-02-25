@@ -43,4 +43,9 @@ class Consultation extends Model
     {
         return $this->belongsTo(Appointment::class);
     }
+
+    public function prescription(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Prescription::class);
+    }
 }

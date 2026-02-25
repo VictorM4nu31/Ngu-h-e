@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { ArrowLeft, Clock, User, Activity, FileText, ClipboardList, Thermometer, Weight, Ruler } from 'lucide-react';
+import { ArrowLeft, Clock, User, Activity, FileText, ClipboardList, Thermometer, Weight, Ruler, Pill, Download, Eye } from 'lucide-react';
 
 interface Consultation {
     id: number;
@@ -24,6 +24,11 @@ interface Consultation {
     diagnosis: string;
     treatment_plan: string | null;
     created_at: string;
+    prescription?: {
+        id: number;
+        items: Array<{ medication: string; dosage: string; frequency: string; duration: string }>;
+        general_instructions: string | null;
+    } | null;
 }
 
 interface Props {
@@ -136,14 +141,57 @@ export default function Show({ consultation }: Props) {
                                 </div>
 
                                 {consultation.treatment_plan && (
-                                    <div className="bg-primary/5 p-4 rounded-lg border border-primary/10">
-                                        <h3 className="font-bold text-sm uppercase text-primary mb-2 flex items-center gap-2">
+                                    <div className="bg-muted/50 p-4 rounded-lg border">
+                                        <h3 className="font-bold text-sm uppercase text-muted-foreground mb-2 flex items-center gap-2">
                                             <FileText className="size-4" />
-                                            Plan de Tratamiento / Receta
+                                            Notas de Seguimiento
                                         </h3>
-                                        <p className="text-foreground whitespace-pre-wrap italic">
+                                        <p className="text-foreground whitespace-pre-wrap">
                                             {consultation.treatment_plan}
                                         </p>
+                                    </div>
+                                )}
+
+                                {consultation.prescription && (
+                                    <div className="bg-primary/5 p-6 rounded-xl border border-primary/20 shadow-sm">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="font-bold text-sm uppercase text-primary flex items-center gap-2">
+                                                <Pill className="size-4" />
+                                                Receta Médica (Rp.)
+                                            </h3>
+                                            <div className="flex gap-2">
+                                                <a href={`/prescriptions/${consultation.prescription.id}/preview`} target="_blank">
+                                                    <Button variant="outline" size="sm" className="gap-2 text-xs">
+                                                        <Eye className="size-3" /> Ver PDF
+                                                    </Button>
+                                                </a>
+                                                <a href={`/prescriptions/${consultation.prescription.id}/download`}>
+                                                    <Button size="sm" className="gap-2 text-xs bg-primary shadow-lg shadow-primary/20">
+                                                        <Download className="size-3" /> Descargar
+                                                    </Button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="space-y-3">
+                                            {consultation.prescription.items.map((item, index) => (
+                                                <div key={index} className="flex items-start justify-between py-2 border-b border-primary/10 last:border-0">
+                                                    <div>
+                                                        <p className="font-bold text-sm">{item.medication}</p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {item.dosage} {item.frequency && `— ${item.frequency}`} {item.duration && `— ${item.duration}`}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {consultation.prescription.general_instructions && (
+                                            <div className="mt-4 pt-4 border-t border-primary/10">
+                                                <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Instrucciones Generales</p>
+                                                <p className="text-sm italic text-foreground">{consultation.prescription.general_instructions}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </CardContent>

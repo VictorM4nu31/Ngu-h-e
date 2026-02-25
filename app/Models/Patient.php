@@ -44,4 +44,9 @@ class Patient extends Model
     {
         return $this->hasMany(Consultation::class);
     }
+
+    public function prescriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Prescription::class);
+    }
 }

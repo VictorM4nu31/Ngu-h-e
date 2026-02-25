@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Save, ArrowLeft, Activity, Heart, Thermometer, User, FileText, ClipboardList } from 'lucide-react';
+import { Save, ArrowLeft, Activity, Heart, Thermometer, User, FileText, ClipboardList, Plus, Trash2, Pill } from 'lucide-react';
 
 interface Patient {
     id: number;
@@ -44,7 +44,28 @@ export default function Create({ patient, appointment }: Props) {
         clinical_findings: '',
         diagnosis: '',
         treatment_plan: '',
+        prescription_items: [] as Array<{ medication: string; dosage: string; frequency: string; duration: string }>,
+        prescription_instructions: '',
     });
+
+    const addMedication = () => {
+        setData('prescription_items', [
+            ...data.prescription_items,
+            { medication: '', dosage: '', frequency: '', duration: '' }
+        ]);
+    };
+
+    const removeMedication = (index: number) => {
+        const newItems = [...data.prescription_items];
+        newItems.splice(index, 1);
+        setData('prescription_items', newItems);
+    };
+
+    const updateMedication = (index: number, field: string, value: string) => {
+        const newItems = [...data.prescription_items];
+        (newItems[index] as any)[field] = value;
+        setData('prescription_items', newItems);
+    };
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
@@ -178,7 +199,7 @@ export default function Create({ patient, appointment }: Props) {
                                 <CardHeader className="pb-3 text-indigo-600 dark:text-indigo-400">
                                     <CardTitle className="text-lg flex items-center gap-2">
                                         <FileText className="size-4" />
-                                        Análisis y Plan
+                                        Análisis y Diagnóstico
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="grid gap-4">
@@ -196,16 +217,114 @@ export default function Create({ patient, appointment }: Props) {
                                         {errors.diagnosis && <p className="text-xs text-destructive">{errors.diagnosis}</p>}
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="treatment_plan">Plan de Tratamiento / Receta</Label>
+                                        <Label htmlFor="treatment_plan">Plan de Seguimiento / Notas Internas</Label>
                                         <textarea
                                             id="treatment_plan"
-                                            rows={4}
-                                            className="flex w-full rounded-md border border-primary/20 bg-primary/5 px-3 py-2 text-sm ring-offset-background placeholder:text-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                            placeholder="Indicaciones, medicamentos, dosis..."
+                                            rows={3}
+                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            placeholder="Plan de acción, recomendaciones generales..."
                                             value={data.treatment_plan}
                                             onChange={e => setData('treatment_plan', e.target.value)}
                                         />
                                     </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Receta Médica */}
+                            <Card className="border-primary/20 bg-primary/5">
+                                <CardHeader className="pb-3">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-1">
+                                            <CardTitle className="text-lg flex items-center gap-2 text-primary">
+                                                <Pill className="size-4" />
+                                                Receta Médica
+                                            </CardTitle>
+                                            <CardDescription>Añade medicamentos para generar la receta imprimible.</CardDescription>
+                                        </div>
+                                        <Button 
+                                            type="button" 
+                                            variant="outline" 
+                                            size="sm" 
+                                            onClick={addMedication}
+                                            className="gap-1 border-primary text-primary hover:bg-primary hover:text-white"
+                                        >
+                                            <Plus className="size-4" />
+                                            Agregar Medicamento
+                                        </Button>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="grid gap-4">
+                                    {data.prescription_items.length > 0 ? (
+                                        <div className="space-y-4">
+                                            {data.prescription_items.map((item, index) => (
+                                                <div key={index} className="grid gap-3 p-4 rounded-lg bg-background border relative group shadow-sm">
+                                                    <Button 
+                                                        type="button" 
+                                                        variant="ghost" 
+                                                        size="icon" 
+                                                        className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        onClick={() => removeMedication(index)}
+                                                    >
+                                                        <Trash2 className="size-4" />
+                                                    </Button>
+                                                    
+                                                    <div className="grid gap-4 md:grid-cols-4">
+                                                        <div className="grid gap-1.5 md:col-span-1">
+                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Medicamento</Label>
+                                                            <Input 
+                                                                placeholder="Nombre / Sustancia" 
+                                                                value={item.medication} 
+                                                                onChange={e => updateMedication(index, 'medication', e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="grid gap-1.5">
+                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Dosis</Label>
+                                                            <Input 
+                                                                placeholder="500mg, 1 cap, etc." 
+                                                                value={item.dosage} 
+                                                                onChange={e => updateMedication(index, 'dosage', e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="grid gap-1.5">
+                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Frecuencia</Label>
+                                                            <Input 
+                                                                placeholder="Cada 8 horas..." 
+                                                                value={item.frequency} 
+                                                                onChange={e => updateMedication(index, 'frequency', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="grid gap-1.5">
+                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Duración</Label>
+                                                            <Input 
+                                                                placeholder="Por 5 días..." 
+                                                                value={item.duration} 
+                                                                onChange={e => updateMedication(index, 'duration', e.target.value)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            
+                                            <div className="grid gap-1.5">
+                                                <Label htmlFor="prescription_instructions">Instrucciones Generales de la Receta</Label>
+                                                <textarea
+                                                    id="prescription_instructions"
+                                                    rows={2}
+                                                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    placeholder="Ej. Guardar reposo, beber abundantes líquidos..."
+                                                    value={data.prescription_instructions}
+                                                    onChange={e => setData('prescription_instructions', e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="py-8 text-center text-muted-foreground border border-dashed rounded-xl">
+                                            <Pill className="size-8 mx-auto mb-2 opacity-20" />
+                                            <p className="text-sm">No se han añadido medicamentos a esta consulta.</p>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
 

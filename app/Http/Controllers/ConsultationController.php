@@ -55,6 +55,13 @@ class ConsultationController extends Controller
             'clinical_findings' => 'nullable|string',
             'diagnosis' => 'required|string',
             'treatment_plan' => 'nullable|string',
+            // Prescription Data
+            'prescription_items' => 'nullable|array',
+            'prescription_items.*.medication' => 'required_with:prescription_items|string',
+            'prescription_items.*.dosage' => 'required_with:prescription_items|string',
+            'prescription_items.*.frequency' => 'nullable|string',
+            'prescription_items.*.duration' => 'nullable|string',
+            'prescription_instructions' => 'nullable|string',
         ]);
 
         $action->execute($validated);
@@ -69,7 +76,7 @@ class ConsultationController extends Controller
     public function show(Consultation $consultation)
     {
         return Inertia::render('consultations/show', [
-            'consultation' => $consultation->load(['patient', 'doctor']),
+            'consultation' => $consultation->load(['patient', 'doctor', 'prescription']),
         ]);
     }
 }
