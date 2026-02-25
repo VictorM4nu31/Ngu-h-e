@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { useState } from 'react';
-import { Calendar, Clock, User, UserSearch, CheckCircle2, XCircle, AlertCircle, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, Clock, User, UserSearch, CheckCircle2, XCircle, AlertCircle, Plus, ChevronLeft, ChevronRight, Activity } from 'lucide-react';
 
 interface Appointment {
     id: number;
@@ -203,6 +203,14 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                 <CheckCircle2 className="size-4 mr-1.5" />
                                                 Confirmar
                                             </Button>
+                                        )}
+                                        {app.status !== 'completed' && app.status !== 'cancelled' && (
+                                            <Link href={`/consultations/create?appointment_id=${app.id}`}>
+                                                <Button variant="secondary" size="sm" className="gap-1.5">
+                                                    <Activity className="size-4" />
+                                                    Atender
+                                                </Button>
+                                            </Link>
                                         )}
                                         {app.status !== 'completed' && app.status !== 'cancelled' && (
                                             <Link href={`/appointments/${app.id}/edit`}>

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Edit, Phone, Mail, MapPin, Calendar, User, Activity, AlertCircle, FileText, Paperclip, Upload, Trash2, Download } from 'lucide-react';
+import { Edit, Phone, Mail, MapPin, Calendar, User, Activity, AlertCircle, FileText, Paperclip, Upload, Trash2, Download, Clock, Eye } from 'lucide-react';
 
 interface Attachment {
     id: number;
@@ -18,6 +18,23 @@ interface Attachment {
     label: string | null;
     url: string;
     created_at: string;
+}
+
+interface Consultation {
+    id: number;
+    doctor: { id: number; name: string };
+    start_time: string;
+    reason_for_visit: string;
+    clinical_findings: string | null;
+    diagnosis: string;
+    treatment_plan: string | null;
+    created_at: string;
+    // Vital signs if needed
+    weight?: number;
+    height?: number;
+    temperature?: number;
+    bp_systolic?: number;
+    bp_diastolic?: number;
 }
 
 interface Patient {
@@ -36,6 +53,7 @@ interface Patient {
     notes: string;
     created_at: string;
     attachments?: Attachment[];
+    consultations?: Consultation[];
 }
 
 interface Props {
@@ -104,10 +122,12 @@ export default function Show({ patient }: Props) {
                                 Editar Datos
                             </Button>
                         </Link>
-                        <Button className="flex items-center gap-2">
-                            <Activity className="size-4" />
-                            Nueva Consulta
-                        </Button>
+                        <Link href={`/consultations/create?patient_id=${patient.id}`}>
+                            <Button className="flex items-center gap-2">
+                                <Activity className="size-4" />
+                                Nueva Consulta
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 
@@ -271,16 +291,62 @@ export default function Show({ patient }: Props) {
                             </CardContent>
                         </Card>
 
-                        {/* Timeline Placeholder */}
+                        {/* Timeline / Historial */}
                         <div className="space-y-4">
                             <h2 className="text-xl font-bold flex items-center gap-2">
                                 <Calendar className="size-5" />
                                 Historial de Consultas
                             </h2>
                             
-                            <div className="bg-muted/50 rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-                                <p>Las consultas aparecerán aquí una vez que se implemente el módulo de consultas (Fase 4).</p>
-                            </div>
+                            {patient.consultations && patient.consultations.length > 0 ? (
+                                <div className="space-y-4">
+                                    {patient.consultations.map((consultation) => (
+                                        <Card key={consultation.id} className="overflow-hidden">
+                                            <CardHeader className="bg-muted/30 pb-3">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <Clock className="size-4 text-muted-foreground" />
+                                                        <span className="text-sm font-medium">
+                                                            {new Date(consultation.created_at).toLocaleDateString()} - {new Date(consultation.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Badge variant="outline">Dr. {consultation.doctor.name}</Badge>
+                                                        <Link href={`/consultations/${consultation.id}`}>
+                                                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1">
+                                                                <Eye className="size-3" />
+                                                                Ver
+                                                            </Button>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </CardHeader>
+                                            <CardContent className="pt-4 space-y-3">
+                                                <div>
+                                                    <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Motivo</h4>
+                                                    <p className="text-sm">{consultation.reason_for_visit}</p>
+                                                </div>
+                                                <div className="grid md:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Diagnóstico</h4>
+                                                        <p className="text-sm font-medium">{consultation.diagnosis}</p>
+                                                    </div>
+                                                    {consultation.treatment_plan && (
+                                                        <div>
+                                                            <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Plan de Tratamiento</h4>
+                                                            <p className="text-sm italic">{consultation.treatment_plan}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="bg-muted/50 rounded-xl border border-dashed p-8 text-center text-muted-foreground">
+                                    <p>No hay consultas registradas para este paciente.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

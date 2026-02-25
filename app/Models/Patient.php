@@ -36,4 +36,12 @@ class Patient extends Model
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
+
+    /**
+     * Get all of the patient's consultations.
+     */
+    public function consultations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Consultation::class);
+    }
 }

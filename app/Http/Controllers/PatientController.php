@@ -56,7 +56,12 @@ class PatientController extends Controller
     public function show(Patient $patient)
     {
         return \Inertia\Inertia::render('patients/show', [
-            'patient' => $patient->load('attachments'),
+            'patient' => $patient->load([
+                'attachments', 
+                'consultations' => function($q) {
+                    $q->with('doctor')->latest();
+                }
+            ]),
         ]);
     }
 

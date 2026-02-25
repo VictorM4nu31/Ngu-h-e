@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('patients', PatientController::class);
     Route::resource('appointments', \App\Http\Controllers\AppointmentController::class);
+    Route::resource('consultations', \App\Http\Controllers\ConsultationController::class);
     
     // Attachments
     Route::post('patients/{patient}/attachments', [App\Http\Controllers\AttachmentController::class, 'storePatient'])->name('patients.attachments.store');
