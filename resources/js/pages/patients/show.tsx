@@ -5,9 +5,15 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Edit, Phone, Mail, MapPin, Calendar, User, Activity, AlertCircle, FileText, Paperclip, Upload, Trash2, Download, Clock, Eye } from 'lucide-react';
+import { VitalSignsChart } from '@/components/clinical/vital-signs-chart';
+import { 
+    Edit, Phone, Mail, MapPin, Calendar, User, Activity, 
+    AlertCircle, FileText, Paperclip, Upload, Trash2, 
+    Download, Clock, Eye, History, TrendingUp, NotebookTabs 
+} from 'lucide-react';
 
 interface Attachment {
     id: number;
@@ -29,12 +35,12 @@ interface Consultation {
     diagnosis: string;
     treatment_plan: string | null;
     created_at: string;
-    // Vital signs if needed
     weight?: number;
     height?: number;
     temperature?: number;
     bp_systolic?: number;
     bp_diastolic?: number;
+    heart_rate?: number;
 }
 
 interface Patient {
@@ -99,31 +105,62 @@ export default function Show({ patient }: Props) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
+    // Unified Timeline Logic
+    const timelineItems = [
+        ...(patient.consultations || []).map(c => ({
+            id: `c-${c.id}`,
+            date: c.created_at,
+            type: 'consultation',
+            data: c
+        })),
+        ...(patient.attachments || []).map(a => ({
+            id: `a-${a.id}`,
+            date: a.created_at,
+            type: 'attachment',
+            data: a
+        }))
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const chartData = (patient.consultations || [])
+        .filter(c => c.weight || c.bp_systolic)
+        .map(c => ({
+            date: c.created_at,
+            weight: c.weight ? Number(c.weight) : undefined,
+            bp_systolic: c.bp_systolic ? Number(c.bp_systolic) : undefined,
+            bp_diastolic: c.bp_diastolic ? Number(c.bp_diastolic) : undefined,
+        }));
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Expediente: ${patient.full_name}`} />
 
-            <div className="flex flex-col gap-6 p-4 max-w-6xl mx-auto w-full">
+            <div className="flex flex-col gap-6 p-4 max-w-6xl mx-auto w-full pb-10">
                 {/* Header Acciones */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 p-2 rounded-full">
-                            <User className="size-6 text-primary" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="bg-primary/10 p-3 rounded-2xl shadow-sm border border-primary/20">
+                            <User className="size-8 text-primary" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold">{patient.full_name}</h1>
-                            <p className="text-muted-foreground text-sm">ID: {patient.document_id || 'Sin identificación'}</p>
+                            <h1 className="text-3xl font-bold tracking-tight">{patient.full_name}</h1>
+                            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                                <Badge variant="secondary" className="font-mono">ID: {patient.document_id || 'N/A'}</Badge>
+                                <span>•</span>
+                                <span>{calculateAge(patient.birth_date)} años</span>
+                                <span>•</span>
+                                <span className="capitalize">{patient.gender || 'No especificado'}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <Link href={`/patients/${patient.id}/edit`}>
-                            <Button variant="outline" className="flex items-center gap-2">
+                            <Button variant="outline" className="gap-2">
                                 <Edit className="size-4" />
-                                Editar Datos
+                                Editar Perfil
                             </Button>
                         </Link>
                         <Link href={`/consultations/create?patient_id=${patient.id}`}>
-                            <Button className="flex items-center gap-2">
+                            <Button className="gap-2 shadow-lg shadow-primary/20">
                                 <Activity className="size-4" />
                                 Nueva Consulta
                             </Button>
@@ -131,226 +168,276 @@ export default function Show({ patient }: Props) {
                     </div>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3">
-                    {/* Columna Lateral: Info Base */}
-                    <div className="space-y-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-lg">Datos de Contacto</CardTitle>
-                            </CardHeader>
-                            <CardContent className="grid gap-4 text-sm">
-                                <div className="flex items-center gap-3 text-muted-foreground">
-                                    <Phone className="size-4" />
-                                    <span>{patient.phone || 'Sin teléfono'}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-muted-foreground">
-                                    <Mail className="size-4" />
-                                    <span>{patient.email || 'Sin correo'}</span>
-                                </div>
-                                <div className="flex items-start gap-3 text-muted-foreground">
-                                    <MapPin className="size-4 mt-0.5" />
-                                    <span>{patient.address || 'Sin dirección registrada'}</span>
-                                </div>
-                                <Separator />
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Edad:</span>
-                                    <span className="font-medium">{calculateAge(patient.birth_date)} años</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Género:</span>
-                                    <Badge variant="outline" className="capitalize">
-                                        {patient.gender || 'No especificado'}
-                                    </Badge>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="border-destructive/20 bg-destructive/5">
+                <div className="grid gap-6 md:grid-cols-4">
+                    {/* Lateral: Alertas y Contacto */}
+                    <div className="md:col-span-1 space-y-6">
+                        <Card className="border-destructive/30 bg-destructive/5 shadow-sm">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg flex items-center gap-2 text-destructive">
+                                <CardTitle className="text-sm font-bold flex items-center gap-2 text-destructive uppercase tracking-wider">
                                     <AlertCircle className="size-4" />
                                     Alertas Médicas
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4 text-sm">
                                 <div>
-                                    <p className="font-semibold text-destructive">Alergias:</p>
-                                    <p className="text-destructive/80">{patient.allergies || 'Ninguna conocida'}</p>
+                                    <p className="font-semibold text-destructive/80 text-xs uppercase mb-1">Alergias</p>
+                                    <p className="font-medium text-destructive">{patient.allergies || 'Ninguna conocida'}</p>
                                 </div>
+                                <Separator className="bg-destructive/20" />
                                 <div>
-                                    <p className="font-semibold text-destructive">Condiciones Crónicas:</p>
-                                    <p className="text-destructive/80">{patient.chronic_diseases || 'Ninguna reportada'}</p>
+                                    <p className="font-semibold text-destructive/80 text-xs uppercase mb-1">Curas Crónicas</p>
+                                    <p className="font-medium text-destructive">{patient.chronic_diseases || 'Ninguna reportada'}</p>
                                 </div>
                             </CardContent>
                         </Card>
 
-                        {/* Adjuntos */}
                         <Card>
-                            <CardHeader>
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    <Paperclip className="size-4" />
-                                    Documentos y Adjuntos
-                                </CardTitle>
-                                <CardDescription>Estudios, fotos, recetas escaneadas.</CardDescription>
+                            <CardHeader className="pb-3">
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Contacto</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <form onSubmit={handleUpload} className="grid gap-3 p-3 border rounded-lg bg-muted/30">
-                                    <div className="grid gap-1.5">
-                                        <Label htmlFor="file" className="text-xs">Subir archivo</Label>
-                                        <Input 
-                                            id="file" 
-                                            type="file" 
-                                            className="text-xs h-8"
-                                            onChange={(e) => setData('file', e.target.files?.[0] || null)}
-                                            required
-                                        />
+                            <CardContent className="grid gap-4 text-sm">
+                                <div className="flex items-center gap-3 group">
+                                    <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                                        <Phone className="size-3.5 text-muted-foreground group-hover:text-primary" />
                                     </div>
-                                    <div className="grid gap-1.5">
-                                        <Label htmlFor="label" className="text-xs">Etiqueta (Opcional)</Label>
-                                        <Input 
-                                            id="label" 
-                                            placeholder="Ej. Rayos X" 
-                                            className="text-xs h-8"
-                                            value={data.label}
-                                            onChange={(e) => setData('label', e.target.value)}
-                                        />
+                                    <span className="font-medium">{patient.phone || 'N/A'}</span>
+                                </div>
+                                <div className="flex items-center gap-3 group">
+                                    <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors">
+                                        <Mail className="size-3.5 text-muted-foreground group-hover:text-primary" />
                                     </div>
-                                    <Button type="submit" size="sm" className="w-full gap-2" disabled={processing}>
-                                        <Upload className="size-3" />
-                                        Subir
-                                    </Button>
-                                </form>
-
-                                <div className="space-y-2">
-                                    {patient.attachments && patient.attachments.length > 0 ? (
-                                        patient.attachments.map((file) => (
-                                            <div key={file.id} className="flex items-center justify-between p-2 rounded-md border bg-card group">
-                                                <div className="flex flex-col min-w-0">
-                                                    <span className="text-xs font-medium truncate">{file.label || file.file_name}</span>
-                                                    <span className="text-[10px] text-muted-foreground">{formatSize(file.file_size)}</span>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <a href={file.url} target="_blank" rel="noopener noreferrer">
-                                                        <Button variant="ghost" size="icon" className="size-7">
-                                                            <Download className="size-3" />
-                                                        </Button>
-                                                    </a>
-                                                    <Button 
-                                                        variant="ghost" 
-                                                        size="icon" 
-                                                        className="size-7 text-destructive"
-                                                        onClick={() => {
-                                                            if (confirm('Eliminar archivo?')) {
-                                                                router.delete(`/attachments/${file.id}`);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Trash2 className="size-3" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-xs text-center text-muted-foreground pt-2">Sin adjuntos.</p>
-                                    )}
+                                    <span className="font-medium truncate">{patient.email || 'N/A'}</span>
+                                </div>
+                                <div className="flex items-start gap-3 group">
+                                    <div className="p-1.5 rounded-lg bg-muted group-hover:bg-primary/10 transition-colors mt-0.5">
+                                        <MapPin className="size-3.5 text-muted-foreground group-hover:text-primary" />
+                                    </div>
+                                    <span className="font-medium text-xs leading-relaxed">{patient.address || 'N/A'}</span>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    {/* Columna Principal: Historia / Notas */}
-                    <div className="md:col-span-2 space-y-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    <FileText className="size-4" />
-                                    Resumen Clínico
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div>
-                                    <h3 className="font-medium mb-2">Antecedentes Médicos</h3>
-                                    <p className="text-sm text-muted-foreground whitespace-pre-wrap bg-muted/30 p-3 rounded-md border">
-                                        {patient.medical_antecedents || 'No se han registrado antecedentes.'}
-                                    </p>
-                                </div>
+                    {/* Principal con Tabs */}
+                    <div className="md:col-span-3">
+                        <Tabs defaultValue="evolution" className="w-full">
+                            <TabsList className="grid w-full grid-cols-4 mb-6">
+                                <TabsTrigger value="evolution" className="gap-2">
+                                    <History className="size-4" />
+                                    <span className="hidden sm:inline">Evolución</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="vitals" className="gap-2">
+                                    <TrendingUp className="size-4" />
+                                    <span className="hidden sm:inline">Tendencias</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="clinical" className="gap-2">
+                                    <NotebookTabs className="size-4" />
+                                    <span className="hidden sm:inline">Resumen</span>
+                                </TabsTrigger>
+                                <TabsTrigger value="docs" className="gap-2">
+                                    <Paperclip className="size-4" />
+                                    <span className="hidden sm:inline">Documentos</span>
+                                </TabsTrigger>
+                            </TabsList>
 
-                                <div>
-                                    <h3 className="font-medium mb-2">Medicación Actual</h3>
-                                    <p className="text-sm text-muted-foreground whitespace-pre-wrap bg-primary/5 p-3 rounded-md border border-primary/10">
-                                        {patient.current_medication || 'No hay medicación registrada.'}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <h3 className="font-medium mb-2">Notas Administrativas/Internas</h3>
-                                    <p className="text-sm text-muted-foreground italic">
-                                        {patient.notes || 'Sin notas adicionales.'}
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Timeline / Historial */}
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-bold flex items-center gap-2">
-                                <Calendar className="size-5" />
-                                Historial de Consultas
-                            </h2>
-                            
-                            {patient.consultations && patient.consultations.length > 0 ? (
-                                <div className="space-y-4">
-                                    {patient.consultations.map((consultation) => (
-                                        <Card key={consultation.id} className="overflow-hidden">
-                                            <CardHeader className="bg-muted/30 pb-3">
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center gap-2">
-                                                        <Clock className="size-4 text-muted-foreground" />
-                                                        <span className="text-sm font-medium">
-                                                            {new Date(consultation.created_at).toLocaleDateString()} - {new Date(consultation.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <Badge variant="outline">Dr. {consultation.doctor.name}</Badge>
-                                                        <Link href={`/consultations/${consultation.id}`}>
-                                                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1">
-                                                                <Eye className="size-3" />
-                                                                Ver
-                                                            </Button>
-                                                        </Link>
-                                                    </div>
+                            {/* TAB: Evolución (Timeline Unificado) */}
+                            <TabsContent value="evolution" className="space-y-6">
+                                {timelineItems.length > 0 ? (
+                                    <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                                        {timelineItems.map((item) => (
+                                            <div key={item.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                                {/* Icono Central */}
+                                                <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-primary text-slate-500 group-[.is-active]:text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                                    {item.type === 'consultation' ? <Activity className="size-5" /> : <Paperclip className="size-5" />}
                                                 </div>
-                                            </CardHeader>
-                                            <CardContent className="pt-4 space-y-3">
-                                                <div>
-                                                    <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Motivo</h4>
-                                                    <p className="text-sm">{consultation.reason_for_visit}</p>
-                                                </div>
-                                                <div className="grid md:grid-cols-2 gap-4">
-                                                    <div>
-                                                        <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Diagnóstico</h4>
-                                                        <p className="text-sm font-medium">{consultation.diagnosis}</p>
+                                                {/* Contendio */}
+                                                <div className="w-[calc(100%-4rem)] md:w-[45%] p-4 rounded border border-slate-200 bg-white shadow">
+                                                    <div className="flex items-center justify-between space-x-2 mb-1">
+                                                        <time className="font-bold text-slate-900 text-xs">
+                                                            {new Date(item.date).toLocaleDateString()}
+                                                        </time>
+                                                        {item.type === 'consultation' && (
+                                                            <Badge variant="outline" className="text-[10px] font-medium">Dr. {(item.data as Consultation).doctor.name}</Badge>
+                                                        )}
                                                     </div>
-                                                    {consultation.treatment_plan && (
-                                                        <div>
-                                                            <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-1">Plan de Tratamiento</h4>
-                                                            <p className="text-sm italic">{consultation.treatment_plan}</p>
+                                                    {item.type === 'consultation' ? (
+                                                        <div className="text-slate-500 text-sm">
+                                                            <p className="font-semibold text-slate-700 mb-1">{(item.data as Consultation).diagnosis}</p>
+                                                            <p className="line-clamp-2 text-xs">{(item.data as Consultation).reason_for_visit}</p>
+                                                            <Link href={`/consultations/${(item.data as Consultation).id}`} className="mt-2 inline-flex items-center gap-1 text-primary text-xs font-bold hover:underline">
+                                                                Ver detalles <Eye className="size-3" />
+                                                            </Link>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-slate-500 text-sm flex items-center justify-between">
+                                                            <div className="flex items-center gap-2">
+                                                                <FileText className="size-4 text-muted-foreground" />
+                                                                <span className="font-medium text-slate-700 truncate max-w-[150px]">{(item.data as Attachment).label || (item.data as Attachment).file_name}</span>
+                                                            </div>
+                                                            <a href={(item.data as Attachment).url} target="_blank" className="text-primary hover:bg-primary/10 p-1 rounded transition-colors">
+                                                                <Download className="size-4" />
+                                                            </a>
                                                         </div>
                                                     )}
                                                 </div>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                ) : (
+                                    <div className="bg-muted/30 rounded-xl border border-dashed p-12 text-center text-muted-foreground">
+                                        <History className="size-12 mx-auto mb-4 opacity-20" />
+                                        <p>No hay actividad registrada para este paciente.</p>
+                                    </div>
+                                )}
+                            </TabsContent>
+
+                            {/* TAB: Signos Vitales (Gráficas) */}
+                            <TabsContent value="vitals">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Tendencias de Salud</CardTitle>
+                                        <CardDescription>Evolución histórica de métricas clave.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <VitalSignsChart data={chartData} />
+                                    </CardContent>
+                                </Card>
+                            </TabsContent>
+
+                            {/* TAB: Resumen Clínico */}
+                            <TabsContent value="clinical">
+                                <div className="grid gap-6">
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle className="text-lg flex items-center gap-2">
+                                                <AlertCircle className="size-4 text-primary" />
+                                                Antecedentes Médicos
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-sm text-muted-foreground whitespace-pre-wrap bg-muted/30 p-4 rounded-lg border leading-relaxed">
+                                                {patient.medical_antecedents || 'No se han registrado antecedentes.'}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle className="text-lg flex items-center gap-2">
+                                                <Activity className="size-4 text-primary" />
+                                                Medicación Actual
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-sm text-muted-foreground whitespace-pre-wrap bg-primary/5 p-4 rounded-lg border border-primary/10 leading-relaxed font-medium">
+                                                {patient.current_medication || 'No hay medicación registrada.'}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle className="text-lg">Notas Adicionales</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-sm text-muted-foreground italic">
+                                                {patient.notes || 'Sin notas adicionales.'}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
                                 </div>
-                            ) : (
-                                <div className="bg-muted/50 rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-                                    <p>No hay consultas registradas para este paciente.</p>
+                            </TabsContent>
+
+                            {/* TAB: Documentos */}
+                            <TabsContent value="docs" className="space-y-6">
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-lg flex items-center gap-2">
+                                            <Upload className="size-4" />
+                                            Subir Nuevo Documento
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <form onSubmit={handleUpload} className="flex flex-col md:flex-row items-end gap-3 p-4 border rounded-xl bg-muted/30">
+                                            <div className="grid gap-1.5 flex-1 w-full">
+                                                <Label htmlFor="file" className="text-xs font-bold uppercase">Archivo</Label>
+                                                <Input 
+                                                    id="file" 
+                                                    type="file" 
+                                                    onChange={(e) => setData('file', e.target.files?.[0] || null)}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="grid gap-1.5 flex-1 w-full">
+                                                <Label htmlFor="label" className="text-xs font-bold uppercase">Etiqueta</Label>
+                                                <Input 
+                                                    id="label" 
+                                                    placeholder="Ej. Resonancia Magnética" 
+                                                    value={data.label}
+                                                    onChange={(e) => setData('label', e.target.value)}
+                                                />
+                                            </div>
+                                            <Button type="submit" disabled={processing} className="w-full md:w-auto px-8">
+                                                {processing ? 'Subiendo...' : 'Subir'}
+                                            </Button>
+                                        </form>
+                                    </CardContent>
+                                </Card>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {patient.attachments && patient.attachments.length > 0 ? (
+                                        patient.attachments.map((file) => (
+                                            <Card key={file.id} className="group overflow-hidden hover:shadow-md transition-shadow">
+                                                <CardContent className="p-4 flex flex-col h-full">
+                                                    <div className="flex items-start justify-between mb-2">
+                                                        <div className="p-2 bg-muted rounded-lg group-hover:bg-primary/10 transition-colors">
+                                                            <FileText className="size-5 text-muted-foreground group-hover:text-primary" />
+                                                        </div>
+                                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                                                <Button variant="ghost" size="icon" className="size-8">
+                                                                    <Download className="size-4" />
+                                                                </Button>
+                                                            </a>
+                                                            <Button 
+                                                                variant="ghost" 
+                                                                size="icon" 
+                                                                className="size-8 text-destructive"
+                                                                onClick={() => {
+                                                                    if (confirm('¿Eliminar archivo?')) {
+                                                                        router.delete(`/attachments/${file.id}`);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Trash2 className="size-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                    <div className="mt-auto">
+                                                        <h4 className="text-sm font-bold truncate pr-4">{file.label || file.file_name}</h4>
+                                                        <p className="text-[10px] text-muted-foreground uppercase flex gap-2">
+                                                            <span>{formatSize(file.file_size)}</span>
+                                                            <span>•</span>
+                                                            <span>{new Date(file.created_at).toLocaleDateString()}</span>
+                                                        </p>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full py-12 text-center text-muted-foreground">
+                                            <Paperclip className="size-12 mx-auto mb-4 opacity-10" />
+                                            <p>No hay documentos adjuntos.</p>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
+                            </TabsContent>
+                        </Tabs>
                     </div>
                 </div>
             </div>
         </AppLayout>
     );
 }
+
