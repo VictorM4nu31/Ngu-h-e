@@ -30,6 +30,17 @@ class CreateConsultationAction
                 ]);
             }
 
+            // Create payment if amount is provided
+            if (!empty($data['payment_amount'])) {
+                $consultation->payment()->create([
+                    'patient_id' => $data['patient_id'],
+                    'amount' => $data['payment_amount'],
+                    'payment_method' => $data['payment_method'] ?? 'cash',
+                    'status' => 'paid',
+                    'notes' => 'Cobro automático de consulta',
+                ]);
+            }
+
             return $consultation;
         });
     }

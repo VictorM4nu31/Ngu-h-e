@@ -48,4 +48,9 @@ class Consultation extends Model
     {
         return $this->hasOne(Prescription::class);
     }
+
+    public function payment(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
 }

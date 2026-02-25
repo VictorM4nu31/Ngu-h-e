@@ -28,6 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Prescriptions
     Route::get('prescriptions/{prescription}/download', [PrescriptionController::class, 'download'])->name('prescriptions.download');
     Route::get('prescriptions/{prescription}/preview', [PrescriptionController::class, 'show'])->name('prescriptions.preview');
+
+    // Payments & Reports
+    Route::get('payments', [App\Http\Controllers\PaymentController::class, 'index'])->name('payments.index');
+    Route::post('payments', [App\Http\Controllers\PaymentController::class, 'store'])->name('payments.store');
+    Route::get('reports', [App\Http\Controllers\ReportsController::class, 'index'])->name('reports.index');
 });
 
 require __DIR__.'/settings.php';

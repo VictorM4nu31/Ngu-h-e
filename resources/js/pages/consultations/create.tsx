@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Save, ArrowLeft, Activity, Heart, Thermometer, User, FileText, ClipboardList, Plus, Trash2, Pill } from 'lucide-react';
+import { Save, ArrowLeft, Activity, Heart, Thermometer, User, FileText, ClipboardList, Plus, Trash2, Pill, DollarSign } from 'lucide-react';
 
 interface Patient {
     id: number;
@@ -46,6 +46,8 @@ export default function Create({ patient, appointment }: Props) {
         treatment_plan: '',
         prescription_items: [] as Array<{ medication: string; dosage: string; frequency: string; duration: string }>,
         prescription_instructions: '',
+        payment_amount: '',
+        payment_method: 'cash',
     });
 
     const addMedication = () => {
@@ -325,6 +327,44 @@ export default function Create({ patient, appointment }: Props) {
                                             <p className="text-sm">No se han añadido medicamentos a esta consulta.</p>
                                         </div>
                                     )}
+                                </CardContent>
+                            </Card>
+
+                            {/* Cobro de Consulta (Rápido) */}
+                            <Card className="border-emerald-500/20 bg-emerald-500/5 shadow-sm">
+                                <CardHeader className="pb-3 border-b border-emerald-500/10 mb-4">
+                                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                                        <DollarSign className="size-4" />
+                                        <CardTitle className="text-lg">Cobro de Consulta</CardTitle>
+                                    </div>
+                                    <CardDescription>Registra el pago de forma rápida si se realiza en este momento.</CardDescription>
+                                </CardHeader>
+                                <CardContent className="grid gap-4 md:grid-cols-2">
+                                    <div className="grid gap-1.5">
+                                        <Label htmlFor="payment_amount">Monto ($)</Label>
+                                        <Input
+                                            id="payment_amount"
+                                            type="number"
+                                            placeholder="0.00"
+                                            value={data.payment_amount}
+                                            onChange={e => setData('payment_amount', e.target.value)}
+                                            className="border-emerald-200 focus-visible:ring-emerald-500"
+                                        />
+                                        {errors.payment_amount && <p className="text-xs text-destructive">{errors.payment_amount}</p>}
+                                    </div>
+                                    <div className="grid gap-1.5">
+                                        <Label htmlFor="payment_method">Método de Pago</Label>
+                                        <select
+                                            id="payment_method"
+                                            className="flex h-10 w-full rounded-md border border-emerald-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            value={data.payment_method}
+                                            onChange={e => setData('payment_method', e.target.value)}
+                                        >
+                                            <option value="cash">Efectivo</option>
+                                            <option value="card">Tarjeta de Crédito/Débito</option>
+                                            <option value="transfer">Transferencia Bancaria</option>
+                                        </select>
+                                    </div>
                                 </CardContent>
                             </Card>
 

@@ -62,6 +62,9 @@ class ConsultationController extends Controller
             'prescription_items.*.frequency' => 'nullable|string',
             'prescription_items.*.duration' => 'nullable|string',
             'prescription_instructions' => 'nullable|string',
+            // Payment Data
+            'payment_amount' => 'nullable|numeric|min:0',
+            'payment_method' => 'nullable|string|in:cash,card,transfer',
         ]);
 
         $action->execute($validated);
