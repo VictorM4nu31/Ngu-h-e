@@ -90,6 +90,10 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
+        if (!request()->user()->hasRole('admin')) {
+            abort(403, 'Solo el administrador puede eliminar pacientes.');
+        }
+
         $patient->delete();
 
         return redirect()->back()->with('success', 'Paciente eliminado.');

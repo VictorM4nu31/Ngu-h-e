@@ -11,6 +11,7 @@ class Patient extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'full_name',
         'document_id',
         'birth_date',

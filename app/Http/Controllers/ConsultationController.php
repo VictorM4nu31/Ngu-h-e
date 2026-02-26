@@ -67,6 +67,9 @@ class ConsultationController extends Controller
             'payment_method' => 'nullable|string|in:cash,card,transfer',
         ]);
 
+        // Forzar doctor_id al usuario autenticado (prevenir suplantación)
+        $validated['doctor_id'] = $request->user()->id;
+
         $action->execute($validated);
 
         return redirect()->route('patients.show', $validated['patient_id'])
@@ -78,6 +81,13 @@ class ConsultationController extends Controller
      */
     public function show(Consultation $consultation)
     {
+        $user = request()->user();
+
+        // Solo el doctor asignado o un admin puede ver la consulta
+        if ($user->hasRole('doctor') && $consultation->doctor_id !== $user->id) {
+            abort(403, 'No tienes acceso a esta consulta.');
+        }
+
         return Inertia::render('consultations/show', [
             'consultation' => $consultation->load(['patient', 'doctor', 'prescription']),
         ]);

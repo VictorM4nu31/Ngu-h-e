@@ -24,10 +24,20 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+
+        $user->assignRole('patient');
+
+        \App\Models\Patient::create([
+            'user_id' => $user->id,
+            'full_name' => $user->name,
+            'email' => $user->email,
+        ]);
+
+        return $user;
     }
 }

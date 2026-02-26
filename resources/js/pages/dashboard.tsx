@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,29 +36,59 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard({ stats, recentConsultations, upcomingAppointments }: Props) {
-    const statCards: Stat[] = [
-        { 
-            label: 'Pacientes Totales', 
-            value: stats.total_patients, 
-            icon: Users, 
-            color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
-            description: 'Registrados en el sistema'
-        },
-        { 
-            label: 'Citas Hoy', 
-            value: stats.appointments_today, 
-            icon: Calendar, 
-            color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
-            description: 'Programadas para hoy'
-        },
-        { 
-            label: 'Consultas Hoy', 
-            value: stats.consultations_today, 
-            icon: Activity, 
-            color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-400/10',
-            description: 'Atendidas con éxito'
-        },
-    ];
+    const { auth } = usePage().props as any;
+    const userRoles = auth.user.roles?.map((r: any) => r.name) || [];
+
+    const getRoleGreeting = () => {
+        if (userRoles.includes('admin')) return 'Administrador';
+        if (userRoles.includes('doctor')) return 'Doctor';
+        if (userRoles.includes('receptionist')) return 'Recepcionista';
+        if (userRoles.includes('patient')) return 'Paciente';
+        return 'Usuario';
+    };
+
+    const isPatient = userRoles.includes('patient');
+
+    const statCards: Stat[] = isPatient
+        ? [
+            { 
+                label: 'Citas Pendientes', 
+                value: stats.pending_appointments, 
+                icon: Calendar, 
+                color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
+                description: 'Programadas próximamente'
+            },
+            { 
+                label: 'Citas Hoy', 
+                value: stats.appointments_today, 
+                icon: Clock, 
+                color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
+                description: 'Programadas para hoy'
+            },
+        ]
+        : [
+            { 
+                label: 'Pacientes Totales', 
+                value: stats.total_patients, 
+                icon: Users, 
+                color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
+                description: 'Registrados en el sistema'
+            },
+            { 
+                label: 'Citas Hoy', 
+                value: stats.appointments_today, 
+                icon: Calendar, 
+                color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
+                description: 'Programadas para hoy'
+            },
+            { 
+                label: 'Consultas Hoy', 
+                value: stats.consultations_today, 
+                icon: Activity, 
+                color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-400/10',
+                description: 'Atendidas con éxito'
+            },
+        ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -68,22 +98,47 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                 {/* Saludo y Acción Rápida */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Bienvenido, Doctor</h1>
-                        <p className="text-muted-foreground">Aquí tienes un resumen de la actividad clínica de hoy.</p>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            Bienvenido, {getRoleGreeting()}
+                        </h1>
+                        <p className="text-muted-foreground">
+                            {isPatient 
+                                ? 'Aquí puedes ver tu información médica y citas.' 
+                                : 'Aquí tienes un resumen de la actividad clínica de hoy.'}
+                        </p>
                     </div>
                     <div className="flex gap-3">
-                        <Link href="/patients">
-                            <Button variant="outline" className="gap-2">
-                                <UserSearch className="size-4" />
-                                Buscar Paciente
-                            </Button>
-                        </Link>
-                        <Link href="/appointments">
-                            <Button className="gap-2 shadow-lg shadow-primary/20">
-                                <Clock className="size-4" />
-                                Ver Agenda
-                            </Button>
-                        </Link>
+                        {isPatient ? (
+                            <>
+                                <Link href="/my-appointments">
+                                    <Button variant="outline" className="gap-2">
+                                        <Calendar className="size-4" />
+                                        Mis Citas
+                                    </Button>
+                                </Link>
+                                <Link href="/my-prescriptions">
+                                    <Button className="gap-2 shadow-lg shadow-primary/20">
+                                        <ClipboardList className="size-4" />
+                                        Mis Recetas
+                                    </Button>
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/patients">
+                                    <Button variant="outline" className="gap-2">
+                                        <UserSearch className="size-4" />
+                                        Buscar Paciente
+                                    </Button>
+                                </Link>
+                                <Link href="/appointments">
+                                    <Button className="gap-2 shadow-lg shadow-primary/20">
+                                        <Clock className="size-4" />
+                                        Ver Agenda
+                                    </Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
 

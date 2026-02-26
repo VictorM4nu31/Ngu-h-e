@@ -19,7 +19,10 @@ class AppointmentController extends Controller
     {
         $query = Appointment::with(['patient', 'doctor']);
 
-        if ($request->has('doctor_id')) {
+        // Doctor solo ve sus propias citas
+        if ($request->user()->hasRole('doctor')) {
+            $query->where('doctor_id', $request->user()->id);
+        } elseif ($request->has('doctor_id')) {
             $query->where('doctor_id', $request->get('doctor_id'));
         }
 
