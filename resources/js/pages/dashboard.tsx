@@ -112,14 +112,14 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                             <>
                                 <Link href="/my-appointments">
                                     <Button variant="outline" className="gap-2">
-                                        <Calendar className="size-4" />
+                                        <Clock className="size-4" />
                                         Mis Citas
                                     </Button>
                                 </Link>
-                                <Link href="/my-prescriptions">
+                                <Link href="/book-appointment">
                                     <Button className="gap-2 shadow-lg shadow-primary/20">
-                                        <ClipboardList className="size-4" />
-                                        Mis Recetas
+                                        <Calendar className="size-4" />
+                                        Agendar Cita
                                     </Button>
                                 </Link>
                             </>

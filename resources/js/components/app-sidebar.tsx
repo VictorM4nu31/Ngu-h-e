@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, Calendar, CreditCard, BarChart2, Stethoscope, FileText, UserCog } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Users, Calendar, CreditCard, BarChart2, Stethoscope, FileText, UserCog, Clock } from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -32,7 +32,7 @@ const mainNavItems: NavItem[] = [
         title: 'Agenda de Citas',
         href: '/appointments',
         icon: Calendar,
-        roles: ['doctor', 'receptionist', 'patient'],
+        roles: ['doctor', 'receptionist'],
     },
     {
         title: 'Control de Pagos',
@@ -51,6 +51,18 @@ const mainNavItems: NavItem[] = [
         href: '/staff',
         icon: UserCog,
         roles: ['admin'],
+    },
+    {
+        title: 'Mis Horarios',
+        href: '/my-schedule',
+        icon: Clock,
+        roles: ['doctor'],
+    },
+    {
+        title: 'Agendar Cita',
+        href: '/book-appointment',
+        icon: Calendar,
+        roles: ['patient'],
     },
     {
         title: 'Mis Citas',

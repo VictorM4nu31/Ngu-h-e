@@ -32,6 +32,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('attachments/{attachment}', [App\Http\Controllers\AttachmentController::class, 'destroy'])->name('attachments.destroy');
     });
 
+    // ═══ Solo Doctor ═══
+    Route::middleware(['role:doctor'])->group(function () {
+        Route::get('my-schedule', [\App\Http\Controllers\DoctorScheduleController::class, 'index'])->name('doctor.schedule');
+        Route::post('my-schedule', [\App\Http\Controllers\DoctorScheduleController::class, 'store'])->name('doctor.schedule.store');
+    });
+
     // ═══ Admin + Doctor (consultas) ═══
     Route::middleware(['role:admin|doctor'])->group(function () {
         Route::resource('consultations', \App\Http\Controllers\ConsultationController::class);
@@ -58,6 +64,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:patient'])->group(function () {
         Route::get('my-appointments', [App\Http\Controllers\PatientPortalController::class, 'appointments'])->name('patient.appointments');
         Route::get('my-prescriptions', [App\Http\Controllers\PatientPortalController::class, 'prescriptions'])->name('patient.prescriptions');
+        
+        // Agendamiento de citas
+        Route::get('book-appointment', [App\Http\Controllers\PatientPortalController::class, 'createAppointment'])->name('patient.appointments.create');
+        Route::post('book-appointment', [App\Http\Controllers\PatientPortalController::class, 'storeAppointment'])->name('patient.appointments.store');
+        Route::get('api/availability', [App\Http\Controllers\PatientPortalController::class, 'getAvailability'])->name('api.availability');
     });
 });
 
