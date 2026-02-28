@@ -62,8 +62,8 @@ class PatientPortalController extends Controller
         $interval = 30; // minutos
 
         $slots = [];
-        $current = Carbon::createFromFormat('Y-m-d H:i:s', "$date {$schedule->start_time}");
-        $end_time_limit = Carbon::createFromFormat('Y-m-d H:i:s', "$date {$schedule->end_time}");
+        $current = Carbon::parse("$date {$schedule->start_time}");
+        $end_time_limit = Carbon::parse("$date {$schedule->end_time}");
 
         // Obtener citas existentes para ese día y doctor
         $existing_appointments = Appointment::where('doctor_id', $doctor_id)

@@ -3,11 +3,25 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import type { AppLayoutProps } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { Toaster, sileo } from 'sileo';
 
 export default function AppSidebarLayout({
     children,
     breadcrumbs = [],
 }: AppLayoutProps) {
+    const { flash } = usePage<any>().props;
+
+    useEffect(() => {
+        if (flash?.success) {
+            sileo.success({ title: '¡Éxito!', description: flash.success });
+        }
+        if (flash?.error) {
+            sileo.error({ title: 'Error', description: flash.error });
+        }
+    }, [flash]);
+
     return (
         <AppShell variant="sidebar">
             <AppSidebar />
@@ -15,6 +29,7 @@ export default function AppSidebarLayout({
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
             </AppContent>
+            <Toaster />
         </AppShell>
     );
 }
