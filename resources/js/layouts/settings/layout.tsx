@@ -10,32 +10,33 @@ import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
-
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: edit(),
-        icon: null,
-    },
-    {
-        title: 'Password',
-        href: editPassword(),
-        icon: null,
-    },
-    {
-        title: 'Two-Factor Auth',
-        href: show(),
-        icon: null,
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
-        icon: null,
-    },
-];
+import { __ } from '@/lib/i18n';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentUrl } = useCurrentUrl();
+
+    const sidebarNavItems: NavItem[] = [
+        {
+            title: __('Profile'),
+            href: edit(),
+            icon: null,
+        },
+        {
+            title: __('Password'),
+            href: editPassword(),
+            icon: null,
+        },
+        {
+            title: __('Two-Factor Auth'),
+            href: show(),
+            icon: null,
+        },
+        {
+            title: __('Appearance'),
+            href: editAppearance(),
+            icon: null,
+        },
+    ];
 
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
@@ -45,15 +46,15 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     return (
         <div className="px-4 py-6">
             <Heading
-                title="Settings"
-                description="Manage your profile and account settings"
+                title={__('Settings')}
+                description={__('Manage your profile and account settings')}
             />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">
                     <nav
                         className="flex flex-col space-y-1 space-x-0"
-                        aria-label="Settings"
+                        aria-label={__('Settings')}
                     >
                         {sidebarNavItems.map((item, index) => (
                             <Button

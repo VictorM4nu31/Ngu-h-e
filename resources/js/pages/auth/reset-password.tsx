@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { update } from '@/routes/password';
+import { __ } from '@/lib/i18n';
 
 type Props = {
     token: string;
@@ -15,10 +16,10 @@ type Props = {
 export default function ResetPassword({ token, email }: Props) {
     return (
         <AuthLayout
-            title="Reset password"
-            description="Please enter your new password below"
+            title={__('Reset password')}
+            description={__('Please enter your new password below')}
         >
-            <Head title="Reset password" />
+            <Head title={__('Reset password')} />
 
             <Form
                 {...update.form()}
@@ -28,7 +29,7 @@ export default function ResetPassword({ token, email }: Props) {
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">{__('Email')}</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -45,7 +46,7 @@ export default function ResetPassword({ token, email }: Props) {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{__('Password')}</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -53,14 +54,14 @@ export default function ResetPassword({ token, email }: Props) {
                                 autoComplete="new-password"
                                 className="mt-1 block w-full"
                                 autoFocus
-                                placeholder="Password"
+                                placeholder={__('Password')}
                             />
                             <InputError message={errors.password} />
                         </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor="password_confirmation">
-                                Confirm password
+                                {__('Confirm password')}
                             </Label>
                             <Input
                                 id="password_confirmation"
@@ -68,7 +69,7 @@ export default function ResetPassword({ token, email }: Props) {
                                 name="password_confirmation"
                                 autoComplete="new-password"
                                 className="mt-1 block w-full"
-                                placeholder="Confirm password"
+                                placeholder={__('Confirm password')}
                             />
                             <InputError
                                 message={errors.password_confirmation}
@@ -83,7 +84,7 @@ export default function ResetPassword({ token, email }: Props) {
                             data-test="reset-password-button"
                         >
                             {processing && <Spinner />}
-                            Reset password
+                            {__('Reset password')}
                         </Button>
                     </div>
                 )}

@@ -8,6 +8,7 @@ import {
     ArrowUpRight, UserSearch, ClipboardList 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { __ } from '@/lib/i18n';
 
 interface Stat {
     label: string;
@@ -40,11 +41,11 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
     const userRoles = auth.user.roles?.map((r: any) => r.name) || [];
 
     const getRoleGreeting = () => {
-        if (userRoles.includes('admin')) return 'Administrador';
-        if (userRoles.includes('doctor')) return 'Doctor';
-        if (userRoles.includes('receptionist')) return 'Recepcionista';
-        if (userRoles.includes('patient')) return 'Paciente';
-        return 'Usuario';
+        if (userRoles.includes('admin')) return __('Welcome, Administrator');
+        if (userRoles.includes('doctor')) return __('Welcome, Doctor');
+        if (userRoles.includes('receptionist')) return __('Welcome, Receptionist');
+        if (userRoles.includes('patient')) return __('Welcome, Patient');
+        return __('Welcome, User');
     };
 
     const isPatient = userRoles.includes('patient');
@@ -52,59 +53,59 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
     const statCards: Stat[] = isPatient
         ? [
             { 
-                label: 'Citas Pendientes', 
+                label: __('Pending Appointments'), 
                 value: stats.pending_appointments, 
                 icon: Calendar, 
                 color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
-                description: 'Programadas próximamente'
+                description: __('Scheduled soon')
             },
             { 
-                label: 'Citas Hoy', 
+                label: __('Appointments Today'), 
                 value: stats.appointments_today, 
                 icon: Clock, 
                 color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
-                description: 'Programadas para hoy'
+                description: __('Scheduled for today')
             },
         ]
         : [
             { 
-                label: 'Pacientes Totales', 
+                label: __('Total Patients'), 
                 value: stats.total_patients, 
                 icon: Users, 
                 color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
-                description: 'Registrados en el sistema'
+                description: __('Registered in the system')
             },
             { 
-                label: 'Citas Hoy', 
+                label: __('Appointments Today'), 
                 value: stats.appointments_today, 
                 icon: Calendar, 
                 color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
-                description: 'Programadas para hoy'
+                description: __('Scheduled for today')
             },
             { 
-                label: 'Consultas Hoy', 
+                label: __('Consultations Today'), 
                 value: stats.consultations_today, 
                 icon: Activity, 
                 color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-400/10',
-                description: 'Atendidas con éxito'
+                description: __('Successfully attended')
             },
         ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard Clínico" />
+            <Head title={__('Clinical Dashboard')} />
             
             <div className="flex flex-col gap-6 p-6 max-w-7xl mx-auto w-full">
                 {/* Saludo y Acción Rápida */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">
-                            Bienvenido, {getRoleGreeting()}
+                            {getRoleGreeting()}
                         </h1>
                         <p className="text-muted-foreground">
                             {isPatient 
-                                ? 'Aquí puedes ver tu información médica y citas.' 
-                                : 'Aquí tienes un resumen de la actividad clínica de hoy.'}
+                                ? __('Here you can view your medical information and appointments.') 
+                                : __('Here is a summary of today\'s clinical activity.')}
                         </p>
                     </div>
                     <div className="flex gap-3">
@@ -113,13 +114,13 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                                 <Link href="/my-appointments">
                                     <Button variant="outline" className="gap-2">
                                         <Clock className="size-4" />
-                                        Mis Citas
+                                        {__('My Appointments')}
                                     </Button>
                                 </Link>
                                 <Link href="/book-appointment">
                                     <Button className="gap-2 shadow-lg shadow-primary/20">
                                         <Calendar className="size-4" />
-                                        Agendar Cita
+                                        {__('Book Appointment')}
                                     </Button>
                                 </Link>
                             </>
@@ -128,13 +129,13 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                                 <Link href="/patients">
                                     <Button variant="outline" className="gap-2">
                                         <UserSearch className="size-4" />
-                                        Buscar Paciente
+                                        {__('Search Patient')}
                                     </Button>
                                 </Link>
                                 <Link href="/appointments">
                                     <Button className="gap-2 shadow-lg shadow-primary/20">
                                         <Clock className="size-4" />
-                                        Ver Agenda
+                                        {__('View Schedule')}
                                     </Button>
                                 </Link>
                             </>
@@ -169,11 +170,11 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                             <div className="space-y-1">
                                 <CardTitle className="text-lg flex items-center gap-2">
                                     <Calendar className="size-4 text-primary" />
-                                    Próximas Citas
+                                    {__('Upcoming Appointments')}
                                 </CardTitle>
-                                <p className="text-xs text-muted-foreground">Programadas para las próximas horas.</p>
+                                <p className="text-xs text-muted-foreground">{__('Scheduled for the next hours.')}</p>
                             </div>
-                            <Badge variant="outline">{stats.pending_appointments} Pendientes</Badge>
+                            <Badge variant="outline">{stats.pending_appointments} {__('Pending')}</Badge>
                         </CardHeader>
                         <CardContent className="pt-4">
                             <div className="space-y-4">
@@ -200,7 +201,7 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                                     ))
                                 ) : (
                                     <div className="py-8 text-center text-muted-foreground border border-dashed rounded-xl">
-                                        <p className="text-sm italic">No hay más citas para hoy.</p>
+                                        <p className="text-sm italic">{__('No more appointments for today.')}</p>
                                     </div>
                                 )}
                             </div>
@@ -213,9 +214,9 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                             <div className="space-y-1">
                                 <CardTitle className="text-lg flex items-center gap-2">
                                     <ClipboardList className="size-4 text-primary" />
-                                    Últimas Consultas
+                                    {__('Recent Consultations')}
                                 </CardTitle>
-                                <p className="text-xs text-muted-foreground">Resumen de atenciones recientes.</p>
+                                <p className="text-xs text-muted-foreground">{__('Summary of recent care.')}</p>
                             </div>
                         </CardHeader>
                         <CardContent className="pt-4">
@@ -234,7 +235,7 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                                                 <p className="text-xs text-muted-foreground font-medium truncate mt-0.5">{consultation.diagnosis}</p>
                                                 <Link href={`/consultations/${consultation.id}`}>
                                                     <button className="text-[10px] font-bold text-primary mt-1 hover:underline flex items-center gap-0.5">
-                                                        Ver expediente <ArrowUpRight className="size-2.5" />
+                                                        {__('View record')} <ArrowUpRight className="size-2.5" />
                                                     </button>
                                                 </Link>
                                             </div>
@@ -242,7 +243,7 @@ export default function Dashboard({ stats, recentConsultations, upcomingAppointm
                                     ))
                                 ) : (
                                     <div className="py-8 text-center text-muted-foreground border border-dashed rounded-xl">
-                                        <p className="text-sm italic">Sin actividad reciente.</p>
+                                        <p className="text-sm italic">{__('No recent activity.')}</p>
                                     </div>
                                 )}
                             </div>

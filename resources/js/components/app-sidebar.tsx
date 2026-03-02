@@ -15,85 +15,74 @@ import {
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
 import { dashboard } from '@/routes';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Pacientes',
-        href: '/patients',
-        icon: Users,
-        roles: ['doctor', 'receptionist'],
-    },
-    {
-        title: 'Agenda de Citas',
-        href: '/appointments',
-        icon: Calendar,
-        roles: ['doctor', 'receptionist'],
-    },
-    {
-        title: 'Control de Pagos',
-        href: '/payments',
-        icon: CreditCard,
-        roles: ['admin', 'receptionist'],
-    },
-    {
-        title: 'Reportes',
-        href: '/reports',
-        icon: BarChart2,
-        roles: ['admin'],
-    },
-    {
-        title: 'Gestión de Personal',
-        href: '/staff',
-        icon: UserCog,
-        roles: ['admin'],
-    },
-    {
-        title: 'Mis Horarios',
-        href: '/my-schedule',
-        icon: Clock,
-        roles: ['doctor'],
-    },
-    {
-        title: 'Agendar Cita',
-        href: '/book-appointment',
-        icon: Calendar,
-        roles: ['patient'],
-    },
-    {
-        title: 'Mis Citas',
-        href: '/my-appointments',
-        icon: Stethoscope,
-        roles: ['patient'],
-    },
-    {
-        title: 'Mis Recetas',
-        href: '/my-prescriptions',
-        icon: FileText,
-        roles: ['patient'],
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+import { __ } from '@/lib/i18n';
 
 export function AppSidebar() {
     const { auth } = usePage().props as any;
     const userRoles = auth.user.roles?.map((r: any) => r.name) || [];
+
+    // Definir los items dentro del componente para poder usar __()
+    const mainNavItems: NavItem[] = [
+        {
+            title: __('Dashboard'),
+            href: dashboard(),
+            icon: LayoutGrid,
+        },
+        {
+            title: __('Patients'),
+            href: '/patients',
+            icon: Users,
+            roles: ['doctor', 'receptionist'],
+        },
+        {
+            title: __('Appointments'),
+            href: '/appointments',
+            icon: Calendar,
+            roles: ['doctor', 'receptionist'],
+        },
+        {
+            title: __('Payments'),
+            href: '/payments',
+            icon: CreditCard,
+            roles: ['admin', 'receptionist'],
+        },
+        {
+            title: __('Reports'),
+            href: '/reports',
+            icon: BarChart2,
+            roles: ['admin'],
+        },
+        {
+            title: __('Staff Management'),
+            href: '/staff',
+            icon: UserCog,
+            roles: ['admin'],
+        },
+        {
+            title: __('My Schedule'),
+            href: '/my-schedule',
+            icon: Clock,
+            roles: ['doctor'],
+        },
+        {
+            title: __('Book Appointment'),
+            href: '/book-appointment',
+            icon: Calendar,
+            roles: ['patient'],
+        },
+        {
+            title: __('My Appointments'),
+            href: '/my-appointments',
+            icon: Stethoscope,
+            roles: ['patient'],
+        },
+        {
+            title: __('My Prescriptions'),
+            href: '/my-prescriptions',
+            icon: FileText,
+            roles: ['patient'],
+        },
+    ];
 
     const filteredNavItems = mainNavItems.filter((item) => {
         if (!item.roles) return true;
@@ -119,7 +108,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+                
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
