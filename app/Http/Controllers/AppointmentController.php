@@ -31,7 +31,7 @@ class AppointmentController extends Controller
         }
 
         $appointments = $query->latest('start_time')->paginate(20)->withQueryString();
-        
+
         $doctors = User::role('doctor')->get(['id', 'name']);
 
         return Inertia::render('appointments/index', [
@@ -69,7 +69,7 @@ class AppointmentController extends Controller
 
         $action->execute($validated);
 
-        return redirect()->back()->with('success', 'Cita agendada correctamente.');
+        return redirect()->route('appointments.index')->with('success', 'Cita agendada correctamente.');
     }
 
     /**

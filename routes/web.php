@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PrescriptionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-use App\Http\Controllers\DashboardController;
-
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\PrescriptionController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -40,7 +39,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ═══ Admin + Doctor (consultas) ═══
     Route::middleware(['role:admin|doctor'])->group(function () {
-        Route::resource('consultations', \App\Http\Controllers\ConsultationController::class);
+        Route::resource('consultations', \App\Http\Controllers\ConsultationController::class)
+            ->only(['index', 'create', 'store', 'show']);
     });
 
     // ═══ Admin + Receptionist (pagos) ═══
@@ -64,7 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:patient'])->group(function () {
         Route::get('my-appointments', [App\Http\Controllers\PatientPortalController::class, 'appointments'])->name('patient.appointments');
         Route::get('my-prescriptions', [App\Http\Controllers\PatientPortalController::class, 'prescriptions'])->name('patient.prescriptions');
-        
+
         // Agendamiento de citas
         Route::get('book-appointment', [App\Http\Controllers\PatientPortalController::class, 'createAppointment'])->name('patient.appointments.create');
         Route::post('book-appointment', [App\Http\Controllers\PatientPortalController::class, 'storeAppointment'])->name('patient.appointments.store');

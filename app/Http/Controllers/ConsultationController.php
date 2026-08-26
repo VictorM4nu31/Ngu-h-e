@@ -3,14 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Consultations\CreateConsultationAction;
+use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Patient;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ConsultationController extends Controller
 {
+    /**
+     * Display consultations visible to the authenticated user.
+     */
+    public function index(Request $request)
+    {
+        $query = Consultation::with(['patient', 'doctor'])->latest();
+
+        if ($request->user()->hasRole('doctor')) {
+            $query->where('doctor_id', $request->user()->id);
+        }
+
+        return Inertia::render('consultations/index', [
+            'consultations' => $query->paginate(20)->withQueryString(),
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

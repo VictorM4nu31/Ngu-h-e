@@ -2,14 +2,28 @@ import { Head, useForm, Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 import InputError from '@/components/input-error';
 import { Spinner } from '@/components/ui/spinner';
-import { Calendar as CalendarIcon, Clock, ChevronLeft, User, AlertCircle, CheckCircle2 } from 'lucide-react';
+import {
+    Calendar as CalendarIcon,
+    Clock,
+    ChevronLeft,
+    User,
+    AlertCircle,
+    CheckCircle2,
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { localDateInputValue } from '@/lib/date';
 
 interface Doctor {
     id: number;
@@ -37,7 +51,7 @@ export default function BookAppointment({ doctors }: Props) {
 
     const { data, setData, post, processing, errors } = useForm({
         doctor_id: '',
-        date: new Date().toISOString().split('T')[0],
+        date: localDateInputValue(),
         time: '',
         reason: '',
     });
@@ -48,10 +62,12 @@ export default function BookAppointment({ doctors }: Props) {
             setLoadingSlots(true);
             setSlots([]);
             setData('time', '');
-            
-            fetch(`/api/availability?doctor_id=${data.doctor_id}&date=${data.date}`)
-                .then(res => res.json())
-                .then(json => {
+
+            fetch(
+                `/api/availability?doctor_id=${data.doctor_id}&date=${data.date}`,
+            )
+                .then((res) => res.json())
+                .then((json) => {
                     setSlots(json.slots);
                     setLoadingSlots(false);
                 })
@@ -68,7 +84,7 @@ export default function BookAppointment({ doctors }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Agendar Cita Médica" />
 
-            <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto w-full">
+            <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/my-appointments">
                         <Button variant="ghost" size="icon">
@@ -78,26 +94,36 @@ export default function BookAppointment({ doctors }: Props) {
                     <h1 className="text-2xl font-bold">Agendar Cita Médica</h1>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {/* Formulario de Selección */}
                     <Card className="lg:col-span-1">
                         <CardHeader>
                             <CardTitle className="text-lg">Selección</CardTitle>
-                            <CardDescription>Elige tu médico y la fecha de consulta.</CardDescription>
+                            <CardDescription>
+                                Elige tu médico y la fecha de consulta.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="doctor">Médico Especialista</Label>
+                                <Label htmlFor="doctor">
+                                    Médico Especialista
+                                </Label>
                                 <select
                                     id="doctor"
-                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
                                     value={data.doctor_id}
-                                    onChange={(e) => setData('doctor_id', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('doctor_id', e.target.value)
+                                    }
                                     required
                                 >
-                                    <option value="">Selecciona un médico</option>
-                                    {doctors.map(dr => (
-                                        <option key={dr.id} value={dr.id}>{dr.name}</option>
+                                    <option value="">
+                                        Selecciona un médico
+                                    </option>
+                                    {doctors.map((dr) => (
+                                        <option key={dr.id} value={dr.id}>
+                                            {dr.name}
+                                        </option>
                                     ))}
                                 </select>
                                 <InputError message={errors.doctor_id} />
@@ -108,21 +134,27 @@ export default function BookAppointment({ doctors }: Props) {
                                 <Input
                                     id="date"
                                     type="date"
-                                    min={new Date().toISOString().split('T')[0]}
+                                    min={localDateInputValue()}
                                     value={data.date}
-                                    onChange={(e) => setData('date', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('date', e.target.value)
+                                    }
                                     required
                                 />
                                 <InputError message={errors.date} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="reason">Motivo de consulta (Opcional)</Label>
+                                <Label htmlFor="reason">
+                                    Motivo de consulta (Opcional)
+                                </Label>
                                 <Input
                                     id="reason"
                                     placeholder="Ej: Control anual, Dolor de cabeza..."
                                     value={data.reason}
-                                    onChange={(e) => setData('reason', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('reason', e.target.value)
+                                    }
                                 />
                                 <InputError message={errors.reason} />
                             </div>
@@ -132,59 +164,90 @@ export default function BookAppointment({ doctors }: Props) {
                     {/* Selector de Horarios */}
                     <Card className="lg:col-span-2">
                         <CardHeader>
-                            <CardTitle className="text-lg">Horarios Disponibles</CardTitle>
+                            <CardTitle className="text-lg">
+                                Horarios Disponibles
+                            </CardTitle>
                             <CardDescription>
-                                {!data.doctor_id 
-                                    ? 'Por favor selecciona un médico primero.' 
-                                    : `Disponibilidad para el día ${new Date(data.date).toLocaleDateString()}`}
+                                {!data.doctor_id
+                                    ? 'Por favor selecciona un médico primero.'
+                                    : `Disponibilidad para el día ${new Date(`${data.date}T00:00:00`).toLocaleDateString('es-MX')}`}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {loadingSlots ? (
-                                <div className="flex flex-col items-center justify-center py-12 gap-2">
+                                <div className="flex flex-col items-center justify-center gap-2 py-12">
                                     <Spinner className="size-8" />
-                                    <p className="text-sm text-muted-foreground">Buscando horarios...</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Buscando horarios...
+                                    </p>
                                 </div>
                             ) : data.doctor_id && slots.length > 0 ? (
-                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                                <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
                                     {slots.map((slot) => (
                                         <Button
                                             key={slot.time}
                                             type="button"
-                                            variant={data.time === slot.time ? 'default' : 'outline'}
+                                            variant={
+                                                data.time === slot.time
+                                                    ? 'default'
+                                                    : 'outline'
+                                            }
                                             disabled={!slot.available}
                                             className={cn(
-                                                "h-12 flex flex-col items-center justify-center",
-                                                data.time === slot.time && "ring-2 ring-primary ring-offset-2"
+                                                'flex h-12 flex-col items-center justify-center',
+                                                data.time === slot.time &&
+                                                    'ring-2 ring-primary ring-offset-2',
                                             )}
-                                            onClick={() => setData('time', slot.time)}
+                                            onClick={() =>
+                                                setData('time', slot.time)
+                                            }
                                         >
-                                            <span className="text-sm font-bold">{slot.time}</span>
+                                            <span className="text-sm font-bold">
+                                                {slot.time}
+                                            </span>
                                         </Button>
                                     ))}
                                 </div>
                             ) : data.doctor_id ? (
-                                <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/30 rounded-lg border border-dashed">
-                                    <AlertCircle className="size-8 text-muted-foreground mb-2" />
-                                    <p className="font-medium">No hay horarios disponibles</p>
-                                    <p className="text-sm text-muted-foreground">Intenta con otra fecha.</p>
+                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-12 text-center">
+                                    <AlertCircle className="mb-2 size-8 text-muted-foreground" />
+                                    <p className="font-medium">
+                                        No hay horarios disponibles
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Intenta con otra fecha.
+                                    </p>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center py-12 text-center bg-muted/10 rounded-lg border border-dashed">
-                                    <User className="size-8 text-muted-foreground/30 mb-2" />
-                                    <p className="text-sm text-muted-foreground">Selecciona un médico y fecha para ver horarios.</p>
+                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/10 py-12 text-center">
+                                    <User className="mb-2 size-8 text-muted-foreground/30" />
+                                    <p className="text-sm text-muted-foreground">
+                                        Selecciona un médico y fecha para ver
+                                        horarios.
+                                    </p>
                                 </div>
                             )}
 
-                            <InputError message={errors.time} className="mt-4" />
+                            <InputError
+                                message={errors.time}
+                                className="mt-4"
+                            />
 
-                            <div className="flex justify-end mt-8">
-                                <Button 
-                                    onClick={handleSubmit} 
-                                    disabled={processing || !data.time || !data.doctor_id}
-                                    className="w-full sm:w-auto gap-2"
+                            <div className="mt-8 flex justify-end">
+                                <Button
+                                    onClick={handleSubmit}
+                                    disabled={
+                                        processing ||
+                                        !data.time ||
+                                        !data.doctor_id
+                                    }
+                                    className="w-full gap-2 sm:w-auto"
                                 >
-                                    {processing ? <Spinner className="mr-2" /> : <CheckCircle2 className="size-4" />}
+                                    {processing ? (
+                                        <Spinner className="mr-2" />
+                                    ) : (
+                                        <CheckCircle2 className="size-4" />
+                                    )}
                                     Confirmar Cita
                                 </Button>
                             </div>

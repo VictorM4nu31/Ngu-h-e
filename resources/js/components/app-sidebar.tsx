@@ -1,5 +1,16 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Users, Calendar, CreditCard, BarChart2, Stethoscope, FileText, UserCog, Clock } from 'lucide-react';
+import {
+    LayoutGrid,
+    Users,
+    Calendar,
+    CreditCard,
+    BarChart2,
+    Stethoscope,
+    FileText,
+    UserCog,
+    Clock,
+    Activity,
+} from 'lucide-react';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -39,6 +50,12 @@ export function AppSidebar() {
             href: '/appointments',
             icon: Calendar,
             roles: ['doctor', 'receptionist'],
+        },
+        {
+            title: 'Consultas',
+            href: '/consultations',
+            icon: Activity,
+            roles: ['admin', 'doctor'],
         },
         {
             title: __('Payments'),
@@ -108,7 +125,6 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

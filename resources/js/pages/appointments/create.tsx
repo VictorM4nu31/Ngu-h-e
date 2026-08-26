@@ -39,7 +39,7 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
     const handleStartTimeChange = (val: string) => {
         setData('start_time', val);
         if (val && !data.end_time) {
-            const date = new Date(val);
+            const date = new Date(`${val}T00:00:00`);
             date.setMinutes(date.getMinutes() + 30);
             setData('end_time', date.toISOString().slice(0, 16));
         }

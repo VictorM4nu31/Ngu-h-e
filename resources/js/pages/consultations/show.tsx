@@ -5,7 +5,21 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { ArrowLeft, Clock, User, Activity, FileText, ClipboardList, Thermometer, Weight, Ruler, Pill, Download, Eye } from 'lucide-react';
+import {
+    ArrowLeft,
+    Clock,
+    User,
+    Activity,
+    FileText,
+    ClipboardList,
+    Thermometer,
+    Weight,
+    Ruler,
+    Pill,
+    Download,
+    Eye,
+} from 'lucide-react';
+import { formatStoredDate, formatStoredTime } from '@/lib/date';
 
 interface Consultation {
     id: number;
@@ -26,7 +40,12 @@ interface Consultation {
     created_at: string;
     prescription?: {
         id: number;
-        items: Array<{ medication: string; dosage: string; frequency: string; duration: string }>;
+        items: Array<{
+            medication: string;
+            dosage: string;
+            frequency: string;
+            duration: string;
+        }>;
         general_instructions: string | null;
     } | null;
 }
@@ -39,7 +58,10 @@ export default function Show({ consultation }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/dashboard' },
         { title: 'Pacientes', href: '/patients' },
-        { title: consultation.patient.full_name, href: `/patients/${consultation.patient.id}` },
+        {
+            title: consultation.patient.full_name,
+            href: `/patients/${consultation.patient.id}`,
+        },
         { title: 'Detalle de Consulta', href: '#' },
     ];
 
@@ -47,7 +69,7 @@ export default function Show({ consultation }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Consulta: ${consultation.patient.full_name}`} />
 
-            <div className="flex flex-col gap-6 p-4 max-w-4xl mx-auto w-full pb-10">
+            <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center gap-4">
                     <Link href={`/patients/${consultation.patient.id}`}>
                         <Button variant="ghost" size="icon">
@@ -55,9 +77,12 @@ export default function Show({ consultation }: Props) {
                         </Button>
                     </Link>
                     <div>
-                        <h1 className="text-2xl font-bold">Detalle de Consulta</h1>
-                        <p className="text-muted-foreground text-sm">
-                            {new Date(consultation.created_at).toLocaleDateString()} - {new Date(consultation.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <h1 className="text-2xl font-bold">
+                            Detalle de Consulta
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                            {formatStoredDate(consultation.created_at)} -{' '}
+                            {formatStoredTime(consultation.created_at)}
                         </p>
                     </div>
                 </div>
@@ -66,7 +91,7 @@ export default function Show({ consultation }: Props) {
                     {/* Info Lateral */}
                     <Card className="md:col-span-1">
                         <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
+                            <CardTitle className="flex items-center gap-2 text-lg">
                                 <Activity className="size-4 text-primary" />
                                 Signos Vitales
                             </CardTitle>
@@ -74,122 +99,203 @@ export default function Show({ consultation }: Props) {
                         <CardContent className="grid gap-4 text-sm">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-muted-foreground flex items-center gap-1.5"><Weight className="size-3" /> Peso</p>
-                                    <p className="font-medium">{consultation.weight ? `${consultation.weight} kg` : 'N/A'}</p>
+                                    <p className="flex items-center gap-1.5 text-muted-foreground">
+                                        <Weight className="size-3" /> Peso
+                                    </p>
+                                    <p className="font-medium">
+                                        {consultation.weight
+                                            ? `${consultation.weight} kg`
+                                            : 'N/A'}
+                                    </p>
                                 </div>
                                 <div>
-                                    <p className="text-muted-foreground flex items-center gap-1.5"><Ruler className="size-3" /> Talla</p>
-                                    <p className="font-medium">{consultation.height ? `${consultation.height} cm` : 'N/A'}</p>
+                                    <p className="flex items-center gap-1.5 text-muted-foreground">
+                                        <Ruler className="size-3" /> Talla
+                                    </p>
+                                    <p className="font-medium">
+                                        {consultation.height
+                                            ? `${consultation.height} cm`
+                                            : 'N/A'}
+                                    </p>
                                 </div>
                             </div>
                             <Separator />
                             <div className="space-y-3">
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground flex items-center gap-1.5"><Thermometer className="size-3" /> Temp.</span>
-                                    <span className="font-medium">{consultation.temperature ? `${consultation.temperature} °C` : 'N/A'}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Presión A.</span>
+                                    <span className="flex items-center gap-1.5 text-muted-foreground">
+                                        <Thermometer className="size-3" /> Temp.
+                                    </span>
                                     <span className="font-medium">
-                                        {consultation.bp_systolic && consultation.bp_diastolic 
-                                            ? `${consultation.bp_systolic}/${consultation.bp_diastolic}` 
+                                        {consultation.temperature
+                                            ? `${consultation.temperature} °C`
                                             : 'N/A'}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">F. Cardíaca</span>
-                                    <span className="font-medium">{consultation.heart_rate ? `${consultation.heart_rate} lpm` : 'N/A'}</span>
+                                    <span className="text-muted-foreground">
+                                        Presión A.
+                                    </span>
+                                    <span className="font-medium">
+                                        {consultation.bp_systolic &&
+                                        consultation.bp_diastolic
+                                            ? `${consultation.bp_systolic}/${consultation.bp_diastolic}`
+                                            : 'N/A'}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Sat. O2</span>
-                                    <span className="font-medium">{consultation.oxygen_saturation ? `${consultation.oxygen_saturation} %` : 'N/A'}</span>
+                                    <span className="text-muted-foreground">
+                                        F. Cardíaca
+                                    </span>
+                                    <span className="font-medium">
+                                        {consultation.heart_rate
+                                            ? `${consultation.heart_rate} lpm`
+                                            : 'N/A'}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">
+                                        Sat. O2
+                                    </span>
+                                    <span className="font-medium">
+                                        {consultation.oxygen_saturation
+                                            ? `${consultation.oxygen_saturation} %`
+                                            : 'N/A'}
+                                    </span>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Contenido Principal */}
-                    <div className="md:col-span-2 space-y-6">
+                    <div className="space-y-6 md:col-span-2">
                         <Card>
-                            <CardHeader className="pb-3 border-b mb-4">
-                                <div className="flex justify-between items-start">
-                                    <CardTitle className="text-xl flex items-center gap-2">
+                            <CardHeader className="mb-4 border-b pb-3">
+                                <div className="flex items-start justify-between">
+                                    <CardTitle className="flex items-center gap-2 text-xl">
                                         <ClipboardList className="size-5 text-primary" />
                                         Registro Clínico
                                     </CardTitle>
-                                    <Badge variant="secondary">Dr. {consultation.doctor.name}</Badge>
+                                    <Badge variant="secondary">
+                                        {consultation.doctor.name}
+                                    </Badge>
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
-                                    <h3 className="font-bold text-sm uppercase text-muted-foreground mb-2">Motivo de Consulta</h3>
-                                    <p className="text-foreground">{consultation.reason_for_visit}</p>
+                                    <h3 className="mb-2 text-sm font-bold text-muted-foreground uppercase">
+                                        Motivo de Consulta
+                                    </h3>
+                                    <p className="text-foreground">
+                                        {consultation.reason_for_visit}
+                                    </p>
                                 </div>
 
                                 {consultation.clinical_findings && (
                                     <div>
-                                        <h3 className="font-bold text-sm uppercase text-muted-foreground mb-2">Hallazgos / Examen Físico</h3>
-                                        <p className="text-foreground whitespace-pre-wrap bg-muted/30 p-4 rounded-lg border">
+                                        <h3 className="mb-2 text-sm font-bold text-muted-foreground uppercase">
+                                            Hallazgos / Examen Físico
+                                        </h3>
+                                        <p className="rounded-lg border bg-muted/30 p-4 whitespace-pre-wrap text-foreground">
                                             {consultation.clinical_findings}
                                         </p>
                                     </div>
                                 )}
 
                                 <div>
-                                    <h3 className="font-bold text-sm uppercase text-indigo-600 dark:text-indigo-400 mb-2">Diagnóstico</h3>
-                                    <p className="text-lg font-medium">{consultation.diagnosis}</p>
+                                    <h3 className="mb-2 text-sm font-bold text-indigo-600 uppercase dark:text-indigo-400">
+                                        Diagnóstico
+                                    </h3>
+                                    <p className="text-lg font-medium">
+                                        {consultation.diagnosis}
+                                    </p>
                                 </div>
 
                                 {consultation.treatment_plan && (
-                                    <div className="bg-muted/50 p-4 rounded-lg border">
-                                        <h3 className="font-bold text-sm uppercase text-muted-foreground mb-2 flex items-center gap-2">
+                                    <div className="rounded-lg border bg-muted/50 p-4">
+                                        <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-muted-foreground uppercase">
                                             <FileText className="size-4" />
                                             Notas de Seguimiento
                                         </h3>
-                                        <p className="text-foreground whitespace-pre-wrap">
+                                        <p className="whitespace-pre-wrap text-foreground">
                                             {consultation.treatment_plan}
                                         </p>
                                     </div>
                                 )}
 
                                 {consultation.prescription && (
-                                    <div className="bg-primary/5 p-6 rounded-xl border border-primary/20 shadow-sm">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h3 className="font-bold text-sm uppercase text-primary flex items-center gap-2">
+                                    <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 shadow-sm">
+                                        <div className="mb-4 flex items-center justify-between">
+                                            <h3 className="flex items-center gap-2 text-sm font-bold text-primary uppercase">
                                                 <Pill className="size-4" />
                                                 Receta Médica (Rp.)
                                             </h3>
                                             <div className="flex gap-2">
-                                                <a href={`/prescriptions/${consultation.prescription.id}/preview`} target="_blank">
-                                                    <Button variant="outline" size="sm" className="gap-2 text-xs">
-                                                        <Eye className="size-3" /> Ver PDF
+                                                <a
+                                                    href={`/prescriptions/${consultation.prescription.id}/preview`}
+                                                    target="_blank"
+                                                >
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        className="gap-2 text-xs"
+                                                    >
+                                                        <Eye className="size-3" />{' '}
+                                                        Ver PDF
                                                     </Button>
                                                 </a>
-                                                <a href={`/prescriptions/${consultation.prescription.id}/download`}>
-                                                    <Button size="sm" className="gap-2 text-xs bg-primary shadow-lg shadow-primary/20">
-                                                        <Download className="size-3" /> Descargar
+                                                <a
+                                                    href={`/prescriptions/${consultation.prescription.id}/download`}
+                                                >
+                                                    <Button
+                                                        size="sm"
+                                                        className="gap-2 bg-primary text-xs shadow-lg shadow-primary/20"
+                                                    >
+                                                        <Download className="size-3" />{' '}
+                                                        Descargar
                                                     </Button>
                                                 </a>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="space-y-3">
-                                            {consultation.prescription.items.map((item, index) => (
-                                                <div key={index} className="flex items-start justify-between py-2 border-b border-primary/10 last:border-0">
-                                                    <div>
-                                                        <p className="font-bold text-sm">{item.medication}</p>
-                                                        <p className="text-xs text-muted-foreground">
-                                                            {item.dosage} {item.frequency && `— ${item.frequency}`} {item.duration && `— ${item.duration}`}
-                                                        </p>
+                                            {consultation.prescription.items.map(
+                                                (item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="flex items-start justify-between border-b border-primary/10 py-2 last:border-0"
+                                                    >
+                                                        <div>
+                                                            <p className="text-sm font-bold">
+                                                                {
+                                                                    item.medication
+                                                                }
+                                                            </p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {item.dosage}{' '}
+                                                                {item.frequency &&
+                                                                    `— ${item.frequency}`}{' '}
+                                                                {item.duration &&
+                                                                    `— ${item.duration}`}
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ),
+                                            )}
                                         </div>
 
-                                        {consultation.prescription.general_instructions && (
-                                            <div className="mt-4 pt-4 border-t border-primary/10">
-                                                <p className="text-[10px] font-bold uppercase text-muted-foreground mb-1">Instrucciones Generales</p>
-                                                <p className="text-sm italic text-foreground">{consultation.prescription.general_instructions}</p>
+                                        {consultation.prescription
+                                            .general_instructions && (
+                                            <div className="mt-4 border-t border-primary/10 pt-4">
+                                                <p className="mb-1 text-[10px] font-bold text-muted-foreground uppercase">
+                                                    Instrucciones Generales
+                                                </p>
+                                                <p className="text-sm text-foreground italic">
+                                                    {
+                                                        consultation
+                                                            .prescription
+                                                            .general_instructions
+                                                    }
+                                                </p>
                                             </div>
                                         )}
                                     </div>

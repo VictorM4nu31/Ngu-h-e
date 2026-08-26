@@ -184,7 +184,7 @@ function Sidebar({
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetHeader className="sr-only">
           <SheetTitle>Sidebar</SheetTitle>
-          <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+          <SheetDescription>Barra lateral móvil</SheetDescription>
         </SheetHeader>
         <SheetContent
           data-sidebar="sidebar"

@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Ngu hñe'),
 
+    'timezone' => env('APP_TIMEZONE', 'America/Mexico_City'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
