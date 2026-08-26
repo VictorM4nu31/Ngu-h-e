@@ -1,21 +1,24 @@
 {
     "agents": [
-        "cursor",
-        "copilot"
+        "opencode"
     ],
+    "cloud": false,
     "guidelines": true,
-    "herd_mcp": false,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": false,
     "packages": [
-        "laravel/fortify"
+        "spatie/laravel-permission",
+        "spatie/laravel-backup"
     ],
     "sail": false,
     "skills": [
+        "developing-with-fortify",
+        "laravel-best-practices",
         "wayfinder-development",
         "pest-testing",
         "inertia-react-development",
         "tailwindcss-development",
-        "developing-with-fortify"
+        "laravel-backup",
+        "laravel-permission-development"
     ]
 }
