@@ -1,13 +1,5 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card';
+import { TrendingUp, Users, DollarSign, Calendar } from 'lucide-react';
 import {
     ResponsiveContainer,
     BarChart,
@@ -21,14 +13,15 @@ import {
     Cell,
 } from 'recharts';
 import {
-    TrendingUp,
-    Users,
-    DollarSign,
-    Calendar,
-    CreditCard,
-    Banknote,
-    Landmark,
-} from 'lucide-react';
+    Card,
+    CardContent,
+    CardTitle,
+    CardDescription,
+    CardHeader,
+} from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
+import type { BreadcrumbItem } from '@/types';
 
 interface Stats {
     total_revenue_month: number;
@@ -55,44 +48,43 @@ interface Props {
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Reportes Financieros', href: '/reports' },
+    { title: 'Financial Reports', href: '/reports' },
 ];
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
-
-const getMethodLabel = (method: string) => {
-    switch (method) {
-        case 'cash':
-            return 'Efectivo';
-        case 'card':
-            return 'Tarjeta';
-        case 'transfer':
-            return 'Transferencia';
-        default:
-            return method;
-    }
-};
 
 export default function Reports({
     dailyRevenue,
     stats,
     paymentMethods,
 }: Props) {
+    const revenueLabel = __('Revenue');
+    const methodLabels = {
+        cash: __('Cash'),
+        card: __('Card'),
+        transfer: __('Bank transfer'),
+    };
+
     const pieData = paymentMethods.map((m) => ({
-        name: getMethodLabel(m.payment_method),
+        name:
+            methodLabels[m.payment_method as keyof typeof methodLabels] ??
+            m.payment_method,
         value: Number(m.total),
     }));
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Reportes Financieros" />
+            <Head title={__('Financial Reports')} />
 
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6 pb-10">
                 <div>
-                    <h1 className="text-2xl font-bold">Análisis Financiero</h1>
+                    <h1 className="text-2xl font-bold">
+                        {__('Financial Analysis')}
+                    </h1>
                     <p className="text-sm text-muted-foreground">
-                        Resumen de ingresos y rendimiento económico del
-                        consultorio.
+                        {__(
+                            'Revenue and economic performance summary of the clinic.',
+                        )}
                     </p>
                 </div>
 
@@ -101,7 +93,8 @@ export default function Reports({
                     <Card className="border-none bg-emerald-500 text-white shadow-lg shadow-emerald-500/20">
                         <CardHeader className="pb-2">
                             <CardDescription className="flex items-center gap-2 text-emerald-100">
-                                <DollarSign className="size-4" /> Ingresos Hoy
+                                <DollarSign className="size-4" />{' '}
+                                {__("Today's Revenue")}
                             </CardDescription>
                             <CardTitle className="text-3xl font-bold">
                                 $
@@ -112,7 +105,8 @@ export default function Reports({
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs text-emerald-100">
-                                {stats.total_payments_today} transacciones hoy
+                                {stats.total_payments_today}{' '}
+                                {__('Transactions today')}
                             </p>
                         </CardContent>
                     </Card>
@@ -120,7 +114,8 @@ export default function Reports({
                     <Card>
                         <CardHeader className="pb-2">
                             <CardDescription className="flex items-center gap-2">
-                                <TrendingUp className="size-4" /> Este Mes
+                                <TrendingUp className="size-4" />{' '}
+                                {__('This Month')}
                             </CardDescription>
                             <CardTitle className="text-3xl font-bold text-primary">
                                 $
@@ -131,7 +126,7 @@ export default function Reports({
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs font-medium text-emerald-600">
-                                Acumulado mensual
+                                {__('Monthly total')}
                             </p>
                         </CardContent>
                     </Card>
@@ -139,7 +134,7 @@ export default function Reports({
                     <Card>
                         <CardHeader className="pb-2">
                             <CardDescription className="flex items-center gap-2">
-                                <Calendar className="size-4" /> Pendiente
+                                <Calendar className="size-4" /> {__('Pending')}
                             </CardDescription>
                             <CardTitle className="text-3xl font-bold text-amber-500">
                                 $
@@ -150,7 +145,7 @@ export default function Reports({
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs text-muted-foreground">
-                                Por cobrar
+                                {__('To collect')}
                             </p>
                         </CardContent>
                     </Card>
@@ -158,7 +153,7 @@ export default function Reports({
                     <Card>
                         <CardHeader className="pb-2">
                             <CardDescription className="flex items-center gap-2">
-                                <Users className="size-4" /> Eficiencia
+                                <Users className="size-4" /> {__('Efficiency')}
                             </CardDescription>
                             <CardTitle className="text-3xl font-bold">
                                 100%
@@ -166,7 +161,7 @@ export default function Reports({
                         </CardHeader>
                         <CardContent>
                             <p className="text-xs text-muted-foreground">
-                                Tasa de recuperación
+                                {__('Recovery rate')}
                             </p>
                         </CardContent>
                     </Card>
@@ -177,7 +172,7 @@ export default function Reports({
                     <Card className="shadow-sm md:col-span-2">
                         <CardHeader>
                             <CardTitle className="text-lg">
-                                Flujo de Ingresos (Últimos 30 días)
+                                {__('Revenue Flow (Last 30 days)')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="h-[350px]">
@@ -218,9 +213,11 @@ export default function Reports({
                                             tickLine={false}
                                         />
                                         <Tooltip
-                                            formatter={(value: any) => [
+                                            formatter={(
+                                                value: number | undefined,
+                                            ) => [
                                                 `$${Number(value).toLocaleString()}`,
-                                                'Ingreso',
+                                                revenueLabel,
                                             ]}
                                             labelFormatter={(label) =>
                                                 new Date(
@@ -250,7 +247,7 @@ export default function Reports({
                                 </ResponsiveContainer>
                             ) : (
                                 <div className="flex h-full items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-                                    No hay ingresos registrados en este periodo.
+                                    {__('No revenue recorded in this period.')}
                                 </div>
                             )}
                         </CardContent>
@@ -260,10 +257,10 @@ export default function Reports({
                     <Card className="shadow-sm md:col-span-1">
                         <CardHeader>
                             <CardTitle className="text-lg">
-                                Métodos de Pago
+                                {__('Payment Methods')}
                             </CardTitle>
                             <CardDescription>
-                                Distribución de ingresos por tipo.
+                                {__('Revenue distribution by type.')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="flex h-[250px] flex-col items-center justify-center">
@@ -305,7 +302,7 @@ export default function Reports({
                                 </ResponsiveContainer>
                             ) : (
                                 <div className="flex h-full items-center justify-center rounded-lg border border-dashed text-sm text-muted-foreground">
-                                    Sin pagos registrados.
+                                    {__('No payments recorded.')}
                                 </div>
                             )}
                             <div className="mt-4 grid w-full grid-cols-2 gap-4 text-xs">
