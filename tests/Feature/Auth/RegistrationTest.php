@@ -18,4 +18,13 @@ test('new users can register', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
+
+    $user = \App\Models\User::where('email', 'test@example.com')->firstOrFail();
+    $this->assertTrue($user->hasRole('patient'));
+
+    $this->assertDatabaseHas('patients', [
+        'user_id' => $user->id,
+        'full_name' => 'Test User',
+        'email' => 'test@example.com',
+    ]);
 });

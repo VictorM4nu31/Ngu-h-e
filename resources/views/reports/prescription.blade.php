@@ -130,7 +130,7 @@
         <div class="patient-line">
             <div class="patient-cell"><strong>PACIENTE:</strong> {{ $prescription->patient->full_name }}</div>
             <div class="patient-cell" style="text-align: right;"><strong>EDAD:</strong>
-                {{ $prescription->patient->birth_date->age }} años</div>
+                {{ $prescription->patient->birth_date?->age ?? 'N/D' }} años</div>
         </div>
     </div>
 
