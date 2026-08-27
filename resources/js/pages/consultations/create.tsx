@@ -1,12 +1,12 @@
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
+import { Save, ArrowLeft, Activity, FileText, ClipboardList, Plus, Trash2, Pill, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Save, ArrowLeft, Activity, Heart, Thermometer, User, FileText, ClipboardList, Plus, Trash2, Pill, DollarSign } from 'lucide-react';
+import type { BreadcrumbItem, PageProps } from '@/types';
 
 interface Patient {
     id: number;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Create({ patient, appointment }: Props) {
-    const { auth } = usePage().props as any;
+    const { auth } = usePage<PageProps>().props;
     
     const { data, setData, post, processing, errors } = useForm({
         patient_id: patient.id,
@@ -63,9 +63,9 @@ export default function Create({ patient, appointment }: Props) {
         setData('prescription_items', newItems);
     };
 
-    const updateMedication = (index: number, field: string, value: string) => {
+    const updateMedication = (index: number, field: 'medication' | 'dosage' | 'frequency' | 'duration', value: string) => {
         const newItems = [...data.prescription_items];
-        (newItems[index] as any)[field] = value;
+        newItems[index][field] = value;
         setData('prescription_items', newItems);
     };
 

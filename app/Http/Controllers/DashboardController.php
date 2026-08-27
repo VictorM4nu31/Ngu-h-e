@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
-use App\Models\Patient;
 use App\Models\Consultation;
+use App\Models\Patient;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -30,53 +31,42 @@ class DashboardController extends Controller
 
     private function globalDashboard(Carbon $today)
     {
-        $stats = [
-            'total_patients' => Patient::count(),
-            'appointments_today' => Appointment::whereDate('start_time', $today)->count(),
-            'pending_appointments' => Appointment::whereDate('start_time', $today)
-                ->whereIn('status', ['scheduled', 'confirmed'])
-                ->count(),
-            'consultations_today' => Consultation::whereDate('created_at', $today)->count(),
-        ];
-
-        $recent_consultations = Consultation::with(['patient', 'doctor'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        $upcoming_appointments = Appointment::with(['patient', 'doctor'])
-            ->whereDate('start_time', $today)
-            ->whereIn('status', ['scheduled', 'confirmed'])
-            ->orderBy('start_time')
-            ->get();
-
-        return Inertia::render('dashboard', [
-            'stats' => $stats,
-            'recentConsultations' => $recent_consultations,
-            'upcomingAppointments' => $upcoming_appointments,
-        ]);
+        return $this->buildDashboard(null, $today);
     }
 
     private function doctorDashboard($user, Carbon $today)
     {
+        return $this->buildDashboard($user, $today);
+    }
+
+    private function buildDashboard(?User $user, Carbon $today)
+    {
+        $doctorId = $user?->id;
+
         $stats = [
-            'total_patients' => Patient::whereHas('consultations', fn ($q) => $q->where('doctor_id', $user->id))->count(),
-            'appointments_today' => Appointment::where('doctor_id', $user->id)->whereDate('start_time', $today)->count(),
-            'pending_appointments' => Appointment::where('doctor_id', $user->id)
+            'total_patients' => $doctorId
+                ? Patient::whereHas('consultations', fn ($q) => $q->where('doctor_id', $doctorId))->count()
+                : Patient::count(),
+            'appointments_today' => Appointment::when($doctorId, fn ($q) => $q->where('doctor_id', $doctorId))
+                ->whereDate('start_time', $today)
+                ->count(),
+            'pending_appointments' => Appointment::when($doctorId, fn ($q) => $q->where('doctor_id', $doctorId))
                 ->whereDate('start_time', $today)
                 ->whereIn('status', ['scheduled', 'confirmed'])
                 ->count(),
-            'consultations_today' => Consultation::where('doctor_id', $user->id)->whereDate('created_at', $today)->count(),
+            'consultations_today' => Consultation::when($doctorId, fn ($q) => $q->where('doctor_id', $doctorId))
+                ->whereDate('created_at', $today)
+                ->count(),
         ];
 
         $recent_consultations = Consultation::with(['patient', 'doctor'])
-            ->where('doctor_id', $user->id)
+            ->when($doctorId, fn ($q) => $q->where('doctor_id', $doctorId))
             ->latest()
             ->take(5)
             ->get();
 
         $upcoming_appointments = Appointment::with(['patient', 'doctor'])
-            ->where('doctor_id', $user->id)
+            ->when($doctorId, fn ($q) => $q->where('doctor_id', $doctorId))
             ->whereDate('start_time', $today)
             ->whereIn('status', ['scheduled', 'confirmed'])
             ->orderBy('start_time')

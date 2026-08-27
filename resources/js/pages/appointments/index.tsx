@@ -1,25 +1,4 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { useState } from 'react';
-import { formatStoredTime, localDateInputValue } from '@/lib/date';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     Calendar,
     Clock,
@@ -33,6 +12,24 @@ import {
     ChevronRight,
     Activity,
 } from 'lucide-react';
+import { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+    Card,
+    CardContent,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import AppLayout from '@/layouts/app-layout';
+import { formatStoredTime, localDateInputValue } from '@/lib/date';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Appointment {
     id: number;
@@ -47,7 +44,7 @@ interface Appointment {
 interface Props {
     appointments: {
         data: Appointment[];
-        links: any[];
+        links: PaginationLink[];
     };
     doctors: { id: number; name: string }[];
     filters: { doctor_id: string; date: string };

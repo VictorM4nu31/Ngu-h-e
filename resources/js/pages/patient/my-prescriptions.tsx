@@ -1,9 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { FileText, Download, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Prescription {
     id: number;
@@ -19,7 +19,7 @@ interface Prescription {
 interface Props {
     prescriptions: {
         data: Prescription[];
-        links: any[];
+        links: PaginationLink[];
     };
 }
 

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Patients\CreatePatientAction;
+use App\Actions\Patients\UpdatePatientAction;
+use App\Http\Requests\Patients\StorePatientRequest;
+use App\Http\Requests\Patients\UpdatePatientRequest;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PatientController extends Controller
 {
@@ -18,15 +23,15 @@ class PatientController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('document_id', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('document_id', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
         $patients = $query->latest()->paginate(10)->withQueryString();
 
-        return \Inertia\Inertia::render('patients/index', [
+        return Inertia::render('patients/index', [
             'patients' => $patients,
             'filters' => $request->only(['search']),
         ]);
@@ -37,13 +42,13 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return \Inertia\Inertia::render('patients/create');
+        return Inertia::render('patients/create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(\App\Http\Requests\Patients\StorePatientRequest $request, \App\Actions\Patients\CreatePatientAction $action)
+    public function store(StorePatientRequest $request, CreatePatientAction $action)
     {
         $action->execute($request->validated());
 
@@ -55,12 +60,12 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        return \Inertia\Inertia::render('patients/show', [
+        return Inertia::render('patients/show', [
             'patient' => $patient->load([
-                'attachments', 
-                'consultations' => function($q) {
+                'attachments',
+                'consultations' => function ($q) {
                     $q->with('doctor')->latest();
-                }
+                },
             ]),
         ]);
     }
@@ -70,7 +75,7 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        return \Inertia\Inertia::render('patients/edit', [
+        return Inertia::render('patients/edit', [
             'patient' => $patient,
         ]);
     }
@@ -78,7 +83,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\App\Http\Requests\Patients\UpdatePatientRequest $request, Patient $patient, \App\Actions\Patients\UpdatePatientAction $action)
+    public function update(UpdatePatientRequest $request, Patient $patient, UpdatePatientAction $action)
     {
         $action->execute($patient, $request->validated());
 
@@ -90,7 +95,7 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        if (!request()->user()->hasRole('admin')) {
+        if (! request()->user()->hasRole('admin')) {
             abort(403, 'Solo el administrador puede eliminar pacientes.');
         }
 

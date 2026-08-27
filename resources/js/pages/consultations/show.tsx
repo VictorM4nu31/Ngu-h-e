@@ -1,14 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
 import {
     ArrowLeft,
-    Clock,
-    User,
     Activity,
     FileText,
     ClipboardList,
@@ -19,7 +11,13 @@ import {
     Download,
     Eye,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate, formatStoredTime } from '@/lib/date';
+import type { BreadcrumbItem } from '@/types';
 
 interface Consultation {
     id: number;

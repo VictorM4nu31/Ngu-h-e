@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate, formatStoredTime } from '@/lib/date';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Appointment {
     id: number;
@@ -18,7 +18,7 @@ interface Appointment {
 interface Props {
     appointments: {
         data: Appointment[];
-        links: any[];
+        links: PaginationLink[];
     };
 }
 

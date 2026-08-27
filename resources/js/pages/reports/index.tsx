@@ -1,13 +1,10 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card';
+    TrendingUp,
+    Users,
+    DollarSign,
+    Calendar,
+} from 'lucide-react';
 import {
     ResponsiveContainer,
     BarChart,
@@ -21,14 +18,14 @@ import {
     Cell,
 } from 'recharts';
 import {
-    TrendingUp,
-    Users,
-    DollarSign,
-    Calendar,
-    CreditCard,
-    Banknote,
-    Landmark,
-} from 'lucide-react';
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem } from '@/types';
 
 interface Stats {
     total_revenue_month: number;
@@ -218,7 +215,7 @@ export default function Reports({
                                             tickLine={false}
                                         />
                                         <Tooltip
-                                            formatter={(value: any) => [
+                                            formatter={(value: number | undefined) => [
                                                 `$${Number(value).toLocaleString()}`,
                                                 'Ingreso',
                                             ]}
