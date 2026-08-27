@@ -359,7 +359,6 @@
     "Financial Reports": "Reportes Financieros",
     "Financial Analysis": "Análisis Financiero",
     "Revenue and economic performance summary of the clinic.": "Resumen de ingresos y rendimiento económico del consultorio.",
-    "Today’s Revenue": "Ingresos Hoy",
     "Transactions today": "transacciones hoy",
     "This Month": "Este Mes",
     "Monthly total": "Acumulado mensual",
@@ -374,5 +373,6 @@
     "No payments recorded.": "Sin pagos registrados.",
     "Cash": "Efectivo",
     "Card": "Tarjeta",
-    "Bank transfer": "Transferencia"
+    "Bank transfer": "Transferencia",
+    "Today's Revenue": "Ingresos Hoy"
 }
