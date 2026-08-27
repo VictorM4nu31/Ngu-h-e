@@ -1,3 +1,6 @@
+import { usePage } from '@inertiajs/react';
+import type { PageProps } from '@/types';
+
 const APP_TIMEZONE = 'America/Mexico_City';
 
 export function localDateInputValue(date = new Date()): string {
@@ -8,19 +11,24 @@ export function localDateInputValue(date = new Date()): string {
     return `${year}-${month}-${day}`;
 }
 
+function appTimezone(): string {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return usePage<PageProps>().props.appTimezone ?? APP_TIMEZONE;
+}
+
 export function formatStoredDate(
     value: string,
     options?: Intl.DateTimeFormatOptions,
 ): string {
     return new Date(value).toLocaleDateString('es-MX', {
-        timeZone: APP_TIMEZONE,
+        timeZone: appTimezone(),
         ...options,
     });
 }
 
 export function formatStoredTime(value: string): string {
     return new Date(value).toLocaleTimeString('es-MX', {
-        timeZone: APP_TIMEZONE,
+        timeZone: appTimezone(),
         hour: '2-digit',
         minute: '2-digit',
         hourCycle: 'h23',
