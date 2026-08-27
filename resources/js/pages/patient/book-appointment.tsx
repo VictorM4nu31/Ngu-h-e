@@ -1,10 +1,5 @@
 import { Head, useForm, Link } from '@inertiajs/react';
-import {
-    ChevronLeft,
-    User,
-    AlertCircle,
-    CheckCircle2,
-} from 'lucide-react';
+import { ChevronLeft, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';

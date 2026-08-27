@@ -1,10 +1,5 @@
 import { Head } from '@inertiajs/react';
-import {
-    TrendingUp,
-    Users,
-    DollarSign,
-    Calendar,
-} from 'lucide-react';
+import { TrendingUp, Users, DollarSign, Calendar } from 'lucide-react';
 import {
     ResponsiveContainer,
     BarChart,
@@ -215,7 +210,9 @@ export default function Reports({
                                             tickLine={false}
                                         />
                                         <Tooltip
-                                            formatter={(value: number | undefined) => [
+                                            formatter={(
+                                                value: number | undefined,
+                                            ) => [
                                                 `$${Number(value).toLocaleString()}`,
                                                 'Ingreso',
                                             ]}

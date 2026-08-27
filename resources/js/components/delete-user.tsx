@@ -31,7 +31,9 @@ export default function DeleteUser() {
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
                     <p className="font-medium">{__('Warning')}</p>
                     <p className="text-sm">
-                        {__('Please proceed with caution, this cannot be undone.')}
+                        {__(
+                            'Please proceed with caution, this cannot be undone.',
+                        )}
                     </p>
                 </div>
 
@@ -46,10 +48,14 @@ export default function DeleteUser() {
                     </DialogTrigger>
                     <DialogContent>
                         <DialogTitle>
-                            {__('Are you sure you want to delete your account?')}
+                            {__(
+                                'Are you sure you want to delete your account?',
+                            )}
                         </DialogTitle>
                         <DialogDescription>
-                            {__('Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.')}
+                            {__(
+                                'Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.',
+                            )}
                         </DialogDescription>
 
                         <Form

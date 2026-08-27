@@ -15,7 +15,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
     return (
         <AuthLayout
             title={__('Forgot password')}
-            description={__('Enter your email to receive a password reset link')}
+            description={__(
+                'Enter your email to receive a password reset link',
+            )}
         >
             <Head title={__('Forgot password')} />
 
@@ -30,7 +32,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     {({ processing, errors }) => (
                         <>
                             <div className="grid gap-2">
-                                <Label htmlFor="email">{__('Email address')}</Label>
+                                <Label htmlFor="email">
+                                    {__('Email address')}
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"

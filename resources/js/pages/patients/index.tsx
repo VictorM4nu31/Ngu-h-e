@@ -58,9 +58,12 @@ export default function Index({ patients, filters }: Props) {
 
                 <Card>
                     <CardHeader className="p-4 pb-0">
-                        <form onSubmit={handleSearch} className="flex max-w-sm items-center gap-2">
+                        <form
+                            onSubmit={handleSearch}
+                            className="flex max-w-sm items-center gap-2"
+                        >
                             <div className="relative flex-1">
-                                <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+                                <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
                                 <Input
                                     type="search"
                                     placeholder="Buscar por nombre, ID o teléfono..."
@@ -69,7 +72,9 @@ export default function Index({ patients, filters }: Props) {
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </div>
-                            <Button type="submit" variant="secondary">Buscar</Button>
+                            <Button type="submit" variant="secondary">
+                                Buscar
+                            </Button>
                         </form>
                     </CardHeader>
                     <CardContent className="p-0">
@@ -77,39 +82,75 @@ export default function Index({ patients, filters }: Props) {
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-muted/50 text-muted-foreground">
                                     <tr>
-                                        <th className="px-4 py-3 font-medium">Nombre Completo</th>
-                                        <th className="px-4 py-3 font-medium">Identificación</th>
-                                        <th className="px-4 py-3 font-medium">Teléfono</th>
-                                        <th className="px-4 py-3 font-medium">Acciones</th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Nombre Completo
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Identificación
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Teléfono
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Acciones
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y">
                                     {patients.data.length > 0 ? (
                                         patients.data.map((patient) => (
-                                            <tr key={patient.id} className="hover:bg-muted/50 transition-colors">
-                                                <td className="px-4 py-3 font-medium">{patient.full_name}</td>
-                                                <td className="px-4 py-3">{patient.document_id || 'N/A'}</td>
-                                                <td className="px-4 py-3">{patient.phone || 'N/A'}</td>
+                                            <tr
+                                                key={patient.id}
+                                                className="transition-colors hover:bg-muted/50"
+                                            >
+                                                <td className="px-4 py-3 font-medium">
+                                                    {patient.full_name}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {patient.document_id ||
+                                                        'N/A'}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {patient.phone || 'N/A'}
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-2">
-                                                        <Link href={`/patients/${patient.id}`}>
-                                                            <Button variant="ghost" size="icon" title="Ver Expediente">
+                                                        <Link
+                                                            href={`/patients/${patient.id}`}
+                                                        >
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                title="Ver Expediente"
+                                                            >
                                                                 <Eye className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Link href={`/patients/${patient.id}/edit`}>
-                                                            <Button variant="ghost" size="icon" title="Editar">
+                                                        <Link
+                                                            href={`/patients/${patient.id}/edit`}
+                                                        >
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                title="Editar"
+                                                            >
                                                                 <Edit className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Button 
-                                                            variant="ghost" 
-                                                            size="icon" 
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
                                                             title="Eliminar"
                                                             className="text-destructive hover:text-destructive"
                                                             onClick={() => {
-                                                                if (confirm('¿Estás seguro de eliminar este paciente?')) {
-                                                                    router.delete(`/patients/${patient.id}`);
+                                                                if (
+                                                                    confirm(
+                                                                        '¿Estás seguro de eliminar este paciente?',
+                                                                    )
+                                                                ) {
+                                                                    router.delete(
+                                                                        `/patients/${patient.id}`,
+                                                                    );
                                                                 }
                                                             }}
                                                         >
@@ -121,7 +162,10 @@ export default function Index({ patients, filters }: Props) {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
+                                            <td
+                                                colSpan={4}
+                                                className="px-4 py-8 text-center text-muted-foreground"
+                                            >
                                                 No se encontraron pacientes.
                                             </td>
                                         </tr>
@@ -139,11 +183,11 @@ export default function Index({ patients, filters }: Props) {
                             <Link
                                 key={i}
                                 href={link.url || '#'}
-                                className={`px-3 py-1 text-sm rounded-md ${
-                                    link.active 
-                                        ? 'bg-primary text-primary-foreground' 
+                                className={`rounded-md px-3 py-1 text-sm ${
+                                    link.active
+                                        ? 'bg-primary text-primary-foreground'
                                         : 'bg-muted hover:bg-muted/80'
-                                } ${!link.url && 'opacity-50 cursor-not-allowed'}`}
+                                } ${!link.url && 'cursor-not-allowed opacity-50'}`}
                                 dangerouslySetInnerHTML={{ __html: link.label }}
                             />
                         ))}

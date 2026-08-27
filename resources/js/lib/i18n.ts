@@ -8,7 +8,10 @@ import type { PageProps } from '@/types';
  * @param replacements - Object with replacement values
  * @returns The translated string
  */
-export function trans(key: string, replacements?: Record<string, string | number>): string {
+export function trans(
+    key: string,
+    replacements?: Record<string, string | number>,
+): string {
     // __() is only invoked during render of Inertia components, so reading the
     // shared props via usePage here is intentional.
     // eslint-disable-next-line react-hooks/rules-of-hooks

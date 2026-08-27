@@ -35,7 +35,9 @@ export default function Password() {
                     <Heading
                         variant="small"
                         title={__('Update password')}
-                        description={__('Ensure your account is using a long, random password to stay secure')}
+                        description={__(
+                            'Ensure your account is using a long, random password to stay secure',
+                        )}
                     />
 
                     <Form

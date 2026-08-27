@@ -4,7 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -60,14 +66,16 @@ export default function Edit({ patient }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Editar ${patient.full_name}`} />
 
-            <div className="flex flex-col gap-6 p-4 max-w-5xl mx-auto w-full">
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/patients">
                         <Button variant="ghost" size="icon">
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold">Editar Paciente: {patient.full_name}</h1>
+                    <h1 className="text-2xl font-bold">
+                        Editar Paciente: {patient.full_name}
+                    </h1>
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid gap-6">
@@ -78,73 +86,132 @@ export default function Edit({ patient }: Props) {
                             </CardHeader>
                             <CardContent className="grid gap-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="full_name">Nombre Completo *</Label>
+                                    <Label htmlFor="full_name">
+                                        Nombre Completo *
+                                    </Label>
                                     <Input
                                         id="full_name"
                                         value={data.full_name}
-                                        onChange={(e) => setData('full_name', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('full_name', e.target.value)
+                                        }
                                         required
                                     />
-                                    {errors.full_name && <p className="text-xs text-destructive">{errors.full_name}</p>}
+                                    {errors.full_name && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.full_name}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
-                                        <Label htmlFor="document_id">Cédula / ID</Label>
+                                        <Label htmlFor="document_id">
+                                            Cédula / ID
+                                        </Label>
                                         <Input
                                             id="document_id"
                                             value={data.document_id}
-                                            onChange={(e) => setData('document_id', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'document_id',
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
-                                        {errors.document_id && <p className="text-xs text-destructive">{errors.document_id}</p>}
+                                        {errors.document_id && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.document_id}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="gender">Género</Label>
-                                        <Select onValueChange={(val) => setData('gender', val)} value={data.gender}>
+                                        <Select
+                                            onValueChange={(val) =>
+                                                setData('gender', val)
+                                            }
+                                            value={data.gender}
+                                        >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Seleccionar..." />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="male">Masculino</SelectItem>
-                                                <SelectItem value="female">Femenino</SelectItem>
-                                                <SelectItem value="other">Otro</SelectItem>
+                                                <SelectItem value="male">
+                                                    Masculino
+                                                </SelectItem>
+                                                <SelectItem value="female">
+                                                    Femenino
+                                                </SelectItem>
+                                                <SelectItem value="other">
+                                                    Otro
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        {errors.gender && <p className="text-xs text-destructive">{errors.gender}</p>}
+                                        {errors.gender && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.gender}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
-                                        <Label htmlFor="birth_date">Fecha de Nacimiento</Label>
+                                        <Label htmlFor="birth_date">
+                                            Fecha de Nacimiento
+                                        </Label>
                                         <Input
                                             id="birth_date"
                                             type="date"
                                             value={data.birth_date}
-                                            onChange={(e) => setData('birth_date', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'birth_date',
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
-                                        {errors.birth_date && <p className="text-xs text-destructive">{errors.birth_date}</p>}
+                                        {errors.birth_date && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.birth_date}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="phone">Teléfono</Label>
                                         <Input
                                             id="phone"
                                             value={data.phone}
-                                            onChange={(e) => setData('phone', e.target.value)}
+                                            onChange={(e) =>
+                                                setData('phone', e.target.value)
+                                            }
                                         />
-                                        {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
+                                        {errors.phone && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.phone}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Correo Electrónico</Label>
+                                    <Label htmlFor="email">
+                                        Correo Electrónico
+                                    </Label>
                                     <Input
                                         id="email"
                                         type="email"
                                         value={data.email}
-                                        onChange={(e) => setData('email', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('email', e.target.value)
+                                        }
                                     />
-                                    {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                                    {errors.email && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.email}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="grid gap-2">
@@ -152,9 +219,15 @@ export default function Edit({ patient }: Props) {
                                     <Input
                                         id="address"
                                         value={data.address}
-                                        onChange={(e) => setData('address', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('address', e.target.value)
+                                        }
                                     />
-                                    {errors.address && <p className="text-xs text-destructive">{errors.address}</p>}
+                                    {errors.address && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.address}
+                                        </p>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
@@ -168,29 +241,45 @@ export default function Edit({ patient }: Props) {
                                     <Label htmlFor="allergies">Alergias</Label>
                                     <textarea
                                         id="allergies"
-                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.allergies}
-                                        onChange={(e) => setData('allergies', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('allergies', e.target.value)
+                                        }
                                     />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="chronic_diseases">Enfermedades Crónicas</Label>
+                                    <Label htmlFor="chronic_diseases">
+                                        Enfermedades Crónicas
+                                    </Label>
                                     <textarea
                                         id="chronic_diseases"
-                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.chronic_diseases}
-                                        onChange={(e) => setData('chronic_diseases', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'chronic_diseases',
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="medical_antecedents">Antecedentes</Label>
+                                    <Label htmlFor="medical_antecedents">
+                                        Antecedentes
+                                    </Label>
                                     <textarea
                                         id="medical_antecedents"
-                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.medical_antecedents}
-                                        onChange={(e) => setData('medical_antecedents', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'medical_antecedents',
+                                                e.target.value,
+                                            )
+                                        }
                                     />
                                 </div>
                             </CardContent>
@@ -203,20 +292,29 @@ export default function Edit({ patient }: Props) {
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="current_medication">Medicación Actual</Label>
+                                <Label htmlFor="current_medication">
+                                    Medicación Actual
+                                </Label>
                                 <Input
                                     id="current_medication"
                                     value={data.current_medication}
-                                    onChange={(e) => setData('current_medication', e.target.value)}
+                                    onChange={(e) =>
+                                        setData(
+                                            'current_medication',
+                                            e.target.value,
+                                        )
+                                    }
                                 />
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="notes">Notas Internas</Label>
                                 <textarea
                                     id="notes"
-                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     value={data.notes}
-                                    onChange={(e) => setData('notes', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('notes', e.target.value)
+                                    }
                                 />
                             </div>
                         </CardContent>
@@ -224,9 +322,15 @@ export default function Edit({ patient }: Props) {
 
                     <div className="flex justify-end gap-3">
                         <Link href="/patients">
-                            <Button variant="outline" type="button">Cancelar</Button>
+                            <Button variant="outline" type="button">
+                                Cancelar
+                            </Button>
                         </Link>
-                        <Button type="submit" disabled={processing} className="flex items-center gap-2">
+                        <Button
+                            type="submit"
+                            disabled={processing}
+                            className="flex items-center gap-2"
+                        >
                             <Save className="size-4" />
                             Actualizar Paciente
                         </Button>
