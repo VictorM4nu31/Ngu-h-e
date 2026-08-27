@@ -576,6 +576,7 @@ export default function Show({ patient }: Props) {
                                                                     variant="ghost"
                                                                     size="icon"
                                                                     className="size-8"
+                                                                    aria-label="Download file"
                                                                 >
                                                                     <Download className="size-4" />
                                                                 </Button>
@@ -584,6 +585,7 @@ export default function Show({ patient }: Props) {
                                                                 variant="ghost"
                                                                 size="icon"
                                                                 className="size-8 text-destructive"
+                                                                aria-label="Delete file"
                                                                 onClick={() => {
                                                                     if (
                                                                         confirm(

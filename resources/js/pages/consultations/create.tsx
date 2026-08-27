@@ -89,7 +89,7 @@ export default function Create({ patient, appointment }: Props) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href={`/patients/${patient.id}`}>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" aria-label="Go back">
                                 <ArrowLeft className="size-4" />
                             </Button>
                         </Link>

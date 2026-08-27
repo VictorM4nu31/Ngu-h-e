@@ -113,7 +113,7 @@ export default function Index({ payments, filters }: Props) {
                                                 </Badge>
                                             </td>
                                             <td className="px-4 py-4 text-right">
-                                                <Button variant="ghost" size="icon" className="size-8">
+                                                <Button variant="ghost" size="icon" className="size-8" aria-label="View receipt">
                                                     <FileText className="size-4" />
                                                 </Button>
                                             </td>

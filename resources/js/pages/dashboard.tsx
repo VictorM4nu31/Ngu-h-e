@@ -237,6 +237,7 @@ export default function Dashboard({
                                                     variant="ghost"
                                                     size="icon"
                                                     className="size-8 rounded-full"
+                                                    aria-label="View appointments"
                                                 >
                                                     <ChevronRight className="size-4" />
                                                 </Button>

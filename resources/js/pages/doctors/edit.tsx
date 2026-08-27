@@ -45,7 +45,7 @@ export default function Edit({ member }: Props) {
             <div className="flex flex-col gap-4 p-4 max-w-2xl mx-auto w-full">
                 <div className="flex items-center gap-2">
                     <Link href="/staff">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label="Go back">
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>

@@ -33,6 +33,15 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Pacientes', href: '/patients' },
 ];
 
+const decodeLabel = (label: string) =>
+    label
+        .replace(/&laquo;/g, '«')
+        .replace(/&raquo;/g, '»')
+        .replace(/&lsaquo;/g, '‹')
+        .replace(/&rsaquo;/g, '›')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/<[^>]*>/g, '');
+
 export default function Index({ patients, filters }: Props) {
     const [search, setSearch] = useState(filters.search || '');
 
@@ -93,12 +102,12 @@ export default function Index({ patients, filters }: Props) {
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-2">
                                                         <Link href={`/patients/${patient.id}`}>
-                                                            <Button variant="ghost" size="icon" title="Ver Expediente">
+                                                            <Button variant="ghost" size="icon" title="Ver Expediente" aria-label="View record">
                                                                 <Eye className="size-4" />
                                                             </Button>
                                                         </Link>
                                                         <Link href={`/patients/${patient.id}/edit`}>
-                                                            <Button variant="ghost" size="icon" title="Editar">
+                                                            <Button variant="ghost" size="icon" title="Editar" aria-label="Edit">
                                                                 <Edit className="size-4" />
                                                             </Button>
                                                         </Link>
@@ -106,6 +115,7 @@ export default function Index({ patients, filters }: Props) {
                                                             variant="ghost" 
                                                             size="icon" 
                                                             title="Eliminar"
+                                                            aria-label="Delete"
                                                             className="text-destructive hover:text-destructive"
                                                             onClick={() => {
                                                                 if (confirm('¿Estás seguro de eliminar este paciente?')) {
@@ -144,8 +154,9 @@ export default function Index({ patients, filters }: Props) {
                                         ? 'bg-primary text-primary-foreground' 
                                         : 'bg-muted hover:bg-muted/80'
                                 } ${!link.url && 'opacity-50 cursor-not-allowed'}`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
+                            >
+                                {decodeLabel(link.label)}
+                            </Link>
                         ))}
                     </div>
                 )}

@@ -63,7 +63,7 @@ export default function Edit({ patient }: Props) {
             <div className="flex flex-col gap-6 p-4 max-w-5xl mx-auto w-full">
                 <div className="flex items-center gap-4">
                     <Link href="/patients">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label="Go back">
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>

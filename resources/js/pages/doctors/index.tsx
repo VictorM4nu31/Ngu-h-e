@@ -85,6 +85,7 @@ export default function Index({ staff }: Props) {
                                                             <Button 
                                                                 variant="ghost" 
                                                                 size="icon"
+                                                                aria-label="Edit"
                                                                 className="text-muted-foreground hover:text-primary"
                                                             >
                                                                 <Pencil className="size-4" />
@@ -93,6 +94,7 @@ export default function Index({ staff }: Props) {
                                                         <Button 
                                                             variant="ghost" 
                                                             size="icon" 
+                                                            aria-label="Delete"
                                                             className="text-destructive hover:text-destructive"
                                                             onClick={() => handleDelete(member.id)}
                                                         >
