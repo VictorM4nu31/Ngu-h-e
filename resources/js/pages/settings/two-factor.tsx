@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import type { BreadcrumbItem } from '@/types';
-import { disable, enable, show } from '@/routes/two-factor';
 import { __ } from '@/lib/i18n';
+import { disable, enable, show } from '@/routes/two-factor';
+import type { BreadcrumbItem } from '@/types';
 
 type Props = {
     requiresConfirmation?: boolean;

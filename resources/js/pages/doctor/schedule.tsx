@@ -1,14 +1,14 @@
 import { Head, useForm } from '@inertiajs/react';
+import { Clock } from 'lucide-react';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
+import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import InputError from '@/components/input-error';
-import { Spinner } from '@/components/ui/spinner';
-import { Clock } from 'lucide-react';
 
 interface Schedule {
     day_of_week: number;
@@ -40,7 +40,7 @@ export default function DoctorSchedule({ schedules }: Props) {
         }))
     });
 
-    const updateSchedule = (index: number, field: keyof Schedule, value: any) => {
+    const updateSchedule = (index: number, field: keyof Schedule, value: string | number | boolean) => {
         const newSchedules = [...data.schedules];
         newSchedules[index] = { ...newSchedules[index], [field]: value };
         setData('schedules', newSchedules);

@@ -3,8 +3,8 @@ import { Activity, Calendar, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
 import { formatStoredDate } from '@/lib/date';
+import type { BreadcrumbItem } from '@/types';
 
 interface Consultation {
     id: number;

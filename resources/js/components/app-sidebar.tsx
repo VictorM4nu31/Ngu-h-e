@@ -11,7 +11,6 @@ import {
     Clock,
     Activity,
 } from 'lucide-react';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -23,14 +22,14 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import type { NavItem } from '@/types';
-import AppLogo from './app-logo';
-import { dashboard } from '@/routes';
 import { __ } from '@/lib/i18n';
+import { dashboard } from '@/routes';
+import type { NavItem, PageProps } from '@/types';
+import AppLogo from './app-logo';
 
 export function AppSidebar() {
-    const { auth } = usePage().props as any;
-    const userRoles = auth.user.roles?.map((r: any) => r.name) || [];
+    const { auth } = usePage<PageProps>().props;
+    const userRoles = auth.user.roles?.map((r) => r.name) || [];
 
     // Definir los items dentro del componente para poder usar __()
     const mainNavItems: NavItem[] = [

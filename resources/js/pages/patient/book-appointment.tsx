@@ -1,7 +1,13 @@
-import { Head, useForm, Link, router } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
+import {
+    ChevronLeft,
+    User,
+    AlertCircle,
+    CheckCircle2,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     Card,
     CardContent,
@@ -9,21 +15,13 @@ import {
     CardTitle,
     CardDescription,
 } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import InputError from '@/components/input-error';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import {
-    Calendar as CalendarIcon,
-    Clock,
-    ChevronLeft,
-    User,
-    AlertCircle,
-    CheckCircle2,
-} from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import AppLayout from '@/layouts/app-layout';
 import { localDateInputValue } from '@/lib/date';
+import { cn } from '@/lib/utils';
+import type { BreadcrumbItem } from '@/types';
 
 interface Doctor {
     id: number;
@@ -59,6 +57,8 @@ export default function BookAppointment({ doctors }: Props) {
     // Cargar disponibilidad cuando cambian doctor o fecha
     useEffect(() => {
         if (data.doctor_id && data.date) {
+            // Reset + refetch on filter change; the synchronous resets are intentional.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLoadingSlots(true);
             setSlots([]);
             setData('time', '');
@@ -73,7 +73,7 @@ export default function BookAppointment({ doctors }: Props) {
                 })
                 .catch(() => setLoadingSlots(false));
         }
-    }, [data.doctor_id, data.date]);
+    }, [data.doctor_id, data.date, setData]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

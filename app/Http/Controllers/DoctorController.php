@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Inertia\Inertia;
 
 class DoctorController extends Controller
 {
@@ -18,7 +17,7 @@ class DoctorController extends Controller
         $staff = User::role(['doctor', 'receptionist'])->with('roles')->get();
 
         return Inertia::render('doctors/index', [
-            'staff' => $staff
+            'staff' => $staff,
         ]);
     }
 
@@ -45,7 +44,7 @@ class DoctorController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
         ]);
 
         $user->assignRole($request->role);
@@ -80,7 +79,7 @@ class DoctorController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|lowercase|email|max:255|unique:users,email,'.$user->id,
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => 'required|string|in:doctor,receptionist',
         ]);
@@ -91,7 +90,7 @@ class DoctorController extends Controller
         ]);
 
         if ($request->filled('password')) {
-            $user->update(['password' => Hash::make($request->password)]);
+            $user->update(['password' => $request->password]);
         }
 
         // Sync role (remove old, assign new)

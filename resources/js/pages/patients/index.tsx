@@ -1,11 +1,11 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Patient {
     id: number;
@@ -19,7 +19,7 @@ interface Patient {
 interface Props {
     patients: {
         data: Patient[];
-        links: any[];
+        links: PaginationLink[];
         current_page: number;
         last_page: number;
     };

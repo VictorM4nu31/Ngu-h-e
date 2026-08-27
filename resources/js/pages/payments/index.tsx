@@ -1,11 +1,11 @@
-import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Head } from '@inertiajs/react';
+import { Search, CreditCard, Banknote, Landmark, Clock, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Search, CreditCard, Banknote, Landmark, Clock, FileText } from 'lucide-react';
+import AppLayout from '@/layouts/app-layout';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Payment {
     id: number;
@@ -20,7 +20,7 @@ interface Payment {
 interface Props {
     payments: {
         data: Payment[];
-        links: any[];
+        links: PaginationLink[];
     };
     filters: {
         search: string;

@@ -1,9 +1,9 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { Plus, Trash2, UserCog, Stethoscope, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Plus, Trash2, UserCog, ShieldCheck, Stethoscope, Pencil } from 'lucide-react';
+import type { BreadcrumbItem } from '@/types';
 
 interface StaffMember {
     id: number;

@@ -4,13 +4,13 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { __ } from '@/lib/i18n';
 import { cn, toUrl } from '@/lib/utils';
-import type { NavItem } from '@/types';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
-import { __ } from '@/lib/i18n';
+import type { NavItem } from '@/types';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentUrl } = useCurrentUrl();

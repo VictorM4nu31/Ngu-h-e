@@ -1,8 +1,4 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
     Users,
     Calendar,
@@ -12,17 +8,36 @@ import {
     ArrowUpRight,
     UserSearch,
     ClipboardList,
+    type LucideIcon,
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { __ } from '@/lib/i18n';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate, formatStoredTime } from '@/lib/date';
+import { __ } from '@/lib/i18n';
+import type { BreadcrumbItem, PageProps } from '@/types';
 
 interface Stat {
     label: string;
     value: number;
-    icon: any;
+    icon: LucideIcon;
     color: string;
     description: string;
+}
+
+interface ConsultationSummary {
+    id: number;
+    patient: { full_name: string };
+    diagnosis: string;
+    created_at: string;
+}
+
+interface AppointmentSummary {
+    id: number;
+    patient: { full_name: string };
+    start_time: string;
+    reason: string | null;
 }
 
 interface Props {
@@ -32,8 +47,8 @@ interface Props {
         pending_appointments: number;
         consultations_today: number;
     };
-    recentConsultations: any[];
-    upcomingAppointments: any[];
+    recentConsultations: ConsultationSummary[];
+    upcomingAppointments: AppointmentSummary[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -48,8 +63,8 @@ export default function Dashboard({
     recentConsultations,
     upcomingAppointments,
 }: Props) {
-    const { auth } = usePage().props as any;
-    const userRoles = auth.user.roles?.map((r: any) => r.name) || [];
+    const { auth } = usePage<PageProps>().props;
+    const userRoles = auth.user.roles?.map((r) => r.name) || [];
 
     const getRoleGreeting = () => {
         if (userRoles.includes('admin')) return __('Welcome, Administrator');
