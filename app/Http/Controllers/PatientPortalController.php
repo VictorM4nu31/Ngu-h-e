@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Appointments\CreateAppointmentAction;
+use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
-use App\Actions\Appointments\CreateAppointmentAction;
 
 class PatientPortalController extends Controller
 {
@@ -55,7 +56,7 @@ class PatientPortalController extends Controller
             ->first();
 
         // Si no trabaja ese día o no tiene horario, retornar lista vacía (sin slots)
-        if (!$schedule || !$schedule->is_working) {
+        if (! $schedule || ! $schedule->is_working) {
             return response()->json(['slots' => []]);
         }
 
@@ -77,7 +78,7 @@ class PatientPortalController extends Controller
 
             // Verificar si hay una cita que se solape
             $is_occupied = $existing_appointments->contains(function ($app) use ($slot_start, $slot_end) {
-                return ($app->start_time < $slot_end && $app->end_time > $slot_start);
+                return $app->start_time < $slot_end && $app->end_time > $slot_start;
             });
 
             // No permitir citas en el pasado si es hoy
@@ -85,7 +86,7 @@ class PatientPortalController extends Controller
 
             $slots[] = [
                 'time' => $slot_start->format('H:i'),
-                'available' => !$is_occupied && !$is_past,
+                'available' => ! $is_occupied && ! $is_past,
             ];
 
             $current->addMinutes($interval);
@@ -97,10 +98,10 @@ class PatientPortalController extends Controller
     /**
      * Store a new appointment booked by a patient.
      */
-    public function storeAppointment(Request $request, CreateAppointmentAction $action)
+    public function storeAppointment(Request $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
         $patient = $this->getPatient();
-        if (!$patient) {
+        if (! $patient) {
             return redirect()->back()->with('error', 'No tienes un perfil de paciente creado.');
         }
 
@@ -111,21 +112,12 @@ class PatientPortalController extends Controller
             'reason' => 'nullable|string|max:255',
         ]);
 
-        $start_time = Carbon::createFromFormat('Y-m-d H:i', $request->date . ' ' . $request->time);
+        $start_time = Carbon::createFromFormat('Y-m-d H:i', $request->date.' '.$request->time);
         $end_time = $start_time->copy()->addMinutes(30);
 
-        // Doble verificación de disponibilidad
-        $conflict = Appointment::where('doctor_id', $request->doctor_id)
-            ->where(function($query) use ($start_time, $end_time) {
-                $query->where('start_time', '<', $end_time)
-                      ->where('end_time', '>', $start_time);
-            })
-            ->whereIn('status', ['scheduled', 'confirmed', 'completed'])
-            ->exists();
-
-        if ($conflict) {
-            return redirect()->back()->withErrors(['time' => 'Este horario ya no está disponible.']);
-        }
+        // Verificar que el horario esté dentro del horario de atención y no se solape
+        $availability->withinSchedule((int) $request->doctor_id, $start_time, $end_time, 'time');
+        $availability->noOverlap((int) $request->doctor_id, $start_time, $end_time, errorField: 'time');
 
         $action->execute([
             'patient_id' => $patient->id,
@@ -146,7 +138,7 @@ class PatientPortalController extends Controller
     {
         $patient = $this->getPatient();
 
-        if (!$patient) {
+        if (! $patient) {
             return Inertia::render('patient/my-appointments', [
                 'appointments' => [],
             ]);
@@ -169,7 +161,7 @@ class PatientPortalController extends Controller
     {
         $patient = $this->getPatient();
 
-        if (!$patient) {
+        if (! $patient) {
             return Inertia::render('patient/my-prescriptions', [
                 'prescriptions' => [],
             ]);
