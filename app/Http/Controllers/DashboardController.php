@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
-use App\Models\Patient;
 use App\Models\Consultation;
+use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -22,6 +22,10 @@ class DashboardController extends Controller
 
         if ($user->hasRole('doctor')) {
             return $this->doctorDashboard($user, $today);
+        }
+
+        if (! $user->hasRole('admin') && ! $user->hasRole('receptionist')) {
+            abort(403, 'No tienes acceso al panel.');
         }
 
         // Admin / Receptionist: vista global
