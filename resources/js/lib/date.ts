@@ -1,3 +1,5 @@
+const APP_TIMEZONE = 'America/Mexico_City';
+
 export function localDateInputValue(date = new Date()): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -11,14 +13,14 @@ export function formatStoredDate(
     options?: Intl.DateTimeFormatOptions,
 ): string {
     return new Date(value).toLocaleDateString('es-MX', {
-        timeZone: 'UTC',
+        timeZone: APP_TIMEZONE,
         ...options,
     });
 }
 
 export function formatStoredTime(value: string): string {
     return new Date(value).toLocaleTimeString('es-MX', {
-        timeZone: 'UTC',
+        timeZone: APP_TIMEZONE,
         hour: '2-digit',
         minute: '2-digit',
         hourCycle: 'h23',
