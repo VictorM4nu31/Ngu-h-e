@@ -2,7 +2,13 @@ import { Head, useForm, Link } from '@inertiajs/react';
 import { ChevronLeft } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
@@ -33,21 +39,28 @@ export default function Create() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Nuevo Miembro del Personal" />
 
-            <div className="flex flex-col gap-4 p-4 max-w-2xl mx-auto w-full">
+            <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/staff">
-                        <Button variant="ghost" size="icon" aria-label="Go back">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Go back"
+                        >
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold">Nuevo Miembro del Personal</h1>
+                    <h1 className="text-2xl font-bold">
+                        Nuevo Miembro del Personal
+                    </h1>
                 </div>
 
                 <Card>
                     <CardHeader>
                         <CardTitle>Datos del Registro</CardTitle>
                         <CardDescription>
-                            Crea una nueva cuenta para un médico o recepcionista.
+                            Crea una nueva cuenta para un médico o
+                            recepcionista.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -57,19 +70,25 @@ export default function Create() {
                                 <Input
                                     id="name"
                                     value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('name', e.target.value)
+                                    }
                                     required
                                 />
                                 <InputError message={errors.name} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Correo Electrónico</Label>
+                                <Label htmlFor="email">
+                                    Correo Electrónico
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
                                     value={data.email}
-                                    onChange={(e) => setData('email', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('email', e.target.value)
+                                    }
                                     required
                                 />
                                 <InputError message={errors.email} />
@@ -79,40 +98,55 @@ export default function Create() {
                                 <Label htmlFor="role">Rol en el Sistema</Label>
                                 <select
                                     id="role"
-                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     value={data.role}
-                                    onChange={(e) => setData('role', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('role', e.target.value)
+                                    }
                                     required
                                 >
                                     <option value="doctor">Doctor</option>
-                                    <option value="receptionist">Recepcionista</option>
+                                    <option value="receptionist">
+                                        Recepcionista
+                                    </option>
                                 </select>
                                 <InputError message={errors.role} />
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">Contraseña</Label>
                                     <Input
                                         id="password"
                                         type="password"
                                         value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('password', e.target.value)
+                                        }
                                         required
                                     />
                                     <InputError message={errors.password} />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password_confirmation">Confirmar Contraseña</Label>
+                                    <Label htmlFor="password_confirmation">
+                                        Confirmar Contraseña
+                                    </Label>
                                     <Input
                                         id="password_confirmation"
                                         type="password"
                                         value={data.password_confirmation}
-                                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'password_confirmation',
+                                                e.target.value,
+                                            )
+                                        }
                                         required
                                     />
-                                    <InputError message={errors.password_confirmation} />
+                                    <InputError
+                                        message={errors.password_confirmation}
+                                    />
                                 </div>
                             </div>
 

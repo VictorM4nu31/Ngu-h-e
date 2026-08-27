@@ -45,28 +45,47 @@ export default function Index({ staff }: Props) {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Médicos y Administrativos</CardTitle>
+                        <CardTitle className="text-lg">
+                            Médicos y Administrativos
+                        </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0">
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-muted/50 text-muted-foreground">
                                     <tr>
-                                        <th className="px-4 py-3 font-medium">Nombre</th>
-                                        <th className="px-4 py-3 font-medium">Email</th>
-                                        <th className="px-4 py-3 font-medium">Rol</th>
-                                        <th className="px-4 py-3 font-medium">Acciones</th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Nombre
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Email
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Rol
+                                        </th>
+                                        <th className="px-4 py-3 font-medium">
+                                            Acciones
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y">
                                     {staff.length > 0 ? (
                                         staff.map((member) => (
-                                            <tr key={member.id} className="hover:bg-muted/50 transition-colors">
-                                                <td className="px-4 py-3 font-medium">{member.name}</td>
-                                                <td className="px-4 py-3">{member.email}</td>
+                                            <tr
+                                                key={member.id}
+                                                className="transition-colors hover:bg-muted/50"
+                                            >
+                                                <td className="px-4 py-3 font-medium">
+                                                    {member.name}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {member.email}
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-1.5 capitalize">
-                                                        {member.roles?.[0]?.name === 'doctor' ? (
+                                                        {member.roles?.[0]
+                                                            ?.name ===
+                                                        'doctor' ? (
                                                             <>
                                                                 <Stethoscope className="size-3.5 text-blue-500" />
                                                                 Doctor
@@ -81,9 +100,11 @@ export default function Index({ staff }: Props) {
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-1">
-                                                        <Link href={`/staff/${member.id}/edit`}>
-                                                            <Button 
-                                                                variant="ghost" 
+                                                        <Link
+                                                            href={`/staff/${member.id}/edit`}
+                                                        >
+                                                            <Button
+                                                                variant="ghost"
                                                                 size="icon"
                                                                 aria-label="Edit"
                                                                 className="text-muted-foreground hover:text-primary"
@@ -91,12 +112,16 @@ export default function Index({ staff }: Props) {
                                                                 <Pencil className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Button 
-                                                            variant="ghost" 
-                                                            size="icon" 
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
                                                             aria-label="Delete"
                                                             className="text-destructive hover:text-destructive"
-                                                            onClick={() => handleDelete(member.id)}
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    member.id,
+                                                                )
+                                                            }
                                                         >
                                                             <Trash2 className="size-4" />
                                                         </Button>
@@ -106,7 +131,10 @@ export default function Index({ staff }: Props) {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
+                                            <td
+                                                colSpan={4}
+                                                className="px-4 py-8 text-center text-muted-foreground"
+                                            >
                                                 No hay personal registrado.
                                             </td>
                                         </tr>

@@ -1,7 +1,23 @@
 import { Head, useForm, usePage, Link } from '@inertiajs/react';
-import { Save, ArrowLeft, Activity, FileText, ClipboardList, Plus, Trash2, Pill, DollarSign } from 'lucide-react';
+import {
+    Save,
+    ArrowLeft,
+    Activity,
+    FileText,
+    ClipboardList,
+    Plus,
+    Trash2,
+    Pill,
+    DollarSign,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -27,7 +43,7 @@ interface Props {
 
 export default function Create({ patient, appointment }: Props) {
     const { auth } = usePage<PageProps>().props;
-    
+
     const { data, setData, post, processing, errors } = useForm({
         patient_id: patient.id,
         doctor_id: auth.user.id,
@@ -44,7 +60,12 @@ export default function Create({ patient, appointment }: Props) {
         clinical_findings: '',
         diagnosis: '',
         treatment_plan: '',
-        prescription_items: [] as Array<{ medication: string; dosage: string; frequency: string; duration: string }>,
+        prescription_items: [] as Array<{
+            medication: string;
+            dosage: string;
+            frequency: string;
+            duration: string;
+        }>,
         prescription_instructions: '',
         payment_amount: '',
         payment_method: 'cash',
@@ -53,7 +74,7 @@ export default function Create({ patient, appointment }: Props) {
     const addMedication = () => {
         setData('prescription_items', [
             ...data.prescription_items,
-            { medication: '', dosage: '', frequency: '', duration: '' }
+            { medication: '', dosage: '', frequency: '', duration: '' },
         ]);
     };
 
@@ -63,7 +84,11 @@ export default function Create({ patient, appointment }: Props) {
         setData('prescription_items', newItems);
     };
 
-    const updateMedication = (index: number, field: 'medication' | 'dosage' | 'frequency' | 'duration', value: string) => {
+    const updateMedication = (
+        index: number,
+        field: 'medication' | 'dosage' | 'frequency' | 'duration',
+        value: string,
+    ) => {
         const newItems = [...data.prescription_items];
         newItems[index][field] = value;
         setData('prescription_items', newItems);
@@ -85,18 +110,27 @@ export default function Create({ patient, appointment }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Consulta: ${patient.full_name}`} />
 
-            <div className="flex flex-col gap-6 p-4 max-w-5xl mx-auto w-full pb-10">
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href={`/patients/${patient.id}`}>
-                            <Button variant="ghost" size="icon" aria-label="Go back">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Go back"
+                            >
                                 <ArrowLeft className="size-4" />
                             </Button>
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold">Registro de Consulta</h1>
-                            <p className="text-muted-foreground text-sm">
-                                Paciente: <span className="font-semibold text-foreground">{patient.full_name}</span>
+                            <h1 className="text-2xl font-bold">
+                                Registro de Consulta
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                                Paciente:{' '}
+                                <span className="font-semibold text-foreground">
+                                    {patient.full_name}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -107,91 +141,238 @@ export default function Create({ patient, appointment }: Props) {
                         {/* Signos Vitales */}
                         <Card className="md:col-span-1">
                             <CardHeader className="pb-3">
-                                <CardTitle className="text-lg flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 text-lg">
                                     <Activity className="size-4 text-primary" />
                                     Signos Vitales
                                 </CardTitle>
-                                <CardDescription>Captura de métricas base.</CardDescription>
+                                <CardDescription>
+                                    Captura de métricas base.
+                                </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="weight" className="text-xs">Peso (kg)</Label>
-                                        <Input id="weight" type="number" step="0.01" value={data.weight} onChange={e => setData('weight', e.target.value)} />
+                                        <Label
+                                            htmlFor="weight"
+                                            className="text-xs"
+                                        >
+                                            Peso (kg)
+                                        </Label>
+                                        <Input
+                                            id="weight"
+                                            type="number"
+                                            step="0.01"
+                                            value={data.weight}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'weight',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="height" className="text-xs">Talla (cm)</Label>
-                                        <Input id="height" type="number" step="0.01" value={data.height} onChange={e => setData('height', e.target.value)} />
+                                        <Label
+                                            htmlFor="height"
+                                            className="text-xs"
+                                        >
+                                            Talla (cm)
+                                        </Label>
+                                        <Input
+                                            id="height"
+                                            type="number"
+                                            step="0.01"
+                                            value={data.height}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'height',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="temperature" className="text-xs">Temp (°C)</Label>
-                                        <Input id="temperature" type="number" step="0.1" value={data.temperature} onChange={e => setData('temperature', e.target.value)} />
+                                        <Label
+                                            htmlFor="temperature"
+                                            className="text-xs"
+                                        >
+                                            Temp (°C)
+                                        </Label>
+                                        <Input
+                                            id="temperature"
+                                            type="number"
+                                            step="0.1"
+                                            value={data.temperature}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'temperature',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="heart_rate" className="text-xs">FC (lpm)</Label>
-                                        <Input id="heart_rate" type="number" value={data.heart_rate} onChange={e => setData('heart_rate', e.target.value)} />
+                                        <Label
+                                            htmlFor="heart_rate"
+                                            className="text-xs"
+                                        >
+                                            FC (lpm)
+                                        </Label>
+                                        <Input
+                                            id="heart_rate"
+                                            type="number"
+                                            value={data.heart_rate}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'heart_rate',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                 </div>
 
                                 <Separator />
-                                <Label className="text-xs font-semibold uppercase text-muted-foreground">Presión Arterial</Label>
+                                <Label className="text-xs font-semibold text-muted-foreground uppercase">
+                                    Presión Arterial
+                                </Label>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="bp_systolic" className="text-xs">Sistólica</Label>
-                                        <Input id="bp_systolic" type="number" placeholder="120" value={data.bp_systolic} onChange={e => setData('bp_systolic', e.target.value)} />
+                                        <Label
+                                            htmlFor="bp_systolic"
+                                            className="text-xs"
+                                        >
+                                            Sistólica
+                                        </Label>
+                                        <Input
+                                            id="bp_systolic"
+                                            type="number"
+                                            placeholder="120"
+                                            value={data.bp_systolic}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'bp_systolic',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="bp_diastolic" className="text-xs">Diastólica</Label>
-                                        <Input id="bp_diastolic" type="number" placeholder="80" value={data.bp_diastolic} onChange={e => setData('bp_diastolic', e.target.value)} />
+                                        <Label
+                                            htmlFor="bp_diastolic"
+                                            className="text-xs"
+                                        >
+                                            Diastólica
+                                        </Label>
+                                        <Input
+                                            id="bp_diastolic"
+                                            type="number"
+                                            placeholder="80"
+                                            value={data.bp_diastolic}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'bp_diastolic',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="respiratory_rate" className="text-xs">FR (rpm)</Label>
-                                        <Input id="respiratory_rate" type="number" value={data.respiratory_rate} onChange={e => setData('respiratory_rate', e.target.value)} />
+                                        <Label
+                                            htmlFor="respiratory_rate"
+                                            className="text-xs"
+                                        >
+                                            FR (rpm)
+                                        </Label>
+                                        <Input
+                                            id="respiratory_rate"
+                                            type="number"
+                                            value={data.respiratory_rate}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'respiratory_rate',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="oxygen_saturation" className="text-xs">SpO2 (%)</Label>
-                                        <Input id="oxygen_saturation" type="number" value={data.oxygen_saturation} onChange={e => setData('oxygen_saturation', e.target.value)} />
+                                        <Label
+                                            htmlFor="oxygen_saturation"
+                                            className="text-xs"
+                                        >
+                                            SpO2 (%)
+                                        </Label>
+                                        <Input
+                                            id="oxygen_saturation"
+                                            type="number"
+                                            value={data.oxygen_saturation}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'oxygen_saturation',
+                                                    e.target.value,
+                                                )
+                                            }
+                                        />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
                         {/* Evolución Clínica */}
-                        <div className="md:col-span-2 space-y-6">
+                        <div className="space-y-6 md:col-span-2">
                             <Card>
                                 <CardHeader className="pb-3">
-                                    <CardTitle className="text-lg flex items-center gap-2">
+                                    <CardTitle className="flex items-center gap-2 text-lg">
                                         <ClipboardList className="size-4 text-primary" />
                                         Subjetivo y Objetivo
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="grid gap-4">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="reason_for_visit">Motivo de Consulta *</Label>
-                                        <Input 
-                                            id="reason_for_visit" 
-                                            placeholder="Ej. Dolor abdominal de 2 días..." 
-                                            value={data.reason_for_visit} 
-                                            onChange={e => setData('reason_for_visit', e.target.value)} 
+                                        <Label htmlFor="reason_for_visit">
+                                            Motivo de Consulta *
+                                        </Label>
+                                        <Input
+                                            id="reason_for_visit"
+                                            placeholder="Ej. Dolor abdominal de 2 días..."
+                                            value={data.reason_for_visit}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'reason_for_visit',
+                                                    e.target.value,
+                                                )
+                                            }
                                             required
                                         />
-                                        {errors.reason_for_visit && <p className="text-xs text-destructive">{errors.reason_for_visit}</p>}
+                                        {errors.reason_for_visit && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.reason_for_visit}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="clinical_findings">Hallazgos y Examen Físico</Label>
+                                        <Label htmlFor="clinical_findings">
+                                            Hallazgos y Examen Físico
+                                        </Label>
                                         <textarea
                                             id="clinical_findings"
                                             rows={4}
-                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             placeholder="Detalles observados durante la revisión..."
                                             value={data.clinical_findings}
-                                            onChange={e => setData('clinical_findings', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'clinical_findings',
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
                                     </div>
                                 </CardContent>
@@ -199,34 +380,52 @@ export default function Create({ patient, appointment }: Props) {
 
                             <Card>
                                 <CardHeader className="pb-3 text-indigo-600 dark:text-indigo-400">
-                                    <CardTitle className="text-lg flex items-center gap-2">
+                                    <CardTitle className="flex items-center gap-2 text-lg">
                                         <FileText className="size-4" />
                                         Análisis y Diagnóstico
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="grid gap-4">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="diagnosis">Diagnóstico *</Label>
+                                        <Label htmlFor="diagnosis">
+                                            Diagnóstico *
+                                        </Label>
                                         <textarea
                                             id="diagnosis"
                                             rows={2}
-                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                             placeholder="Diagnóstico clínico o CIE-10..."
                                             value={data.diagnosis}
-                                            onChange={e => setData('diagnosis', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'diagnosis',
+                                                    e.target.value,
+                                                )
+                                            }
                                             required
                                         />
-                                        {errors.diagnosis && <p className="text-xs text-destructive">{errors.diagnosis}</p>}
+                                        {errors.diagnosis && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.diagnosis}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="treatment_plan">Plan de Seguimiento / Notas Internas</Label>
+                                        <Label htmlFor="treatment_plan">
+                                            Plan de Seguimiento / Notas Internas
+                                        </Label>
                                         <textarea
                                             id="treatment_plan"
                                             rows={3}
-                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                             placeholder="Plan de acción, recomendaciones generales..."
                                             value={data.treatment_plan}
-                                            onChange={e => setData('treatment_plan', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'treatment_plan',
+                                                    e.target.value,
+                                                )
+                                            }
                                         />
                                     </div>
                                 </CardContent>
@@ -237,16 +436,19 @@ export default function Create({ patient, appointment }: Props) {
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
-                                            <CardTitle className="text-lg flex items-center gap-2 text-primary">
+                                            <CardTitle className="flex items-center gap-2 text-lg text-primary">
                                                 <Pill className="size-4" />
                                                 Receta Médica
                                             </CardTitle>
-                                            <CardDescription>Añade medicamentos para generar la receta imprimible.</CardDescription>
+                                            <CardDescription>
+                                                Añade medicamentos para generar
+                                                la receta imprimible.
+                                            </CardDescription>
                                         </div>
-                                        <Button 
-                                            type="button" 
-                                            variant="outline" 
-                                            size="sm" 
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="sm"
                                             onClick={addMedication}
                                             className="gap-1 border-primary text-primary hover:bg-primary hover:text-white"
                                         >
@@ -258,73 +460,151 @@ export default function Create({ patient, appointment }: Props) {
                                 <CardContent className="grid gap-4">
                                     {data.prescription_items.length > 0 ? (
                                         <div className="space-y-4">
-                                            {data.prescription_items.map((item, index) => (
-                                                <div key={index} className="grid gap-3 p-4 rounded-lg bg-background border relative group shadow-sm">
-                                                    <Button 
-                                                        type="button" 
-                                                        variant="ghost" 
-                                                        size="icon" 
-                                                        className="absolute top-2 right-2 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                                                        onClick={() => removeMedication(index)}
+                                            {data.prescription_items.map(
+                                                (item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="group relative grid gap-3 rounded-lg border bg-background p-4 shadow-sm"
                                                     >
-                                                        <Trash2 className="size-4" />
-                                                    </Button>
-                                                    
-                                                    <div className="grid gap-4 md:grid-cols-4">
-                                                        <div className="grid gap-1.5 md:col-span-1">
-                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Medicamento</Label>
-                                                            <Input 
-                                                                placeholder="Nombre / Sustancia" 
-                                                                value={item.medication} 
-                                                                onChange={e => updateMedication(index, 'medication', e.target.value)}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className="grid gap-1.5">
-                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Dosis</Label>
-                                                            <Input 
-                                                                placeholder="500mg, 1 cap, etc." 
-                                                                value={item.dosage} 
-                                                                onChange={e => updateMedication(index, 'dosage', e.target.value)}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className="grid gap-1.5">
-                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Frecuencia</Label>
-                                                            <Input 
-                                                                placeholder="Cada 8 horas..." 
-                                                                value={item.frequency} 
-                                                                onChange={e => updateMedication(index, 'frequency', e.target.value)}
-                                                            />
-                                                        </div>
-                                                        <div className="grid gap-1.5">
-                                                            <Label className="text-[10px] uppercase font-bold text-muted-foreground">Duración</Label>
-                                                            <Input 
-                                                                placeholder="Por 5 días..." 
-                                                                value={item.duration} 
-                                                                onChange={e => updateMedication(index, 'duration', e.target.value)}
-                                                            />
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="absolute top-2 right-2 text-destructive opacity-0 transition-opacity group-hover:opacity-100"
+                                                            onClick={() =>
+                                                                removeMedication(
+                                                                    index,
+                                                                )
+                                                            }
+                                                        >
+                                                            <Trash2 className="size-4" />
+                                                        </Button>
+
+                                                        <div className="grid gap-4 md:grid-cols-4">
+                                                            <div className="grid gap-1.5 md:col-span-1">
+                                                                <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                                    Medicamento
+                                                                </Label>
+                                                                <Input
+                                                                    placeholder="Nombre / Sustancia"
+                                                                    value={
+                                                                        item.medication
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        updateMedication(
+                                                                            index,
+                                                                            'medication',
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        )
+                                                                    }
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="grid gap-1.5">
+                                                                <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                                    Dosis
+                                                                </Label>
+                                                                <Input
+                                                                    placeholder="500mg, 1 cap, etc."
+                                                                    value={
+                                                                        item.dosage
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        updateMedication(
+                                                                            index,
+                                                                            'dosage',
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        )
+                                                                    }
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="grid gap-1.5">
+                                                                <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                                    Frecuencia
+                                                                </Label>
+                                                                <Input
+                                                                    placeholder="Cada 8 horas..."
+                                                                    value={
+                                                                        item.frequency
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        updateMedication(
+                                                                            index,
+                                                                            'frequency',
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            <div className="grid gap-1.5">
+                                                                <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                                                                    Duración
+                                                                </Label>
+                                                                <Input
+                                                                    placeholder="Por 5 días..."
+                                                                    value={
+                                                                        item.duration
+                                                                    }
+                                                                    onChange={(
+                                                                        e,
+                                                                    ) =>
+                                                                        updateMedication(
+                                                                            index,
+                                                                            'duration',
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            ))}
-                                            
+                                                ),
+                                            )}
+
                                             <div className="grid gap-1.5">
-                                                <Label htmlFor="prescription_instructions">Instrucciones Generales de la Receta</Label>
+                                                <Label htmlFor="prescription_instructions">
+                                                    Instrucciones Generales de
+                                                    la Receta
+                                                </Label>
                                                 <textarea
                                                     id="prescription_instructions"
                                                     rows={2}
-                                                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                                     placeholder="Ej. Guardar reposo, beber abundantes líquidos..."
-                                                    value={data.prescription_instructions}
-                                                    onChange={e => setData('prescription_instructions', e.target.value)}
+                                                    value={
+                                                        data.prescription_instructions
+                                                    }
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            'prescription_instructions',
+                                                            e.target.value,
+                                                        )
+                                                    }
                                                 />
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="py-8 text-center text-muted-foreground border border-dashed rounded-xl">
-                                            <Pill className="size-8 mx-auto mb-2 opacity-20" />
-                                            <p className="text-sm">No se han añadido medicamentos a esta consulta.</p>
+                                        <div className="rounded-xl border border-dashed py-8 text-center text-muted-foreground">
+                                            <Pill className="mx-auto mb-2 size-8 opacity-20" />
+                                            <p className="text-sm">
+                                                No se han añadido medicamentos a
+                                                esta consulta.
+                                            </p>
                                         </div>
                                     )}
                                 </CardContent>
@@ -332,37 +612,66 @@ export default function Create({ patient, appointment }: Props) {
 
                             {/* Cobro de Consulta (Rápido) */}
                             <Card className="border-emerald-500/20 bg-emerald-500/5 shadow-sm">
-                                <CardHeader className="pb-3 border-b border-emerald-500/10 mb-4">
+                                <CardHeader className="mb-4 border-b border-emerald-500/10 pb-3">
                                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                                         <DollarSign className="size-4" />
-                                        <CardTitle className="text-lg">Cobro de Consulta</CardTitle>
+                                        <CardTitle className="text-lg">
+                                            Cobro de Consulta
+                                        </CardTitle>
                                     </div>
-                                    <CardDescription>Registra el pago de forma rápida si se realiza en este momento.</CardDescription>
+                                    <CardDescription>
+                                        Registra el pago de forma rápida si se
+                                        realiza en este momento.
+                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-4 md:grid-cols-2">
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="payment_amount">Monto ($)</Label>
+                                        <Label htmlFor="payment_amount">
+                                            Monto ($)
+                                        </Label>
                                         <Input
                                             id="payment_amount"
                                             type="number"
                                             placeholder="0.00"
                                             value={data.payment_amount}
-                                            onChange={e => setData('payment_amount', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'payment_amount',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className="border-emerald-200 focus-visible:ring-emerald-500"
                                         />
-                                        {errors.payment_amount && <p className="text-xs text-destructive">{errors.payment_amount}</p>}
+                                        {errors.payment_amount && (
+                                            <p className="text-xs text-destructive">
+                                                {errors.payment_amount}
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="grid gap-1.5">
-                                        <Label htmlFor="payment_method">Método de Pago</Label>
+                                        <Label htmlFor="payment_method">
+                                            Método de Pago
+                                        </Label>
                                         <select
                                             id="payment_method"
-                                            className="flex h-10 w-full rounded-md border border-emerald-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            className="flex h-10 w-full rounded-md border border-emerald-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             value={data.payment_method}
-                                            onChange={e => setData('payment_method', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'payment_method',
+                                                    e.target.value,
+                                                )
+                                            }
                                         >
-                                            <option value="cash">Efectivo</option>
-                                            <option value="card">Tarjeta de Crédito/Débito</option>
-                                            <option value="transfer">Transferencia Bancaria</option>
+                                            <option value="cash">
+                                                Efectivo
+                                            </option>
+                                            <option value="card">
+                                                Tarjeta de Crédito/Débito
+                                            </option>
+                                            <option value="transfer">
+                                                Transferencia Bancaria
+                                            </option>
                                         </select>
                                     </div>
                                 </CardContent>
@@ -370,9 +679,15 @@ export default function Create({ patient, appointment }: Props) {
 
                             <div className="flex justify-end gap-3">
                                 <Link href={`/patients/${patient.id}`}>
-                                    <Button variant="outline" type="button">Cancelar</Button>
+                                    <Button variant="outline" type="button">
+                                        Cancelar
+                                    </Button>
                                 </Link>
-                                <Button type="submit" disabled={processing} className="px-8 gap-2">
+                                <Button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="gap-2 px-8"
+                                >
                                     <Save className="size-4" />
                                     Guardar Consulta
                                 </Button>

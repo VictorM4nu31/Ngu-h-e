@@ -1,10 +1,22 @@
 import { Head, useForm, Link } from '@inertiajs/react';
 import { Save, ArrowLeft, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -20,7 +32,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Agendar Cita', href: '#' },
 ];
 
-export default function Create({ patients, doctors, selected_patient_id }: Props) {
+export default function Create({
+    patients,
+    doctors,
+    selected_patient_id,
+}: Props) {
     const { data, setData, post, processing, errors } = useForm({
         patient_id: selected_patient_id || '',
         doctor_id: '',
@@ -49,14 +65,20 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Agendar Cita" />
 
-            <div className="flex flex-col gap-6 p-4 max-w-2xl mx-auto w-full">
+            <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/appointments">
-                        <Button variant="ghost" size="icon" aria-label="Go back">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Go back"
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold text-foreground">Agendar Nueva Cita</h1>
+                    <h1 className="text-2xl font-bold text-foreground">
+                        Agendar Nueva Cita
+                    </h1>
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid gap-6">
@@ -66,37 +88,69 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
                                 <Calendar className="size-5" />
                                 Detalles de la Cita
                             </CardTitle>
-                            <CardDescription>Seleccione el paciente, médico y horario.</CardDescription>
+                            <CardDescription>
+                                Seleccione el paciente, médico y horario.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="patient_id">Paciente *</Label>
-                                <Select onValueChange={(val) => setData('patient_id', val)} value={data.patient_id.toString()}>
+                                <Select
+                                    onValueChange={(val) =>
+                                        setData('patient_id', val)
+                                    }
+                                    value={data.patient_id.toString()}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Seleccione un paciente..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {patients.map(p => (
-                                            <SelectItem key={p.id} value={p.id.toString()}>{p.full_name}</SelectItem>
+                                        {patients.map((p) => (
+                                            <SelectItem
+                                                key={p.id}
+                                                value={p.id.toString()}
+                                            >
+                                                {p.full_name}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.patient_id && <p className="text-xs text-destructive">{errors.patient_id}</p>}
+                                {errors.patient_id && (
+                                    <p className="text-xs text-destructive">
+                                        {errors.patient_id}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="doctor_id">Médico Responsable *</Label>
-                                <Select onValueChange={(val) => setData('doctor_id', val)} value={data.doctor_id}>
+                                <Label htmlFor="doctor_id">
+                                    Médico Responsable *
+                                </Label>
+                                <Select
+                                    onValueChange={(val) =>
+                                        setData('doctor_id', val)
+                                    }
+                                    value={data.doctor_id}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Seleccione un médico..." />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {doctors.map(d => (
-                                            <SelectItem key={d.id} value={d.id.toString()}>{d.name}</SelectItem>
+                                        {doctors.map((d) => (
+                                            <SelectItem
+                                                key={d.id}
+                                                value={d.id.toString()}
+                                            >
+                                                {d.name}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                {errors.doctor_id && <p className="text-xs text-destructive">{errors.doctor_id}</p>}
+                                {errors.doctor_id && (
+                                    <p className="text-xs text-destructive">
+                                        {errors.doctor_id}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
@@ -106,10 +160,18 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
                                         id="start_time"
                                         type="datetime-local"
                                         value={data.start_time}
-                                        onChange={(e) => handleStartTimeChange(e.target.value)}
+                                        onChange={(e) =>
+                                            handleStartTimeChange(
+                                                e.target.value,
+                                            )
+                                        }
                                         required
                                     />
-                                    {errors.start_time && <p className="text-xs text-destructive">{errors.start_time}</p>}
+                                    {errors.start_time && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.start_time}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="end_time">Fin *</Label>
@@ -117,31 +179,47 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
                                         id="end_time"
                                         type="datetime-local"
                                         value={data.end_time}
-                                        onChange={(e) => setData('end_time', e.target.value)}
+                                        onChange={(e) =>
+                                            setData('end_time', e.target.value)
+                                        }
                                         required
                                     />
-                                    {errors.end_time && <p className="text-xs text-destructive">{errors.end_time}</p>}
+                                    {errors.end_time && (
+                                        <p className="text-xs text-destructive">
+                                            {errors.end_time}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="reason">Motivo de Consulta</Label>
+                                <Label htmlFor="reason">
+                                    Motivo de Consulta
+                                </Label>
                                 <Input
                                     id="reason"
                                     placeholder="Ej. Dolor de cabeza, Seguimiento..."
                                     value={data.reason}
-                                    onChange={(e) => setData('reason', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('reason', e.target.value)
+                                    }
                                 />
-                                {errors.reason && <p className="text-xs text-destructive">{errors.reason}</p>}
+                                {errors.reason && (
+                                    <p className="text-xs text-destructive">
+                                        {errors.reason}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid gap-2">
                                 <Label htmlFor="notes">Notas adicionales</Label>
                                 <textarea
                                     id="notes"
-                                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     value={data.notes}
-                                    onChange={(e) => setData('notes', e.target.value)}
+                                    onChange={(e) =>
+                                        setData('notes', e.target.value)
+                                    }
                                 />
                             </div>
                         </CardContent>
@@ -149,9 +227,15 @@ export default function Create({ patients, doctors, selected_patient_id }: Props
 
                     <div className="flex justify-end gap-3">
                         <Link href="/appointments">
-                            <Button variant="outline" type="button">Cancelar</Button>
+                            <Button variant="outline" type="button">
+                                Cancelar
+                            </Button>
                         </Link>
-                        <Button type="submit" disabled={processing} className="flex items-center gap-2">
+                        <Button
+                            type="submit"
+                            disabled={processing}
+                            className="flex items-center gap-2"
+                        >
                             <Save className="size-4" />
                             Agendar Cita
                         </Button>

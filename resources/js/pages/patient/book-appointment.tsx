@@ -1,10 +1,5 @@
 import { Head, useForm, Link } from '@inertiajs/react';
-import {
-    ChevronLeft,
-    User,
-    AlertCircle,
-    CheckCircle2,
-} from 'lucide-react';
+import { ChevronLeft, User, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -87,7 +82,11 @@ export default function BookAppointment({ doctors }: Props) {
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/my-appointments">
-                        <Button variant="ghost" size="icon" aria-label="Go back">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="Go back"
+                        >
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>

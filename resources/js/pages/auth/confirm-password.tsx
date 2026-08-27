@@ -12,7 +12,9 @@ export default function ConfirmPassword() {
     return (
         <AuthLayout
             title={__('Confirm your password')}
-            description={__('This is a secure area of the application. Please confirm your password before continuing.')}
+            description={__(
+                'This is a secure area of the application. Please confirm your password before continuing.',
+            )}
         >
             <Head title={__('Confirm password')} />
 

@@ -45,20 +45,26 @@ export default function TwoFactor({
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={__('Two-Factor Authentication')} />
 
-            <h1 className="sr-only">{__('Two-Factor Authentication Settings')}</h1>
+            <h1 className="sr-only">
+                {__('Two-Factor Authentication Settings')}
+            </h1>
 
             <SettingsLayout>
                 <div className="space-y-6">
                     <Heading
                         variant="small"
                         title={__('Two-Factor Authentication')}
-                        description={__('Manage your two-factor authentication settings')}
+                        description={__(
+                            'Manage your two-factor authentication settings',
+                        )}
                     />
                     {twoFactorEnabled ? (
                         <div className="flex flex-col items-start justify-start space-y-4">
                             <Badge variant="default">{__('Enabled')}</Badge>
                             <p className="text-muted-foreground">
-                                {__('With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.')}
+                                {__(
+                                    'With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.',
+                                )}
                             </p>
 
                             <TwoFactorRecoveryCodes
@@ -83,9 +89,13 @@ export default function TwoFactor({
                         </div>
                     ) : (
                         <div className="flex flex-col items-start justify-start space-y-4">
-                            <Badge variant="destructive">{__('Disabled')}</Badge>
+                            <Badge variant="destructive">
+                                {__('Disabled')}
+                            </Badge>
                             <p className="text-muted-foreground">
-                                {__('When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.')}
+                                {__(
+                                    'When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.',
+                                )}
                             </p>
 
                             <div>
