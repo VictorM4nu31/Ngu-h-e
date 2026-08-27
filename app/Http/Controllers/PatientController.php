@@ -18,9 +18,9 @@ class PatientController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('document_id', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('document_id', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -57,10 +57,10 @@ class PatientController extends Controller
     {
         return \Inertia\Inertia::render('patients/show', [
             'patient' => $patient->load([
-                'attachments', 
-                'consultations' => function($q) {
+                'attachments',
+                'consultations' => function ($q) {
                     $q->with('doctor')->latest();
-                }
+                },
             ]),
         ]);
     }
@@ -90,9 +90,7 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        if (!request()->user()->hasRole('admin')) {
-            abort(403, 'Solo el administrador puede eliminar pacientes.');
-        }
+        $this->authorize('delete', $patient);
 
         $patient->delete();
 

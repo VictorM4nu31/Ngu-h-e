@@ -97,12 +97,7 @@ class ConsultationController extends Controller
      */
     public function show(Consultation $consultation)
     {
-        $user = request()->user();
-
-        // Solo el doctor asignado o un admin puede ver la consulta
-        if ($user->hasRole('doctor') && $consultation->doctor_id !== $user->id) {
-            abort(403, 'No tienes acceso a esta consulta.');
-        }
+        $this->authorize('view', $consultation);
 
         return Inertia::render('consultations/show', [
             'consultation' => $consultation->load(['patient', 'doctor', 'prescription']),

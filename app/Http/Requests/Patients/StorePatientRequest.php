@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Patients;
 
+use App\Models\Patient;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePatientRequest extends FormRequest
@@ -11,7 +12,7 @@ class StorePatientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Simplified for now, or check $this->user()->can('patients.create')
+        return $this->user()?->can('create', Patient::class) ?? false;
     }
 
     /**
