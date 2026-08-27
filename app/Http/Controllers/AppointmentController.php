@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Appointments\CreateAppointmentAction;
+use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Actions\Appointments\UpdateAppointmentAction;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -56,7 +58,7 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CreateAppointmentAction $action)
+    public function store(Request $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
@@ -67,6 +69,12 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        $availability->noOverlap(
+            (int) $validated['doctor_id'],
+            Carbon::parse($validated['start_time']),
+            Carbon::parse($validated['end_time']),
+        );
+
         $action->execute($validated);
 
         return redirect()->route('appointments.index')->with('success', 'Cita agendada correctamente.');
@@ -75,7 +83,7 @@ class AppointmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Appointment $appointment, UpdateAppointmentAction $action)
+    public function update(Request $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
         $validated = $request->validate([
             'status' => 'sometimes|in:scheduled,confirmed,completed,cancelled,no_show',
@@ -83,6 +91,13 @@ class AppointmentController extends Controller
             'end_time' => 'sometimes|date|after:start_time',
             'notes' => 'nullable|string',
         ]);
+
+        $availability->noOverlap(
+            (int) $appointment->doctor_id,
+            Carbon::parse($validated['start_time'] ?? $appointment->start_time),
+            Carbon::parse($validated['end_time'] ?? $appointment->end_time),
+            $appointment->id,
+        );
 
         $action->execute($appointment, $validated);
 

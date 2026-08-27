@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\User;
-use App\Models\Patient;
 use App\Models\Appointment;
-use Spatie\Permission\Models\Role;
+use App\Models\Patient;
+use App\Models\User;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
     Role::firstOrCreate(['name' => 'doctor']);
@@ -39,12 +39,12 @@ test('patient can view availability slots', function () {
     $response = $this->actingAs($patient_user)
         ->get(route('api.availability', [
             'doctor_id' => $doctor->id,
-            'date' => $date
+            'date' => $date,
         ]));
 
     $response->assertOk();
     $response->assertJsonStructure(['slots']);
-    
+
     // Debería haber un slot de las 09:00
     $response->assertJsonFragment(['time' => '09:00', 'available' => true]);
 });
@@ -80,7 +80,7 @@ test('patient can book a free appointment slot', function () {
             'doctor_id' => $doctor->id,
             'date' => $date,
             'time' => $time,
-            'reason' => 'Consulta de prueba'
+            'reason' => 'Consulta de prueba',
         ]);
 
     $response->assertRedirect(route('patient.appointments'));
@@ -88,7 +88,7 @@ test('patient can book a free appointment slot', function () {
         'patient_id' => $patient->id,
         'doctor_id' => $doctor->id,
         'reason' => 'Consulta de prueba',
-        'status' => 'scheduled'
+        'status' => 'scheduled',
     ]);
 });
 
@@ -116,7 +116,7 @@ test('patient cannot book an occupied slot', function () {
         'doctor_id' => $doctor->id,
         'start_time' => $start,
         'end_time' => $end,
-        'status' => 'confirmed'
+        'status' => 'confirmed',
     ]);
 
     $dayOfWeek = now()->addDay()->dayOfWeek;
@@ -135,12 +135,12 @@ test('patient cannot book an occupied slot', function () {
             'doctor_id' => $doctor->id,
             'date' => $date,
             'time' => $time,
-            'reason' => 'Intento fallido'
+            'reason' => 'Intento fallido',
         ]);
 
     $response->assertSessionHasErrors(['time']);
     $this->assertDatabaseMissing('appointments', [
-        'reason' => 'Intento fallido'
+        'reason' => 'Intento fallido',
     ]);
 });
 
@@ -174,7 +174,7 @@ test('patient cannot book a slot in the past', function () {
     $response = $this->actingAs($patient_user)
         ->get(route('api.availability', [
             'doctor_id' => $doctor->id,
-            'date' => $date
+            'date' => $date,
         ]));
 
     // Los slots antiguos deben estar marcados como NO disponibles
@@ -182,4 +182,44 @@ test('patient cannot book a slot in the past', function () {
     foreach ($slots as $slot) {
         $this->assertFalse($slot['available']);
     }
+});
+
+test('patient cannot book a slot outside the doctor schedule', function () {
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+
+    $patient_user = User::factory()->create();
+    $patient_user->assignRole('patient');
+    Patient::create([
+        'user_id' => $patient_user->id,
+        'full_name' => 'Patient 1',
+        'email' => 'p1@test.com',
+        'document_id' => '1',
+    ]);
+
+    $date = now()->addDay()->format('Y-m-d');
+    $dayOfWeek = now()->addDay()->dayOfWeek;
+
+    // El doctor solo atiende de 08:00 a 12:00
+    \App\Models\DoctorSchedule::create([
+        'user_id' => $doctor->id,
+        'day_of_week' => $dayOfWeek,
+        'is_working' => true,
+        'start_time' => '08:00:00',
+        'end_time' => '12:00:00',
+    ]);
+
+    // Intentar reservar a las 16:00, fuera del horario de atención
+    $response = $this->actingAs($patient_user)
+        ->post(route('patient.appointments.store'), [
+            'doctor_id' => $doctor->id,
+            'date' => $date,
+            'time' => '16:00',
+            'reason' => 'Fuera de horario',
+        ]);
+
+    $response->assertSessionHasErrors(['time']);
+    $this->assertDatabaseMissing('appointments', [
+        'reason' => 'Fuera de horario',
+    ]);
 });
