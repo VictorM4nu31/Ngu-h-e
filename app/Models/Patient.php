@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Concerns\SerializesWithTimezone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SerializesWithTimezone, SoftDeletes;
 
     protected $fillable = [
         'user_id',

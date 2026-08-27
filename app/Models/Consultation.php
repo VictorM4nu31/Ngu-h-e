@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\SerializesWithTimezone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Consultation extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SerializesWithTimezone, SoftDeletes;
 
     protected $fillable = [
         'patient_id',

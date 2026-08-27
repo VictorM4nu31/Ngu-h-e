@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use App\Concerns\SerializesWithTimezone;
 use Illuminate\Database\Eloquent\Model;
 
 class DoctorSchedule extends Model
 {
+    use SerializesWithTimezone;
+
     protected $fillable = [
         'user_id',
         'day_of_week',
         'start_time',
         'end_time',
-        'is_working'
+        'is_working',
     ];
 
     protected $casts = [
