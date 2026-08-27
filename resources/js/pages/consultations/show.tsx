@@ -72,7 +72,7 @@ export default function Show({ consultation }: Props) {
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center gap-4">
                     <Link href={`/patients/${consultation.patient.id}`}>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" aria-label="Go back">
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>

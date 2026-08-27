@@ -168,6 +168,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 <Button
                                     variant="outline"
                                     size="icon"
+                                    aria-label="Previous day"
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() - 1);
@@ -192,6 +193,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 <Button
                                     variant="outline"
                                     size="icon"
+                                    aria-label="Next day"
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() + 1);
