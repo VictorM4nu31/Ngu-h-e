@@ -12,7 +12,7 @@ class AttachmentController extends Controller
     public function storePatient(Request $request, Patient $patient, UploadAttachmentAction $action)
     {
         $request->validate([
-            'file' => 'required|file|max:10240', // 10MB max
+            'file' => 'required|file|max:10240|mimetypes:image/jpeg,image/png,image/webp,application/pdf',
             'label' => 'nullable|string|max:255',
         ]);
 
