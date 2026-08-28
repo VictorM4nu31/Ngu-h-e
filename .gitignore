@@ -11,6 +11,14 @@
 /resources/js/wayfinder
 /vendor
 /.playwright-mcp/
+/.agents/
+/.cursor/
+/.github/skills/
+/.claude/
+/.aider/
+/opencode.json
+/boost.json
+/AGENTS.md
 .DS_Store
 .env
 .env.backup
