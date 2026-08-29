@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Appointments\CreateAppointmentAction;
-use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Actions\Appointments\UpdateAppointmentAction;
 use App\Http\Requests\Appointments\StoreAppointmentRequest;
 use App\Http\Requests\Appointments\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -60,17 +58,11 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAppointmentRequest $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
+    public function store(StoreAppointmentRequest $request, CreateAppointmentAction $action)
     {
         $this->authorize('create', Appointment::class);
 
         $validated = $request->validated();
-
-        $availability->noOverlap(
-            (int) $validated['doctor_id'],
-            Carbon::parse($validated['start_time']),
-            Carbon::parse($validated['end_time']),
-        );
 
         $action->execute($validated);
 
@@ -80,18 +72,11 @@ class AppointmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAppointmentRequest $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment, UpdateAppointmentAction $action)
     {
         $this->authorize('update', $appointment);
 
         $validated = $request->validated();
-
-        $availability->noOverlap(
-            (int) $appointment->doctor_id,
-            Carbon::parse($validated['start_time'] ?? $appointment->start_time),
-            Carbon::parse($validated['end_time'] ?? $appointment->end_time),
-            $appointment->id,
-        );
 
         $action->execute($appointment, $validated);
 

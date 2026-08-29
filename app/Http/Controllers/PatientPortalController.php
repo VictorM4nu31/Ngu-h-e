@@ -12,6 +12,7 @@ use App\Models\Prescription;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class PatientPortalController extends Controller
@@ -111,6 +112,13 @@ class PatientPortalController extends Controller
 
         $start_time = Carbon::createFromFormat('Y-m-d H:i', $validated['date'].' '.$validated['time']);
         $end_time = $start_time->copy()->addMinutes(30);
+
+        // Rechazar horarios en el pasado
+        if ($start_time->isPast()) {
+            throw ValidationException::withMessages([
+                'time' => 'Debes seleccionar un horario futuro.',
+            ]);
+        }
 
         // Verificar que el horario esté dentro del horario de atención y no se solape
         $availability->withinSchedule((int) $validated['doctor_id'], $start_time, $end_time, 'time');

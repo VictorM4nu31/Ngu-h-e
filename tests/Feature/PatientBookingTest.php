@@ -223,3 +223,33 @@ test('patient cannot book a slot outside the doctor schedule', function () {
         'reason' => 'Fuera de horario',
     ]);
 });
+
+test('patient cannot book a slot in the past on the server', function () {
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+
+    $patient_user = User::factory()->create();
+    $patient_user->assignRole('patient');
+    Patient::create([
+        'user_id' => $patient_user->id,
+        'full_name' => 'Patient 1',
+        'email' => 'p1@test.com',
+        'document_id' => '1',
+    ]);
+
+    $date = now()->subDay()->format('Y-m-d');
+    $time = '10:00';
+
+    $response = $this->actingAs($patient_user)
+        ->post(route('patient.appointments.store'), [
+            'doctor_id' => $doctor->id,
+            'date' => $date,
+            'time' => $time,
+            'reason' => 'Horario pasado',
+        ]);
+
+    $response->assertSessionHasErrors(['time']);
+    $this->assertDatabaseMissing('appointments', [
+        'reason' => 'Horario pasado',
+    ]);
+});

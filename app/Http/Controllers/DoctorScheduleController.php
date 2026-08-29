@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DoctorSchedules\StoreDoctorScheduleRequest;
 use App\Models\DoctorSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DoctorScheduleController extends Controller
@@ -51,19 +52,21 @@ class DoctorScheduleController extends Controller
 
         $user = $request->user();
 
-        foreach ($validated['schedules'] as $scheduleData) {
-            DoctorSchedule::updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'day_of_week' => $scheduleData['day_of_week'],
-                ],
-                [
-                    'is_working' => $scheduleData['is_working'],
-                    'start_time' => $scheduleData['is_working'] ? $scheduleData['start_time'] : null,
-                    'end_time' => $scheduleData['is_working'] ? $scheduleData['end_time'] : null,
-                ]
-            );
-        }
+        DB::transaction(function () use ($validated, $user) {
+            foreach ($validated['schedules'] as $scheduleData) {
+                DoctorSchedule::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'day_of_week' => $scheduleData['day_of_week'],
+                    ],
+                    [
+                        'is_working' => $scheduleData['is_working'],
+                        'start_time' => $scheduleData['is_working'] ? $scheduleData['start_time'] : null,
+                        'end_time' => $scheduleData['is_working'] ? $scheduleData['end_time'] : null,
+                    ]
+                );
+            }
+        });
 
         return redirect()->back()->with('success', 'Horario de atención actualizado correctamente.');
     }
