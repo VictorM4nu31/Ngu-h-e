@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Appointment;
+use App\Models\Attachment;
 use App\Models\Consultation;
 use App\Models\Patient;
 use App\Models\Prescription;
@@ -85,4 +87,40 @@ test('a patient only views their own prescription', function () {
     expect($patientB->can('view', $prescription))->toBeFalse();
     expect($doctor->can('view', $prescription))->toBeTrue();
     expect(roleUser('receptionist')->can('view', $prescription))->toBeTrue();
+});
+
+test('a doctor only manages their own appointments', function () {
+    $doctor = roleUser('doctor');
+    $otherDoctor = roleUser('doctor');
+    $patient = Patient::create(['full_name' => 'Paciente A', 'document_id' => 'POL-5']);
+
+    $appointment = Appointment::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+        'start_time' => now()->addDay(),
+        'end_time' => now()->addDay()->addMinutes(30),
+        'status' => 'scheduled',
+    ]);
+    $other = Appointment::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $otherDoctor->id,
+        'start_time' => now()->addDay(),
+        'end_time' => now()->addDay()->addMinutes(30),
+        'status' => 'scheduled',
+    ]);
+
+    expect($doctor->can('update', $appointment))->toBeTrue();
+    expect($doctor->can('delete', $appointment))->toBeTrue();
+    expect($doctor->can('update', $other))->toBeFalse();
+    expect($doctor->can('delete', $other))->toBeFalse();
+
+    expect(roleUser('admin')->can('delete', $other))->toBeTrue();
+    expect(roleUser('receptionist')->can('update', $other))->toBeTrue();
+});
+
+test('only staff can manage attachments', function () {
+    expect(roleUser('admin')->can('create', Attachment::class))->toBeTrue();
+    expect(roleUser('doctor')->can('create', Attachment::class))->toBeTrue();
+    expect(roleUser('receptionist')->can('create', Attachment::class))->toBeTrue();
+    expect(roleUser('patient')->can('create', Attachment::class))->toBeFalse();
 });

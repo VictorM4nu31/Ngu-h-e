@@ -11,6 +11,8 @@ class AttachmentController extends Controller
 {
     public function storePatient(Request $request, Patient $patient, UploadAttachmentAction $action)
     {
+        $this->authorize('create', Attachment::class);
+
         $request->validate([
             'file' => 'required|file|max:10240|mimetypes:image/jpeg,image/png,image/webp,application/pdf',
             'label' => 'nullable|string|max:255',
@@ -23,6 +25,8 @@ class AttachmentController extends Controller
 
     public function destroy(Attachment $attachment)
     {
+        $this->authorize('delete', $attachment);
+
         \Illuminate\Support\Facades\Storage::disk('public')->delete($attachment->file_path);
         $attachment->delete();
 

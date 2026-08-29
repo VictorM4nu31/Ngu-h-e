@@ -62,6 +62,8 @@ class AppointmentController extends Controller
      */
     public function store(StoreAppointmentRequest $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
+        $this->authorize('create', Appointment::class);
+
         $validated = $request->validated();
 
         $availability->noOverlap(
@@ -80,6 +82,8 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
+        $this->authorize('update', $appointment);
+
         $validated = $request->validated();
 
         $availability->noOverlap(
@@ -99,6 +103,8 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
+        $this->authorize('delete', $appointment);
+
         $appointment->delete();
 
         return redirect()->back()->with('success', 'Cita eliminada.');
