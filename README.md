@@ -70,6 +70,37 @@ vendor/bin/pint --dirty --format agent   # estilo PHP
 
 Las pruebas de feature usan `RefreshDatabase` con SQLite en memoria (`:memory:`), por lo que cada archivo parte de una BD limpia y crea solo los roles/datos que necesita.
 
+## Iconos / logo de la aplicación
+
+El logo y los favicons se generan a partir de `public/logo.jpg` (1024×1024). El script `scripts/convert-logo.js` produce:
+
+| Archivo | Uso |
+|---------|-----|
+| `public/favicon.ico` (16/32/48) | Icono de la pestaña del navegador |
+| `public/apple-touch-icon.png` (180) | Icono iOS |
+| `public/icon-192.png` / `public/icon-512.png` | Web app manifest (PWA) |
+| `public/logo.png` (512) | Logo mostrado en sidebar, header y pantallas de login |
+
+Referencias en la app:
+
+- `resources/views/app.blade.php` → `<link rel="icon">`, `apple-touch-icon` y `site.webmanifest`.
+- `resources/js/components/app-logo-icon.tsx` → renderiza `public/logo.png` como `<img>` dentro de una caja con color (se usa en `app-logo`, `app-header`, `auth-*`).
+
+### Cómo reemplazar el logo de nuevo
+
+1. Sustituye `public/logo.jpg` por tu nueva imagen (idealmente cuadrada, ≥ 1024×1024).
+2. Regenera los assets (instala `sharp` temporalmente):
+
+   ```bash
+   npm install -D sharp
+   node scripts/convert-logo.js
+   npm uninstall sharp          # no deja la dependencia en el proyecto
+   ```
+
+3. Recompila el frontend: `npm run build`.
+
+> `sharp` se instala solo de forma transitoria; no figura en `package.json` del proyecto.
+
 ## Documentación de mejoras
 
 Este repo se construyó por ramas de trabajo independientes a partir de una auditoría de calidad (seguridad, integridad de agenda, i18n y accesibilidad). Cada rama es mergeable por sí sola; el historial refleja esas unidades de cambio.
