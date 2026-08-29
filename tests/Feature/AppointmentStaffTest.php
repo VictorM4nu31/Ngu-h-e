@@ -129,3 +129,34 @@ test('staff cannot be assigned as doctor if the user lacks the doctor role', fun
         ])
         ->assertSessionHasErrors(['doctor_id']);
 });
+
+test('an owner can edit an appointment', function () {
+    [$admin, $doctor, $patient] = makeStaffContext();
+
+    $start = Carbon::tomorrow()->setTime(10, 0);
+    $appointment = Appointment::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+        'start_time' => $start,
+        'end_time' => $start->copy()->addMinutes(30),
+        'status' => 'scheduled',
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('appointments.edit', $appointment))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('appointments/edit'));
+
+    $this->actingAs($admin)
+        ->put(route('appointments.update', $appointment), [
+            'start_time' => $start->format('Y-m-d H:i'),
+            'end_time' => $start->copy()->addMinutes(30)->format('Y-m-d H:i'),
+            'reason' => 'Motivo actualizado',
+        ])
+        ->assertRedirect();
+
+    $this->assertDatabaseHas('appointments', [
+        'id' => $appointment->id,
+        'reason' => 'Motivo actualizado',
+    ]);
+});

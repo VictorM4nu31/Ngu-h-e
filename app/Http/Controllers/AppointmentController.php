@@ -55,6 +55,15 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function edit(Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        return Inertia::render('appointments/edit', [
+            'appointment' => $appointment->load(['patient', 'doctor']),
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

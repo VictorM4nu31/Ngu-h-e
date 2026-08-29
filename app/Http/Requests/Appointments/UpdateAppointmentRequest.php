@@ -27,6 +27,7 @@ class UpdateAppointmentRequest extends FormRequest
             'status' => ['sometimes', Rule::enum(AppointmentStatus::class)],
             'start_time' => ['sometimes', 'date'],
             'end_time' => ['sometimes', 'date', 'after:start_time'],
+            'reason' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ];
     }
