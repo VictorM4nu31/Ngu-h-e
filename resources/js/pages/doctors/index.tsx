@@ -3,7 +3,7 @@ import { Plus, Trash2, UserCog, Stethoscope, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface StaffMember {
     id: number;
@@ -13,13 +13,25 @@ interface StaffMember {
 }
 
 interface Props {
-    staff: StaffMember[];
+    staff: {
+        data: StaffMember[];
+        links: PaginationLink[];
+        current_page?: number;
+        last_page?: number;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Gestión de Personal', href: '/staff' },
 ];
+
+const decodeLabel = (label: string) =>
+    label
+        .replace(/&laquo;/g, '«')
+        .replace(/&raquo;/g, '»')
+        .replace(/&lsaquo;/g, '‹')
+        .replace(/&rsaquo;/g, '›');
 
 export default function Index({ staff }: Props) {
     const handleDelete = (id: number) => {
@@ -69,8 +81,8 @@ export default function Index({ staff }: Props) {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y">
-                                    {staff.length > 0 ? (
-                                        staff.map((member) => (
+                                    {staff.data.length > 0 ? (
+                                        staff.data.map((member) => (
                                             <tr
                                                 key={member.id}
                                                 className="transition-colors hover:bg-muted/50"
@@ -144,6 +156,24 @@ export default function Index({ staff }: Props) {
                         </div>
                     </CardContent>
                 </Card>
+
+                {staff.last_page && staff.last_page > 1 && (
+                    <div className="flex justify-center gap-2">
+                        {staff.links.map((link, i) => (
+                            <Link
+                                key={i}
+                                href={link.url || '#'}
+                                className={`rounded-md px-3 py-1 text-sm ${
+                                    link.active
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-muted hover:bg-muted/80'
+                                } ${!link.url && 'cursor-not-allowed opacity-50'}`}
+                            >
+                                {decodeLabel(link.label)}
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

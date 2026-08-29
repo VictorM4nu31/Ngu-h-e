@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Doctors\StoreDoctorRequest;
 use App\Http\Requests\Doctors\UpdateDoctorRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class DoctorController extends Controller
@@ -12,9 +13,13 @@ class DoctorController extends Controller
     /**
      * Display a listing of the staff members.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $staff = User::role(['doctor', 'receptionist'])->with('roles')->get();
+        $staff = User::role(['doctor', 'receptionist'])
+            ->with('roles')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('doctors/index', [
             'staff' => $staff,
