@@ -281,7 +281,7 @@ export default function Reports({
                                             paddingAngle={5}
                                             dataKey="value"
                                         >
-                                            {pieData.map((entry, index) => (
+                                            {pieData.map((_entry, index) => (
                                                 <Cell
                                                     key={`cell-${index}`}
                                                     fill={
