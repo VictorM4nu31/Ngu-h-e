@@ -33,6 +33,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
+import { calculateAge, formatSize } from '@/lib/format';
 import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
@@ -107,31 +108,11 @@ export default function Show({ patient }: Props) {
         { title: patient.full_name, href: '#' },
     ];
 
-    const calculateAge = (dateString: string) => {
-        if (!dateString) return 'N/A';
-        const today = new Date();
-        const birthDate = new Date(dateString);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    };
-
     const handleUpload = (e: React.FormEvent) => {
         e.preventDefault();
         post(`/patients/${patient.id}/attachments`, {
             onSuccess: () => reset(),
         });
-    };
-
-    const formatSize = (bytes: number) => {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
     // Unified Timeline Logic
@@ -183,7 +164,9 @@ export default function Show({ patient }: Props) {
                                 </Badge>
                                 <span>•</span>
                                 <span>
-                                    {calculateAge(patient.birth_date)} años
+                                    {calculateAge(patient.birth_date) ??
+                                        __('N/A')}{' '}
+                                    {__('years')}
                                 </span>
                                 <span>•</span>
                                 <span className="capitalize">

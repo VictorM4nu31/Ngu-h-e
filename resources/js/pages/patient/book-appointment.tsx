@@ -12,6 +12,13 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
 import { localDateInputValue } from '@/lib/date';
@@ -127,24 +134,28 @@ export default function BookAppointment({ doctors }: Props) {
                                 <Label htmlFor="doctor">
                                     {__('Specialist Doctor')}
                                 </Label>
-                                <select
-                                    id="doctor"
-                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
-                                    value={data.doctor_id}
-                                    onChange={(e) =>
-                                        setData('doctor_id', e.target.value)
+                                <Select
+                                    value={data.doctor_id || undefined}
+                                    onValueChange={(val) =>
+                                        setData('doctor_id', val)
                                     }
-                                    required
                                 >
-                                    <option value="">
-                                        {__('Select a doctor')}
-                                    </option>
-                                    {doctors.map((dr) => (
-                                        <option key={dr.id} value={dr.id}>
-                                            {dr.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger id="doctor">
+                                        <SelectValue
+                                            placeholder={__('Select a doctor')}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {doctors.map((dr) => (
+                                            <SelectItem
+                                                key={dr.id}
+                                                value={dr.id.toString()}
+                                            >
+                                                {dr.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <InputError message={errors.doctor_id} />
                             </div>
 

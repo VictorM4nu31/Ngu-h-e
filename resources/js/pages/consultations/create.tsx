@@ -20,6 +20,13 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
@@ -682,27 +689,30 @@ export default function Create({ patient, appointment }: Props) {
                                         <Label htmlFor="payment_method">
                                             {__('Payment Method')}
                                         </Label>
-                                        <select
-                                            id="payment_method"
-                                            className="flex h-10 w-full rounded-md border border-emerald-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                                        <Select
                                             value={data.payment_method}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'payment_method',
-                                                    e.target.value,
-                                                )
+                                            onValueChange={(val) =>
+                                                setData('payment_method', val)
                                             }
                                         >
-                                            <option value="cash">
-                                                {__('Cash')}
-                                            </option>
-                                            <option value="card">
-                                                {__('Credit/Debit Card')}
-                                            </option>
-                                            <option value="transfer">
-                                                {__('Bank Transfer')}
-                                            </option>
-                                        </select>
+                                            <SelectTrigger
+                                                id="payment_method"
+                                                className="border-emerald-200 focus-visible:ring-emerald-500"
+                                            >
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="cash">
+                                                    {__('Cash')}
+                                                </SelectItem>
+                                                <SelectItem value="card">
+                                                    {__('Credit/Debit Card')}
+                                                </SelectItem>
+                                                <SelectItem value="transfer">
+                                                    {__('Bank Transfer')}
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </CardContent>
                             </Card>
