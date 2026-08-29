@@ -21,6 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem, PageProps } from '@/types';
 
@@ -361,7 +362,7 @@ export default function Create({ patient, appointment }: Props) {
                                         <Label htmlFor="clinical_findings">
                                             Hallazgos y Examen Físico
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="clinical_findings"
                                             rows={4}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -390,7 +391,7 @@ export default function Create({ patient, appointment }: Props) {
                                         <Label htmlFor="diagnosis">
                                             Diagnóstico *
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="diagnosis"
                                             rows={2}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -414,7 +415,7 @@ export default function Create({ patient, appointment }: Props) {
                                         <Label htmlFor="treatment_plan">
                                             Plan de Seguimiento / Notas Internas
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="treatment_plan"
                                             rows={3}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -581,7 +582,7 @@ export default function Create({ patient, appointment }: Props) {
                                                     Instrucciones Generales de
                                                     la Receta
                                                 </Label>
-                                                <textarea
+                                                <Textarea
                                                     id="prescription_instructions"
                                                     rows={2}
                                                     className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"

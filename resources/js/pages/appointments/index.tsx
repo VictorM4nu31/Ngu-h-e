@@ -13,6 +13,7 @@ import {
     Activity,
 } from 'lucide-react';
 import { useState } from 'react';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -313,25 +314,27 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                 </Link>
                                             )}
                                         {app.status !== 'completed' && (
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-destructive"
-                                                onClick={() => {
-                                                    if (
-                                                        confirm(
-                                                            '¿Cancelar cita?',
-                                                        )
+                                            <ConfirmDialog
+                                                title="Cancelar cita"
+                                                description="¿Estás seguro de cancelar esta cita?"
+                                                confirmLabel="Cancelar"
+                                                onConfirm={() =>
+                                                    updateStatus(
+                                                        app.id,
+                                                        'cancelled',
                                                     )
-                                                        updateStatus(
-                                                            app.id,
-                                                            'cancelled',
-                                                        );
-                                                }}
-                                            >
-                                                <XCircle className="mr-1.5 size-4" />
-                                                Cancelar
-                                            </Button>
+                                                }
+                                                trigger={
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-destructive"
+                                                    >
+                                                        <XCircle className="mr-1.5 size-4" />
+                                                        Cancelar
+                                                    </Button>
+                                                }
+                                            />
                                         )}
                                     </div>
                                 </div>

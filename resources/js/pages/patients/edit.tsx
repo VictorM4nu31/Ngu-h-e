@@ -11,6 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -243,7 +244,7 @@ export default function Edit({ patient }: Props) {
                             <CardContent className="grid gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="allergies">Alergias</Label>
-                                    <textarea
+                                    <Textarea
                                         id="allergies"
                                         className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.allergies}
@@ -257,7 +258,7 @@ export default function Edit({ patient }: Props) {
                                     <Label htmlFor="chronic_diseases">
                                         Enfermedades Crónicas
                                     </Label>
-                                    <textarea
+                                    <Textarea
                                         id="chronic_diseases"
                                         className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.chronic_diseases}
@@ -274,7 +275,7 @@ export default function Edit({ patient }: Props) {
                                     <Label htmlFor="medical_antecedents">
                                         Antecedentes
                                     </Label>
-                                    <textarea
+                                    <Textarea
                                         id="medical_antecedents"
                                         className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.medical_antecedents}
@@ -312,7 +313,7 @@ export default function Edit({ patient }: Props) {
                             </div>
                             <div className="grid gap-2">
                                 <Label htmlFor="notes">Notas Internas</Label>
-                                <textarea
+                                <Textarea
                                     id="notes"
                                     className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                     value={data.notes}

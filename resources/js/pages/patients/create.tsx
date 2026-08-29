@@ -27,6 +27,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
 
@@ -341,7 +342,7 @@ export default function Create() {
                                         <Label htmlFor="allergies">
                                             Alergias Conocidas
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="allergies"
                                             className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-shadow placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-blue-digital focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             value={data.allergies}
@@ -359,7 +360,7 @@ export default function Create() {
                                         <Label htmlFor="chronic_diseases">
                                             Enfermedades Crónicas
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="chronic_diseases"
                                             className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-shadow placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-blue-digital focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             value={data.chronic_diseases}
@@ -377,7 +378,7 @@ export default function Create() {
                                         <Label htmlFor="medical_antecedents">
                                             Antecedentes Familiares / Personales
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="medical_antecedents"
                                             className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-shadow placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-blue-digital focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             value={data.medical_antecedents}
@@ -451,7 +452,7 @@ export default function Create() {
                                         <Label htmlFor="notes">
                                             Notas Internas de Clínica (Privadas)
                                         </Label>
-                                        <textarea
+                                        <Textarea
                                             id="notes"
                                             className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-shadow placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-blue-digital focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                                             value={data.notes}

@@ -41,6 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function BookAppointment({ doctors }: Props) {
     const [slots, setSlots] = useState<Slot[]>([]);
     const [loadingSlots, setLoadingSlots] = useState(false);
+    const [slotError, setSlotError] = useState<string | null>(null);
 
     const { data, setData, post, processing, errors } = useForm({
         doctor_id: '',
@@ -57,16 +58,28 @@ export default function BookAppointment({ doctors }: Props) {
             setLoadingSlots(true);
             setSlots([]);
             setData('time', '');
+            setSlotError(null);
+
+            const controller = new AbortController();
 
             fetch(
                 `/api/availability?doctor_id=${data.doctor_id}&date=${data.date}`,
+                { signal: controller.signal },
             )
-                .then((res) => res.json())
+                .then((res) => {
+                    if (!res.ok) throw new Error('Network error');
+                    return res.json();
+                })
                 .then((json) => {
                     setSlots(json.slots);
-                    setLoadingSlots(false);
                 })
-                .catch(() => setLoadingSlots(false));
+                .catch((err) => {
+                    if (err.name !== 'AbortError')
+                        setSlotError('No se pudieron cargar los horarios.');
+                })
+                .finally(() => setLoadingSlots(false));
+
+            return () => controller.abort();
         }
     }, [data.doctor_id, data.date, setData]);
 
@@ -178,6 +191,16 @@ export default function BookAppointment({ doctors }: Props) {
                                     <Spinner className="size-8" />
                                     <p className="text-sm text-muted-foreground">
                                         Buscando horarios...
+                                    </p>
+                                </div>
+                            ) : slotError ? (
+                                <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-destructive/40 bg-destructive/5 py-12 text-center">
+                                    <AlertCircle className="mb-2 size-8 text-destructive" />
+                                    <p className="font-medium text-destructive">
+                                        {slotError}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Intenta de nuevo.
                                     </p>
                                 </div>
                             ) : data.doctor_id && slots.length > 0 ? (

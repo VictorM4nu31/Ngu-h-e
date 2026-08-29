@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Trash2, UserCog, Stethoscope, Pencil } from 'lucide-react';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
@@ -35,9 +36,7 @@ const decodeLabel = (label: string) =>
 
 export default function Index({ staff }: Props) {
     const handleDelete = (id: number) => {
-        if (confirm('¿Estás seguro de eliminar a este miembro del personal?')) {
-            router.delete(`/staff/${id}`);
-        }
+        router.delete(`/staff/${id}`);
     };
 
     return (
@@ -124,19 +123,26 @@ export default function Index({ staff }: Props) {
                                                                 <Pencil className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            aria-label="Delete"
-                                                            className="text-destructive hover:text-destructive"
-                                                            onClick={() =>
+                                                        <ConfirmDialog
+                                                            title="Eliminar miembro"
+                                                            description="¿Estás seguro de eliminar a este miembro del personal?"
+                                                            confirmLabel="Eliminar"
+                                                            onConfirm={() =>
                                                                 handleDelete(
                                                                     member.id,
                                                                 )
                                                             }
-                                                        >
-                                                            <Trash2 className="size-4" />
-                                                        </Button>
+                                                            trigger={
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    aria-label="Delete"
+                                                                    className="text-destructive hover:text-destructive"
+                                                                >
+                                                                    <Trash2 className="size-4" />
+                                                                </Button>
+                                                            }
+                                                        />
                                                     </div>
                                                 </td>
                                             </tr>

@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useState } from 'react';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -148,26 +149,27 @@ export default function Index({ patients, filters }: Props) {
                                                                 <Edit className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            title="Eliminar"
-                                                            aria-label="Delete"
-                                                            className="text-destructive hover:text-destructive"
-                                                            onClick={() => {
-                                                                if (
-                                                                    confirm(
-                                                                        '¿Estás seguro de eliminar este paciente?',
-                                                                    )
-                                                                ) {
-                                                                    router.delete(
-                                                                        `/patients/${patient.id}`,
-                                                                    );
-                                                                }
-                                                            }}
-                                                        >
-                                                            <Trash2 className="size-4" />
-                                                        </Button>
+                                                        <ConfirmDialog
+                                                            title="Eliminar paciente"
+                                                            description="¿Estás seguro de eliminar este paciente?"
+                                                            confirmLabel="Eliminar"
+                                                            onConfirm={() =>
+                                                                router.delete(
+                                                                    `/patients/${patient.id}`,
+                                                                )
+                                                            }
+                                                            trigger={
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    title="Eliminar"
+                                                                    aria-label="Delete"
+                                                                    className="text-destructive hover:text-destructive"
+                                                                >
+                                                                    <Trash2 className="size-4" />
+                                                                </Button>
+                                                            }
+                                                        />
                                                     </div>
                                                 </td>
                                             </tr>

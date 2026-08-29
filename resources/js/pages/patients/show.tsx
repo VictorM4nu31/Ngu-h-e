@@ -18,6 +18,7 @@ import {
     NotebookTabs,
 } from 'lucide-react';
 import { VitalSignsChart } from '@/components/clinical/vital-signs-chart';
+import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -85,6 +86,14 @@ interface Props {
     patient: Patient;
 }
 
+type TimelineItem = {
+    id: string;
+    date: string;
+} & (
+    | { type: 'consultation'; data: Consultation }
+    | { type: 'attachment'; data: Attachment }
+);
+
 export default function Show({ patient }: Props) {
     const { data, setData, post, processing, reset } = useForm({
         file: null as File | null,
@@ -125,14 +134,14 @@ export default function Show({ patient }: Props) {
     };
 
     // Unified Timeline Logic
-    const timelineItems = [
-        ...(patient.consultations || []).map((c) => ({
+    const timelineItems: TimelineItem[] = [
+        ...(patient.consultations || []).map<TimelineItem>((c) => ({
             id: `c-${c.id}`,
             date: c.created_at,
             type: 'consultation',
             data: c,
         })),
-        ...(patient.attachments || []).map((a) => ({
+        ...(patient.attachments || []).map<TimelineItem>((a) => ({
             id: `a-${a.id}`,
             date: a.created_at,
             type: 'attachment',
@@ -368,7 +377,7 @@ export default function Show({ patient }: Props) {
                                                                 }
                                                             </p>
                                                             <Link
-                                                                href={`/consultations/${(item.data as Consultation).id}`}
+                                                                href={`/consultations/${item.data.id}`}
                                                                 className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                                                             >
                                                                 Ver detalles{' '}
@@ -579,25 +588,26 @@ export default function Show({ patient }: Props) {
                                                                     <Download className="size-4" />
                                                                 </Button>
                                                             </a>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                className="size-8 text-destructive"
-                                                                aria-label="Delete file"
-                                                                onClick={() => {
-                                                                    if (
-                                                                        confirm(
-                                                                            '¿Eliminar archivo?',
-                                                                        )
-                                                                    ) {
-                                                                        router.delete(
-                                                                            `/attachments/${file.id}`,
-                                                                        );
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <Trash2 className="size-4" />
-                                                            </Button>
+                                                            <ConfirmDialog
+                                                                title="Eliminar archivo"
+                                                                description="¿Estás seguro de eliminar este archivo?"
+                                                                confirmLabel="Eliminar"
+                                                                onConfirm={() =>
+                                                                    router.delete(
+                                                                        `/attachments/${file.id}`,
+                                                                    )
+                                                                }
+                                                                trigger={
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="size-8 text-destructive"
+                                                                        aria-label="Delete file"
+                                                                    >
+                                                                        <Trash2 className="size-4" />
+                                                                    </Button>
+                                                                }
+                                                            />
                                                         </div>
                                                     </div>
                                                     <div className="mt-auto">
