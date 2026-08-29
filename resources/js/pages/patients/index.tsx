@@ -132,7 +132,7 @@ export default function Index({ patients, filters }: Props) {
                                                                 variant="ghost"
                                                                 size="icon"
                                                                 title="Ver Expediente"
-                                                                aria-label="View record"
+                                                                aria-label="Ver registro"
                                                             >
                                                                 <Eye className="size-4" />
                                                             </Button>
@@ -144,7 +144,7 @@ export default function Index({ patients, filters }: Props) {
                                                                 variant="ghost"
                                                                 size="icon"
                                                                 title="Editar"
-                                                                aria-label="Edit"
+                                                                aria-label="Editar"
                                                             >
                                                                 <Edit className="size-4" />
                                                             </Button>
@@ -163,7 +163,7 @@ export default function Index({ patients, filters }: Props) {
                                                                     variant="ghost"
                                                                     size="icon"
                                                                     title="Eliminar"
-                                                                    aria-label="Delete"
+                                                                    aria-label="Eliminar"
                                                                     className="text-destructive hover:text-destructive"
                                                                 >
                                                                     <Trash2 className="size-4" />

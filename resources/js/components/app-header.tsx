@@ -81,7 +81,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                     variant="ghost"
                                     size="icon"
                                     className="mr-2 h-[34px] w-[34px]"
-                                    aria-label="Open navigation menu"
+                                    aria-label="Abrir menú de navegación"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
@@ -183,7 +183,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 variant="ghost"
                                 size="icon"
                                 className="group h-9 w-9 cursor-pointer"
-                                aria-label="Search"
+                                aria-label="Buscar"
                             >
                                 <Search className="!size-5 opacity-80 group-hover:opacity-100" />
                             </Button>

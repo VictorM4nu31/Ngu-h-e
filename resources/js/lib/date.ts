@@ -11,6 +11,13 @@ export function localDateInputValue(date = new Date()): string {
     return `${year}-${month}-${day}`;
 }
 
+export function localDateTimeInputValue(date = new Date()): string {
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+
+    return `${localDateInputValue(date)}T${hour}:${minute}`;
+}
+
 function appTimezone(): string {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return usePage<PageProps>().props.appTimezone ?? APP_TIMEZONE;

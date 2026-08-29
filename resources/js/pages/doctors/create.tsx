@@ -42,11 +42,7 @@ export default function Create() {
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/staff">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Go back"
-                        >
+                        <Button variant="ghost" size="icon" aria-label="Volver">
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>

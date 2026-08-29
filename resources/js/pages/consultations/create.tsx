@@ -118,7 +118,7 @@ export default function Create({ patient, appointment }: Props) {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Go back"
+                                aria-label="Volver"
                             >
                                 <ArrowLeft className="size-4" />
                             </Button>

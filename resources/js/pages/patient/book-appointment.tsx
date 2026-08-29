@@ -95,11 +95,7 @@ export default function BookAppointment({ doctors }: Props) {
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/my-appointments">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Go back"
-                        >
+                        <Button variant="ghost" size="icon" aria-label="Volver">
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>

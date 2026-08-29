@@ -163,13 +163,11 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    aria-label="Previous day"
+                                    aria-label="Día anterior"
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() - 1);
-                                        const str = d
-                                            .toISOString()
-                                            .split('T')[0];
+                                        const str = localDateInputValue(d);
                                         setDate(str);
                                         handleFilter(str);
                                     }}
@@ -188,13 +186,11 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    aria-label="Next day"
+                                    aria-label="Día siguiente"
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() + 1);
-                                        const str = d
-                                            .toISOString()
-                                            .split('T')[0];
+                                        const str = localDateInputValue(d);
                                         setDate(str);
                                         handleFilter(str);
                                     }}

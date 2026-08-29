@@ -43,7 +43,7 @@ export default function Create() {
         full_name: '',
         document_id: '',
         birth_date: '',
-        gender: '',
+        gender: null as string | null,
         phone: '',
         email: '',
         address: '',
@@ -66,11 +66,7 @@ export default function Create() {
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/patients">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Go back"
-                        >
+                        <Button variant="ghost" size="icon" aria-label="Volver">
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
@@ -190,7 +186,7 @@ export default function Create() {
                                                 onValueChange={(val) =>
                                                     setData('gender', val)
                                                 }
-                                                value={data.gender}
+                                                value={data.gender ?? undefined}
                                             >
                                                 <SelectTrigger className="focus-visible:ring-blue-digital">
                                                     <SelectValue placeholder="Seleccionar..." />

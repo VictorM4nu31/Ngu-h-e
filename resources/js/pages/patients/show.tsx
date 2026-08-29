@@ -583,7 +583,7 @@ export default function Show({ patient }: Props) {
                                                                     variant="ghost"
                                                                     size="icon"
                                                                     className="size-8"
-                                                                    aria-label="Download file"
+                                                                    aria-label="Descargar archivo"
                                                                 >
                                                                     <Download className="size-4" />
                                                                 </Button>
@@ -602,7 +602,7 @@ export default function Show({ patient }: Props) {
                                                                         variant="ghost"
                                                                         size="icon"
                                                                         className="size-8 text-destructive"
-                                                                        aria-label="Delete file"
+                                                                        aria-label="Eliminar archivo"
                                                                     >
                                                                         <Trash2 className="size-4" />
                                                                     </Button>

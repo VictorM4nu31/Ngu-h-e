@@ -1,17 +1,11 @@
-import { Head } from '@inertiajs/react';
-import {
-    Search,
-    CreditCard,
-    Banknote,
-    Landmark,
-    Clock,
-    FileText,
-} from 'lucide-react';
+import { Head, router } from '@inertiajs/react';
+import { Search, CreditCard, Banknote, Landmark, Clock } from 'lucide-react';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
+import { formatStoredDate } from '@/lib/date';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Payment {
@@ -66,6 +60,17 @@ const getMethodLabel = (method: string) => {
 };
 
 export default function Index({ payments, filters }: Props) {
+    const [search, setSearch] = useState(filters.search);
+
+    const submitSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        router.get(
+            '/payments',
+            { search: search || undefined },
+            { preserveState: true },
+        );
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Historial de Pagos" />
@@ -86,15 +91,20 @@ export default function Index({ payments, filters }: Props) {
                             <CardTitle className="text-lg">
                                 Transacciones Recientes
                             </CardTitle>
-                            <div className="relative w-72">
+                            <form
+                                onSubmit={submitSearch}
+                                className="relative w-72"
+                            >
                                 <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                                 <Input
                                     type="search"
+                                    name="search"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
                                     placeholder="Buscar por paciente..."
                                     className="pl-8"
-                                    defaultValue={filters.search}
                                 />
-                            </div>
+                            </form>
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -117,7 +127,9 @@ export default function Index({ payments, filters }: Props) {
                                         <th className="px-4 py-3 font-bold">
                                             Estado
                                         </th>
-                                        <th className="px-4 py-3"></th>
+                                        <th className="px-4 py-3 font-bold">
+                                            Notas
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,9 +142,9 @@ export default function Index({ payments, filters }: Props) {
                                                 {payment.patient.full_name}
                                             </td>
                                             <td className="px-4 py-4 text-muted-foreground">
-                                                {new Date(
+                                                {formatStoredDate(
                                                     payment.created_at,
-                                                ).toLocaleDateString()}
+                                                )}
                                             </td>
                                             <td className="px-4 py-4">
                                                 <div className="flex items-center gap-2">
@@ -174,15 +186,16 @@ export default function Index({ payments, filters }: Props) {
                                                         : 'Pendiente'}
                                                 </Badge>
                                             </td>
-                                            <td className="px-4 py-4 text-right">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="size-8"
-                                                    aria-label="View receipt"
-                                                >
-                                                    <FileText className="size-4" />
-                                                </Button>
+                                            <td className="px-4 py-4">
+                                                {payment.notes ? (
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {payment.notes}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-xs text-muted-foreground/50">
+                                                        —
+                                                    </span>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { localDateTimeInputValue } from '@/lib/date';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -56,9 +57,9 @@ export default function Create({
     const handleStartTimeChange = (val: string) => {
         setData('start_time', val);
         if (val && !data.end_time) {
-            const date = new Date(`${val}T00:00:00`);
+            const date = new Date(val);
             date.setMinutes(date.getMinutes() + 30);
-            setData('end_time', date.toISOString().slice(0, 16));
+            setData('end_time', localDateTimeInputValue(date));
         }
     };
 
@@ -69,11 +70,7 @@ export default function Create({
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/appointments">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            aria-label="Go back"
-                        >
+                        <Button variant="ghost" size="icon" aria-label="Volver">
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>

@@ -252,7 +252,7 @@ export default function Dashboard({
                                                     variant="ghost"
                                                     size="icon"
                                                     className="size-8 rounded-full"
-                                                    aria-label="View appointments"
+                                                    aria-label="Ver citas"
                                                 >
                                                     <ChevronRight className="size-4" />
                                                 </Button>
