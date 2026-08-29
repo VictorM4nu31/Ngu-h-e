@@ -65,6 +65,12 @@ export default [
         },
     },
     {
+        files: ['scripts/**/*.js'],
+        languageOptions: {
+            globals: globals.node,
+        },
+    },
+    {
         ignores: [
             'vendor',
             'node_modules',
