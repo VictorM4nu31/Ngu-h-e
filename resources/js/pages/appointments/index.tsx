@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredTime, localDateInputValue } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Appointment {
@@ -48,14 +49,14 @@ interface Props {
     filters: { doctor_id: string; date: string };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Agenda de Citas', href: '/appointments' },
-];
-
 export default function Index({ appointments, doctors, filters }: Props) {
     const [date, setDate] = useState(filters.date || localDateInputValue());
     const [doctorId, setDoctorId] = useState(filters.doctor_id || 'all');
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Appointments'), href: '/appointments' },
+    ];
 
     const handleFilter = (newDate?: string, newDoctorId?: string) => {
         const d = newDate !== undefined ? newDate : date;
@@ -84,12 +85,12 @@ export default function Index({ appointments, doctors, filters }: Props) {
             'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300',
     };
 
-    const statusLabels = {
-        scheduled: 'Programada',
-        confirmed: 'Confirmada',
-        completed: 'Completada',
-        cancelled: 'Cancelada',
-        no_show: 'No asistió',
+    const statusLabels: Record<Appointment['status'], string> = {
+        scheduled: __('Scheduled'),
+        confirmed: __('Confirmed'),
+        completed: __('Completed'),
+        cancelled: __('Cancelled'),
+        no_show: __('No Show'),
     };
 
     const updateStatus = (id: number, status: string) => {
@@ -98,25 +99,25 @@ export default function Index({ appointments, doctors, filters }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Agenda de Citas" />
+            <Head title={__('Appointments')} />
 
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
                 <div className="flex items-center justify-between gap-4">
                     <h1 className="flex items-center gap-2 text-2xl font-bold">
                         <Calendar className="size-6" />
-                        Agenda de Citas
+                        {__('Appointments')}
                     </h1>
                     <div className="flex gap-2">
                         <Link href="/patients">
                             <Button variant="outline" className="gap-2">
                                 <UserSearch className="size-4" />
-                                Buscar Paciente
+                                {__('Search Patient')}
                             </Button>
                         </Link>
                         <Link href="/appointments/create">
                             <Button className="gap-2">
                                 <Plus className="size-4" />
-                                Nueva Cita
+                                {__('New Appointment')}
                             </Button>
                         </Link>
                     </div>
@@ -127,7 +128,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                     <CardContent className="flex flex-wrap items-end gap-4 p-4">
                         <div className="grid min-w-[200px] flex-1 gap-1.5">
                             <label className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                                Médico
+                                {__('Doctor')}
                             </label>
                             <Select
                                 onValueChange={(val) => {
@@ -137,11 +138,13 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 value={doctorId}
                             >
                                 <SelectTrigger>
-                                    <SelectValue placeholder="Todos los médicos" />
+                                    <SelectValue
+                                        placeholder={__('All doctors')}
+                                    />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">
-                                        Todos los médicos
+                                        {__('All doctors')}
                                     </SelectItem>
                                     {doctors.map((dr) => (
                                         <SelectItem
@@ -157,13 +160,13 @@ export default function Index({ appointments, doctors, filters }: Props) {
 
                         <div className="grid min-w-[200px] flex-1 gap-1.5">
                             <label className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-                                Fecha
+                                {__('Date')}
                             </label>
                             <div className="flex items-center gap-2">
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    aria-label="Día anterior"
+                                    aria-label={__('Previous day')}
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() - 1);
@@ -186,7 +189,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    aria-label="Día siguiente"
+                                    aria-label={__('Next day')}
                                     onClick={() => {
                                         const d = new Date(date);
                                         d.setDate(d.getDate() + 1);
@@ -209,7 +212,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                 handleFilter(today, 'all');
                             }}
                         >
-                            HOY
+                            {__('Today')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -278,7 +281,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                 }
                                             >
                                                 <CheckCircle2 className="mr-1.5 size-4" />
-                                                Confirmar
+                                                {__('Confirm')}
                                             </Button>
                                         )}
                                         {app.status !== 'completed' &&
@@ -292,7 +295,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                         className="gap-1.5"
                                                     >
                                                         <Activity className="size-4" />
-                                                        Atender
+                                                        {__('Attend')}
                                                     </Button>
                                                 </Link>
                                             )}
@@ -305,15 +308,17 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                         variant="ghost"
                                                         size="sm"
                                                     >
-                                                        Editar
+                                                        {__('Edit')}
                                                     </Button>
                                                 </Link>
                                             )}
                                         {app.status !== 'completed' && (
                                             <ConfirmDialog
-                                                title="Cancelar cita"
-                                                description="¿Estás seguro de cancelar esta cita?"
-                                                confirmLabel="Cancelar"
+                                                title={__('Cancel appointment')}
+                                                description={__(
+                                                    'Are you sure you want to cancel this appointment?',
+                                                )}
+                                                confirmLabel={__('Cancel')}
                                                 onConfirm={() =>
                                                     updateStatus(
                                                         app.id,
@@ -327,7 +332,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                         className="text-destructive"
                                                     >
                                                         <XCircle className="mr-1.5 size-4" />
-                                                        Cancelar
+                                                        {__('Cancel')}
                                                     </Button>
                                                 }
                                             />
@@ -340,10 +345,10 @@ export default function Index({ appointments, doctors, filters }: Props) {
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/30 p-12">
                             <Calendar className="mb-4 size-12 text-muted-foreground/30" />
                             <h3 className="text-lg font-medium text-muted-foreground">
-                                No hay citas para este día
+                                {__('No appointments for this day')}
                             </h3>
                             <p className="text-sm text-muted-foreground/60">
-                                Cambie la fecha o use el botón de hoy.
+                                {__('Change the date or use the today button.')}
                             </p>
                         </div>
                     )}

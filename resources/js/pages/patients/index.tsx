@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Patient {
@@ -29,11 +30,6 @@ interface Props {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Pacientes', href: '/patients' },
-];
-
 const decodeLabel = (label: string) =>
     label
         .replace(/&laquo;/g, '«')
@@ -46,6 +42,11 @@ const decodeLabel = (label: string) =>
 export default function Index({ patients, filters }: Props) {
     const [search, setSearch] = useState(filters.search || '');
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
+    ];
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get('/patients', { search }, { preserveState: true });
@@ -53,15 +54,17 @@ export default function Index({ patients, filters }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Pacientes" />
+            <Head title={__('Patients')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center justify-between gap-4">
-                    <h1 className="text-2xl font-bold">Gestión de Pacientes</h1>
+                    <h1 className="text-2xl font-bold">
+                        {__('Patient Management')}
+                    </h1>
                     <Link href="/patients/create">
                         <Button className="flex items-center gap-2">
                             <Plus className="size-4" />
-                            Nuevo Paciente
+                            {__('New Patient')}
                         </Button>
                     </Link>
                 </div>
@@ -76,14 +79,16 @@ export default function Index({ patients, filters }: Props) {
                                 <Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground" />
                                 <Input
                                     type="search"
-                                    placeholder="Buscar por nombre, ID o teléfono..."
+                                    placeholder={__(
+                                        'Search by name, ID or phone...',
+                                    )}
                                     className="pl-8"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
                                 />
                             </div>
                             <Button type="submit" variant="secondary">
-                                Buscar
+                                {__('Search')}
                             </Button>
                         </form>
                     </CardHeader>
@@ -93,16 +98,16 @@ export default function Index({ patients, filters }: Props) {
                                 <thead className="bg-muted/50 text-muted-foreground">
                                     <tr>
                                         <th className="px-4 py-3 font-medium">
-                                            Nombre Completo
+                                            {__('Full Name')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Identificación
+                                            {__('Identification')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Teléfono
+                                            {__('Phone')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Acciones
+                                            {__('Actions')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -118,10 +123,10 @@ export default function Index({ patients, filters }: Props) {
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     {patient.document_id ||
-                                                        'N/A'}
+                                                        __('N/A')}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    {patient.phone || 'N/A'}
+                                                    {patient.phone || __('N/A')}
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex items-center gap-2">
@@ -131,8 +136,12 @@ export default function Index({ patients, filters }: Props) {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                title="Ver Expediente"
-                                                                aria-label="Ver registro"
+                                                                title={__(
+                                                                    'View record',
+                                                                )}
+                                                                aria-label={__(
+                                                                    'View record',
+                                                                )}
                                                             >
                                                                 <Eye className="size-4" />
                                                             </Button>
@@ -143,16 +152,26 @@ export default function Index({ patients, filters }: Props) {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                title="Editar"
-                                                                aria-label="Editar"
+                                                                title={__(
+                                                                    'Edit',
+                                                                )}
+                                                                aria-label={__(
+                                                                    'Edit',
+                                                                )}
                                                             >
                                                                 <Edit className="size-4" />
                                                             </Button>
                                                         </Link>
                                                         <ConfirmDialog
-                                                            title="Eliminar paciente"
-                                                            description="¿Estás seguro de eliminar este paciente?"
-                                                            confirmLabel="Eliminar"
+                                                            title={__(
+                                                                'Delete patient',
+                                                            )}
+                                                            description={__(
+                                                                'Are you sure you want to delete this patient?',
+                                                            )}
+                                                            confirmLabel={__(
+                                                                'Delete',
+                                                            )}
                                                             onConfirm={() =>
                                                                 router.delete(
                                                                     `/patients/${patient.id}`,
@@ -162,8 +181,12 @@ export default function Index({ patients, filters }: Props) {
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="icon"
-                                                                    title="Eliminar"
-                                                                    aria-label="Eliminar"
+                                                                    title={__(
+                                                                        'Delete',
+                                                                    )}
+                                                                    aria-label={__(
+                                                                        'Delete',
+                                                                    )}
                                                                     className="text-destructive hover:text-destructive"
                                                                 >
                                                                     <Trash2 className="size-4" />
@@ -180,7 +203,7 @@ export default function Index({ patients, filters }: Props) {
                                                 colSpan={4}
                                                 className="px-4 py-8 text-center text-muted-foreground"
                                             >
-                                                No se encontraron pacientes.
+                                                {__('No patients found.')}
                                             </td>
                                         </tr>
                                     )}

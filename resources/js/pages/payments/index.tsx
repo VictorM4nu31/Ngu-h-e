@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Payment {
@@ -28,11 +29,6 @@ interface Props {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Pagos', href: '/payments' },
-];
-
 const getMethodIcon = (method: string) => {
     switch (method) {
         case 'cash':
@@ -46,21 +42,26 @@ const getMethodIcon = (method: string) => {
     }
 };
 
-const getMethodLabel = (method: string) => {
-    switch (method) {
-        case 'cash':
-            return 'Efectivo';
-        case 'card':
-            return 'Tarjeta';
-        case 'transfer':
-            return 'Transferencia';
-        default:
-            return method;
-    }
-};
-
 export default function Index({ payments, filters }: Props) {
     const [search, setSearch] = useState(filters.search);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Payments'), href: '/payments' },
+    ];
+
+    const getMethodLabel = (method: string) => {
+        switch (method) {
+            case 'cash':
+                return __('Cash');
+            case 'card':
+                return __('Card');
+            case 'transfer':
+                return __('Transfer');
+            default:
+                return method;
+        }
+    };
 
     const submitSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,14 +74,18 @@ export default function Index({ payments, filters }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Historial de Pagos" />
+            <Head title={__('Payment History')} />
 
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">Gestión de Pagos</h1>
+                        <h1 className="text-2xl font-bold">
+                            {__('Payment Management')}
+                        </h1>
                         <p className="text-sm text-muted-foreground">
-                            Control de ingresos y transacciones del consultorio.
+                            {__(
+                                'Control of income and transactions of the clinic.',
+                            )}
                         </p>
                     </div>
                 </div>
@@ -89,7 +94,7 @@ export default function Index({ payments, filters }: Props) {
                     <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-lg">
-                                Transacciones Recientes
+                                {__('Recent Transactions')}
                             </CardTitle>
                             <form
                                 onSubmit={submitSearch}
@@ -101,7 +106,7 @@ export default function Index({ payments, filters }: Props) {
                                     name="search"
                                     value={search}
                                     onChange={(e) => setSearch(e.target.value)}
-                                    placeholder="Buscar por paciente..."
+                                    placeholder={__('Search by patient...')}
                                     className="pl-8"
                                 />
                             </form>
@@ -113,22 +118,22 @@ export default function Index({ payments, filters }: Props) {
                                 <thead className="bg-muted/50 text-xs text-muted-foreground uppercase">
                                     <tr>
                                         <th className="px-4 py-3 font-bold">
-                                            Paciente
+                                            {__('Patient')}
                                         </th>
                                         <th className="px-4 py-3 font-bold">
-                                            Fecha
+                                            {__('Date')}
                                         </th>
                                         <th className="px-4 py-3 font-bold">
-                                            Método
+                                            {__('Method')}
                                         </th>
                                         <th className="px-4 py-3 text-right font-bold">
-                                            Monto
+                                            {__('Amount')}
                                         </th>
                                         <th className="px-4 py-3 font-bold">
-                                            Estado
+                                            {__('Status')}
                                         </th>
                                         <th className="px-4 py-3 font-bold">
-                                            Notas
+                                            {__('Notes')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -182,8 +187,8 @@ export default function Index({ payments, filters }: Props) {
                                                     }
                                                 >
                                                     {payment.status === 'paid'
-                                                        ? 'Completado'
-                                                        : 'Pendiente'}
+                                                        ? __('Completed')
+                                                        : __('Pending')}
                                                 </Badge>
                                             </td>
                                             <td className="px-4 py-4">
@@ -205,8 +210,7 @@ export default function Index({ payments, filters }: Props) {
                                                 colSpan={6}
                                                 className="px-4 py-12 text-center text-muted-foreground italic"
                                             >
-                                                No se encontraron registros de
-                                                pagos.
+                                                {__('No payments recorded.')}
                                             </td>
                                         </tr>
                                     )}
