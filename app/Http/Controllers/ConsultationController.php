@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Consultations\CreateConsultationAction;
+use App\Enums\PaymentMethod;
 use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ConsultationController extends Controller
@@ -80,7 +82,7 @@ class ConsultationController extends Controller
             'prescription_instructions' => 'nullable|string',
             // Payment Data
             'payment_amount' => 'nullable|numeric|min:0',
-            'payment_method' => 'nullable|string|in:cash,card,transfer',
+            'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
         ]);
 
         // Forzar doctor_id al usuario autenticado (prevenir suplantación)

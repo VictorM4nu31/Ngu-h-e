@@ -2,8 +2,11 @@
 
 namespace App\Actions\Consultations;
 
-use App\Models\Consultation;
+use App\Enums\AppointmentStatus;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Models\Appointment;
+use App\Models\Consultation;
 use Illuminate\Support\Facades\DB;
 
 class CreateConsultationAction
@@ -13,15 +16,15 @@ class CreateConsultationAction
         return DB::transaction(function () use ($data) {
             $consultation = Consultation::create($data);
 
-            if (!empty($data['appointment_id'])) {
+            if (! empty($data['appointment_id'])) {
                 $appointment = Appointment::find($data['appointment_id']);
                 if ($appointment) {
-                    $appointment->update(['status' => 'completed']);
+                    $appointment->update(['status' => AppointmentStatus::Completed]);
                 }
             }
 
             // Create prescription if items are provided
-            if (!empty($data['prescription_items'])) {
+            if (! empty($data['prescription_items'])) {
                 $consultation->prescription()->create([
                     'patient_id' => $data['patient_id'],
                     'doctor_id' => $data['doctor_id'],
@@ -31,12 +34,12 @@ class CreateConsultationAction
             }
 
             // Create payment if amount is provided
-            if (!empty($data['payment_amount'])) {
+            if (! empty($data['payment_amount'])) {
                 $consultation->payment()->create([
                     'patient_id' => $data['patient_id'],
                     'amount' => $data['payment_amount'],
-                    'payment_method' => $data['payment_method'] ?? 'cash',
-                    'status' => 'paid',
+                    'payment_method' => $data['payment_method'] ?? PaymentMethod::Cash,
+                    'status' => PaymentStatus::Paid,
                     'notes' => 'Cobro automático de consulta',
                 ]);
             }

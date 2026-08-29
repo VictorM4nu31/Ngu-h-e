@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Appointments\CreateAppointmentAction;
 use App\Actions\Appointments\EnsureAppointmentAvailability;
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Prescription;
@@ -124,7 +125,7 @@ class PatientPortalController extends Controller
             'doctor_id' => $request->doctor_id,
             'start_time' => $start_time,
             'end_time' => $end_time,
-            'status' => 'scheduled',
+            'status' => AppointmentStatus::Scheduled,
             'reason' => $request->reason,
         ]);
 

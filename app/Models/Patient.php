@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\SerializesWithTimezone;
+use App\Enums\Gender;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,6 +30,7 @@ class Patient extends Model
 
     protected $casts = [
         'birth_date' => 'date',
+        'gender' => Gender::class,
     ];
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Actions\Payments;
 
+use App\Enums\PaymentStatus;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +19,7 @@ class CreatePaymentAction
                 'consultation_id' => $data['consultation_id'] ?? null,
                 'amount' => $data['amount'],
                 'payment_method' => $data['payment_method'],
-                'status' => $data['status'] ?? 'paid',
+                'status' => $data['status'] ?? PaymentStatus::Paid,
                 'notes' => $data['notes'] ?? null,
             ]);
         });

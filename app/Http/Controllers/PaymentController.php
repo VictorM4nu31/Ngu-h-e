@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Payments\CreatePaymentAction;
+use App\Enums\PaymentMethod;
+use App\Enums\PaymentStatus;
 use App\Models\Payment;
-use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class PaymentController extends Controller
@@ -39,8 +41,8 @@ class PaymentController extends Controller
             'patient_id' => 'required|exists:patients,id',
             'consultation_id' => 'nullable|exists:consultations,id',
             'amount' => 'required|numeric|min:0',
-            'payment_method' => 'required|string|in:cash,card,transfer',
-            'status' => 'required|string|in:paid,pending,cancelled',
+            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
+            'status' => ['required', Rule::enum(PaymentStatus::class)],
             'notes' => 'nullable|string',
         ]);
 

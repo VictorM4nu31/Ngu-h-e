@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Actions\Appointments\CreateAppointmentAction;
 use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Actions\Appointments\UpdateAppointmentAction;
+use App\Enums\AppointmentStatus;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AppointmentController extends Controller
@@ -86,7 +88,7 @@ class AppointmentController extends Controller
     public function update(Request $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
         $validated = $request->validate([
-            'status' => 'sometimes|in:scheduled,confirmed,completed,cancelled,no_show',
+            'status' => ['sometimes', Rule::enum(AppointmentStatus::class)],
             'start_time' => 'sometimes|date',
             'end_time' => 'sometimes|date|after:start_time',
             'notes' => 'nullable|string',
