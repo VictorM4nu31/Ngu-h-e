@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -26,9 +27,9 @@ interface Props {
 
 export default function Edit({ member }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Gestión de Personal', href: '/staff' },
-        { title: 'Editar', href: `/staff/${member.id}/edit` },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Staff Management'), href: '/staff' },
+        { title: __('Edit'), href: `/staff/${member.id}/edit` },
     ];
 
     const { data, setData, put, processing, errors } = useForm({
@@ -46,30 +47,35 @@ export default function Edit({ member }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Editar Personal" />
+            <Head title={__('Edit Staff')} />
 
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/staff">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold">Editar Personal</h1>
+                    <h1 className="text-2xl font-bold">{__('Edit Staff')}</h1>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Datos del Personal</CardTitle>
+                        <CardTitle>{__('Staff Data')}</CardTitle>
                         <CardDescription>
-                            Actualiza la información del miembro del personal.
-                            Deja la contraseña vacía si no deseas cambiarla.
+                            {__(
+                                'Update the staff member information. Leave the password empty to keep it.',
+                            )}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Nombre Completo</Label>
+                                <Label htmlFor="name">{__('Full Name')}</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
@@ -82,9 +88,7 @@ export default function Edit({ member }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">
-                                    Correo Electrónico
-                                </Label>
+                                <Label htmlFor="email">{__('Email')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -98,7 +102,9 @@ export default function Edit({ member }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="role">Rol en el Sistema</Label>
+                                <Label htmlFor="role">
+                                    {__('Role in the System')}
+                                </Label>
                                 <select
                                     id="role"
                                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -108,9 +114,11 @@ export default function Edit({ member }: Props) {
                                     }
                                     required
                                 >
-                                    <option value="doctor">Doctor</option>
+                                    <option value="doctor">
+                                        {__('Doctor')}
+                                    </option>
                                     <option value="receptionist">
-                                        Recepcionista
+                                        {__('Receptionist')}
                                     </option>
                                 </select>
                                 <InputError message={errors.role} />
@@ -119,7 +127,7 @@ export default function Edit({ member }: Props) {
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">
-                                        Nueva Contraseña
+                                        {__('New Password')}
                                     </Label>
                                     <Input
                                         id="password"
@@ -128,14 +136,16 @@ export default function Edit({ member }: Props) {
                                         onChange={(e) =>
                                             setData('password', e.target.value)
                                         }
-                                        placeholder="Dejar vacío para no cambiar"
+                                        placeholder={__(
+                                            'Leave empty to keep it',
+                                        )}
                                     />
                                     <InputError message={errors.password} />
                                 </div>
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password_confirmation">
-                                        Confirmar Nueva Contraseña
+                                        {__('Confirm New Password')}
                                     </Label>
                                     <Input
                                         id="password_confirmation"
@@ -147,7 +157,7 @@ export default function Edit({ member }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        placeholder="Confirmar contraseña"
+                                        placeholder={__('Confirm password')}
                                     />
                                     <InputError
                                         message={errors.password_confirmation}
@@ -158,7 +168,7 @@ export default function Edit({ member }: Props) {
                             <div className="flex justify-end pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Spinner className="mr-2" />}
-                                    Guardar Cambios
+                                    {__('Save Changes')}
                                 </Button>
                             </div>
                         </form>

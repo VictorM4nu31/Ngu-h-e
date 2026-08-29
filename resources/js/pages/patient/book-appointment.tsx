@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
 import { localDateInputValue } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import type { BreadcrumbItem } from '@/types';
 
@@ -32,16 +33,16 @@ interface Props {
     doctors: Doctor[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Mis Citas', href: '/my-appointments' },
-    { title: 'Agendar Cita', href: '/book-appointment' },
-];
-
 export default function BookAppointment({ doctors }: Props) {
     const [slots, setSlots] = useState<Slot[]>([]);
     const [loadingSlots, setLoadingSlots] = useState(false);
     const [slotError, setSlotError] = useState<string | null>(null);
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('My Appointments'), href: '/my-appointments' },
+        { title: __('Book Appointment'), href: '/book-appointment' },
+    ];
 
     const { data, setData, post, processing, errors } = useForm({
         doctor_id: '',
@@ -75,7 +76,7 @@ export default function BookAppointment({ doctors }: Props) {
                 })
                 .catch((err) => {
                     if (err.name !== 'AbortError')
-                        setSlotError('No se pudieron cargar los horarios.');
+                        setSlotError(__('Could not load the schedules.'));
                 })
                 .finally(() => setLoadingSlots(false));
 
@@ -90,31 +91,41 @@ export default function BookAppointment({ doctors }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Agendar Cita Médica" />
+            <Head title={__('Book Appointment')} />
 
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/my-appointments">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold">Agendar Cita Médica</h1>
+                    <h1 className="text-2xl font-bold">
+                        {__('Book Appointment')}
+                    </h1>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                     {/* Formulario de Selección */}
                     <Card className="lg:col-span-1">
                         <CardHeader>
-                            <CardTitle className="text-lg">Selección</CardTitle>
+                            <CardTitle className="text-lg">
+                                {__('Selection')}
+                            </CardTitle>
                             <CardDescription>
-                                Elige tu médico y la fecha de consulta.
+                                {__(
+                                    'Choose your doctor and consultation date.',
+                                )}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="doctor">
-                                    Médico Especialista
+                                    {__('Specialist Doctor')}
                                 </Label>
                                 <select
                                     id="doctor"
@@ -126,7 +137,7 @@ export default function BookAppointment({ doctors }: Props) {
                                     required
                                 >
                                     <option value="">
-                                        Selecciona un médico
+                                        {__('Select a doctor')}
                                     </option>
                                     {doctors.map((dr) => (
                                         <option key={dr.id} value={dr.id}>
@@ -138,7 +149,9 @@ export default function BookAppointment({ doctors }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="date">Fecha de Cita</Label>
+                                <Label htmlFor="date">
+                                    {__('Appointment Date')}
+                                </Label>
                                 <Input
                                     id="date"
                                     type="date"
@@ -154,11 +167,13 @@ export default function BookAppointment({ doctors }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="reason">
-                                    Motivo de consulta (Opcional)
+                                    {__('Reason for visit (Optional)')}
                                 </Label>
                                 <Input
                                     id="reason"
-                                    placeholder="Ej: Control anual, Dolor de cabeza..."
+                                    placeholder={__(
+                                        'E.g: Annual check-up, Headache...',
+                                    )}
                                     value={data.reason}
                                     onChange={(e) =>
                                         setData('reason', e.target.value)
@@ -173,12 +188,12 @@ export default function BookAppointment({ doctors }: Props) {
                     <Card className="lg:col-span-2">
                         <CardHeader>
                             <CardTitle className="text-lg">
-                                Horarios Disponibles
+                                {__('Available Schedules')}
                             </CardTitle>
                             <CardDescription>
                                 {!data.doctor_id
-                                    ? 'Por favor selecciona un médico primero.'
-                                    : `Disponibilidad para el día ${new Date(`${data.date}T00:00:00`).toLocaleDateString('es-MX')}`}
+                                    ? __('Please select a doctor first.')
+                                    : `${__('Availability for the day')} ${new Date(`${data.date}T12:00:00`).toLocaleDateString('es-MX')}`}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -186,7 +201,7 @@ export default function BookAppointment({ doctors }: Props) {
                                 <div className="flex flex-col items-center justify-center gap-2 py-12">
                                     <Spinner className="size-8" />
                                     <p className="text-sm text-muted-foreground">
-                                        Buscando horarios...
+                                        {__('Searching for schedules...')}
                                     </p>
                                 </div>
                             ) : slotError ? (
@@ -196,7 +211,7 @@ export default function BookAppointment({ doctors }: Props) {
                                         {slotError}
                                     </p>
                                     <p className="text-sm text-muted-foreground">
-                                        Intenta de nuevo.
+                                        {__('Try again.')}
                                     </p>
                                 </div>
                             ) : data.doctor_id && slots.length > 0 ? (
@@ -230,18 +245,19 @@ export default function BookAppointment({ doctors }: Props) {
                                 <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-12 text-center">
                                     <AlertCircle className="mb-2 size-8 text-muted-foreground" />
                                     <p className="font-medium">
-                                        No hay horarios disponibles
+                                        {__('No schedules available')}
                                     </p>
                                     <p className="text-sm text-muted-foreground">
-                                        Intenta con otra fecha.
+                                        {__('Try another date.')}
                                     </p>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/10 py-12 text-center">
                                     <User className="mb-2 size-8 text-muted-foreground/30" />
                                     <p className="text-sm text-muted-foreground">
-                                        Selecciona un médico y fecha para ver
-                                        horarios.
+                                        {__(
+                                            'Select a doctor and date to see schedules.',
+                                        )}
                                     </p>
                                 </div>
                             )}
@@ -266,7 +282,7 @@ export default function BookAppointment({ doctors }: Props) {
                                     ) : (
                                         <CheckCircle2 className="size-4" />
                                     )}
-                                    Confirmar Cita
+                                    {__('Confirm Appointment')}
                                 </Button>
                             </div>
                         </CardContent>

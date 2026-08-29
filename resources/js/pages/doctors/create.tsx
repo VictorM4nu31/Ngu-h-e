@@ -13,15 +13,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Gestión de Personal', href: '/staff' },
-    { title: 'Nuevo Miembro', href: '/staff/create' },
-];
-
 export default function Create() {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Staff Management'), href: '/staff' },
+        { title: __('New Member'), href: '/staff/create' },
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -37,32 +38,35 @@ export default function Create() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Nuevo Miembro del Personal" />
+            <Head title={__('New Member')} />
 
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 p-4">
                 <div className="flex items-center gap-2">
                     <Link href="/staff">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ChevronLeft className="size-4" />
                         </Button>
                     </Link>
-                    <h1 className="text-2xl font-bold">
-                        Nuevo Miembro del Personal
-                    </h1>
+                    <h1 className="text-2xl font-bold">{__('New Member')}</h1>
                 </div>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Datos del Registro</CardTitle>
+                        <CardTitle>{__('Registration Data')}</CardTitle>
                         <CardDescription>
-                            Crea una nueva cuenta para un médico o
-                            recepcionista.
+                            {__(
+                                'Create a new account for a doctor or receptionist.',
+                            )}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Nombre Completo</Label>
+                                <Label htmlFor="name">{__('Full Name')}</Label>
                                 <Input
                                     id="name"
                                     value={data.name}
@@ -75,9 +79,7 @@ export default function Create() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">
-                                    Correo Electrónico
-                                </Label>
+                                <Label htmlFor="email">{__('Email')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -91,7 +93,9 @@ export default function Create() {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="role">Rol en el Sistema</Label>
+                                <Label htmlFor="role">
+                                    {__('Role in the System')}
+                                </Label>
                                 <select
                                     id="role"
                                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -101,9 +105,11 @@ export default function Create() {
                                     }
                                     required
                                 >
-                                    <option value="doctor">Doctor</option>
+                                    <option value="doctor">
+                                        {__('Doctor')}
+                                    </option>
                                     <option value="receptionist">
-                                        Recepcionista
+                                        {__('Receptionist')}
                                     </option>
                                 </select>
                                 <InputError message={errors.role} />
@@ -111,7 +117,9 @@ export default function Create() {
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password">Contraseña</Label>
+                                    <Label htmlFor="password">
+                                        {__('Password')}
+                                    </Label>
                                     <Input
                                         id="password"
                                         type="password"
@@ -126,7 +134,7 @@ export default function Create() {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="password_confirmation">
-                                        Confirmar Contraseña
+                                        {__('Confirm Password')}
                                     </Label>
                                     <Input
                                         id="password_confirmation"
@@ -149,7 +157,7 @@ export default function Create() {
                             <div className="flex justify-end pt-4">
                                 <Button type="submit" disabled={processing}>
                                     {processing && <Spinner className="mr-2" />}
-                                    Registrar Miembro
+                                    {__('Register Member')}
                                 </Button>
                             </div>
                         </form>

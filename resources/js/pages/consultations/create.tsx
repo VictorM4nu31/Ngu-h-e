@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PageProps } from '@/types';
 
 interface Patient {
@@ -96,10 +97,10 @@ export default function Create({ patient, appointment }: Props) {
     };
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Pacientes', href: '/patients' },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
         { title: patient.full_name, href: `/patients/${patient.id}` },
-        { title: 'Nueva Consulta', href: '#' },
+        { title: __('New Consultation'), href: '#' },
     ];
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -109,7 +110,7 @@ export default function Create({ patient, appointment }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Consulta: ${patient.full_name}`} />
+            <Head title={`${__('Consultation')}: ${patient.full_name}`} />
 
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center justify-between">
@@ -118,17 +119,17 @@ export default function Create({ patient, appointment }: Props) {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                aria-label="Volver"
+                                aria-label={__('Back')}
                             >
                                 <ArrowLeft className="size-4" />
                             </Button>
                         </Link>
                         <div>
                             <h1 className="text-2xl font-bold">
-                                Registro de Consulta
+                                {__('Consultation Record')}
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Paciente:{' '}
+                                {__('Patient:')}{' '}
                                 <span className="font-semibold text-foreground">
                                     {patient.full_name}
                                 </span>
@@ -139,15 +140,14 @@ export default function Create({ patient, appointment }: Props) {
 
                 <form onSubmit={handleSubmit} className="grid gap-6">
                     <div className="grid gap-6 md:grid-cols-3">
-                        {/* Signos Vitales */}
                         <Card className="md:col-span-1">
                             <CardHeader className="pb-3">
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <Activity className="size-4 text-primary" />
-                                    Signos Vitales
+                                    {__('Vital Signs')}
                                 </CardTitle>
                                 <CardDescription>
-                                    Captura de métricas base.
+                                    {__('Capture of baseline metrics.')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
@@ -157,7 +157,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="weight"
                                             className="text-xs"
                                         >
-                                            Peso (kg)
+                                            {__('Weight (kg)')}
                                         </Label>
                                         <Input
                                             id="weight"
@@ -177,7 +177,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="height"
                                             className="text-xs"
                                         >
-                                            Talla (cm)
+                                            {__('Height (cm)')}
                                         </Label>
                                         <Input
                                             id="height"
@@ -200,7 +200,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="temperature"
                                             className="text-xs"
                                         >
-                                            Temp (°C)
+                                            {__('Temp (°C)')}
                                         </Label>
                                         <Input
                                             id="temperature"
@@ -220,7 +220,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="heart_rate"
                                             className="text-xs"
                                         >
-                                            FC (lpm)
+                                            {__('HR (bpm)')}
                                         </Label>
                                         <Input
                                             id="heart_rate"
@@ -238,7 +238,7 @@ export default function Create({ patient, appointment }: Props) {
 
                                 <Separator />
                                 <Label className="text-xs font-semibold text-muted-foreground uppercase">
-                                    Presión Arterial
+                                    {__('Blood Pressure')}
                                 </Label>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="grid gap-1.5">
@@ -246,12 +246,12 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="bp_systolic"
                                             className="text-xs"
                                         >
-                                            Sistólica
+                                            {__('Systolic')}
                                         </Label>
                                         <Input
                                             id="bp_systolic"
                                             type="number"
-                                            placeholder="120"
+                                            placeholder={__('120')}
                                             value={data.bp_systolic}
                                             onChange={(e) =>
                                                 setData(
@@ -266,12 +266,12 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="bp_diastolic"
                                             className="text-xs"
                                         >
-                                            Diastólica
+                                            {__('Diastolic')}
                                         </Label>
                                         <Input
                                             id="bp_diastolic"
                                             type="number"
-                                            placeholder="80"
+                                            placeholder={__('80')}
                                             value={data.bp_diastolic}
                                             onChange={(e) =>
                                                 setData(
@@ -289,7 +289,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="respiratory_rate"
                                             className="text-xs"
                                         >
-                                            FR (rpm)
+                                            {__('RR (rpm)')}
                                         </Label>
                                         <Input
                                             id="respiratory_rate"
@@ -308,7 +308,7 @@ export default function Create({ patient, appointment }: Props) {
                                             htmlFor="oxygen_saturation"
                                             className="text-xs"
                                         >
-                                            SpO2 (%)
+                                            {__('SpO2 (%)')}
                                         </Label>
                                         <Input
                                             id="oxygen_saturation"
@@ -326,23 +326,24 @@ export default function Create({ patient, appointment }: Props) {
                             </CardContent>
                         </Card>
 
-                        {/* Evolución Clínica */}
                         <div className="space-y-6 md:col-span-2">
                             <Card>
                                 <CardHeader className="pb-3">
                                     <CardTitle className="flex items-center gap-2 text-lg">
                                         <ClipboardList className="size-4 text-primary" />
-                                        Subjetivo y Objetivo
+                                        {__('Subjective and Objective')}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="grid gap-4">
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="reason_for_visit">
-                                            Motivo de Consulta *
+                                            {__('Reason for visit')} *
                                         </Label>
                                         <Input
                                             id="reason_for_visit"
-                                            placeholder="Ej. Dolor abdominal de 2 días..."
+                                            placeholder={__(
+                                                'E.g. Abdominal pain for 2 days...',
+                                            )}
                                             value={data.reason_for_visit}
                                             onChange={(e) =>
                                                 setData(
@@ -360,13 +361,15 @@ export default function Create({ patient, appointment }: Props) {
                                     </div>
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="clinical_findings">
-                                            Hallazgos y Examen Físico
+                                            {__('Findings and Physical Exam')}
                                         </Label>
                                         <Textarea
                                             id="clinical_findings"
                                             rows={4}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                                            placeholder="Detalles observados durante la revisión..."
+                                            placeholder={__(
+                                                'Details observed during the examination...',
+                                            )}
                                             value={data.clinical_findings}
                                             onChange={(e) =>
                                                 setData(
@@ -383,19 +386,21 @@ export default function Create({ patient, appointment }: Props) {
                                 <CardHeader className="pb-3 text-indigo-600 dark:text-indigo-400">
                                     <CardTitle className="flex items-center gap-2 text-lg">
                                         <FileText className="size-4" />
-                                        Análisis y Diagnóstico
+                                        {__('Analysis and Diagnosis')}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="grid gap-4">
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="diagnosis">
-                                            Diagnóstico *
+                                            {__('Diagnosis')} *
                                         </Label>
                                         <Textarea
                                             id="diagnosis"
                                             rows={2}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-                                            placeholder="Diagnóstico clínico o CIE-10..."
+                                            placeholder={__(
+                                                'Clinical diagnosis or ICD-10...',
+                                            )}
                                             value={data.diagnosis}
                                             onChange={(e) =>
                                                 setData(
@@ -413,13 +418,17 @@ export default function Create({ patient, appointment }: Props) {
                                     </div>
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="treatment_plan">
-                                            Plan de Seguimiento / Notas Internas
+                                            {__(
+                                                'Follow-up Plan / Internal Notes',
+                                            )}
                                         </Label>
                                         <Textarea
                                             id="treatment_plan"
                                             rows={3}
                                             className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-                                            placeholder="Plan de acción, recomendaciones generales..."
+                                            placeholder={__(
+                                                'Action plan, general recommendations...',
+                                            )}
                                             value={data.treatment_plan}
                                             onChange={(e) =>
                                                 setData(
@@ -432,18 +441,18 @@ export default function Create({ patient, appointment }: Props) {
                                 </CardContent>
                             </Card>
 
-                            {/* Receta Médica */}
                             <Card className="border-primary/20 bg-primary/5">
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
                                             <CardTitle className="flex items-center gap-2 text-lg text-primary">
                                                 <Pill className="size-4" />
-                                                Receta Médica
+                                                {__('Medical Prescription')}
                                             </CardTitle>
                                             <CardDescription>
-                                                Añade medicamentos para generar
-                                                la receta imprimible.
+                                                {__(
+                                                    'Add medications to generate the printable prescription.',
+                                                )}
                                             </CardDescription>
                                         </div>
                                         <Button
@@ -454,7 +463,7 @@ export default function Create({ patient, appointment }: Props) {
                                             className="gap-1 border-primary text-primary hover:bg-primary hover:text-white"
                                         >
                                             <Plus className="size-4" />
-                                            Agregar Medicamento
+                                            {__('Add Medication')}
                                         </Button>
                                     </div>
                                 </CardHeader>
@@ -484,10 +493,14 @@ export default function Create({ patient, appointment }: Props) {
                                                         <div className="grid gap-4 md:grid-cols-4">
                                                             <div className="grid gap-1.5 md:col-span-1">
                                                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">
-                                                                    Medicamento
+                                                                    {__(
+                                                                        'Medication',
+                                                                    )}
                                                                 </Label>
                                                                 <Input
-                                                                    placeholder="Nombre / Sustancia"
+                                                                    placeholder={__(
+                                                                        'Name / Substance',
+                                                                    )}
                                                                     value={
                                                                         item.medication
                                                                     }
@@ -507,10 +520,14 @@ export default function Create({ patient, appointment }: Props) {
                                                             </div>
                                                             <div className="grid gap-1.5">
                                                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">
-                                                                    Dosis
+                                                                    {__(
+                                                                        'Dosage',
+                                                                    )}
                                                                 </Label>
                                                                 <Input
-                                                                    placeholder="500mg, 1 cap, etc."
+                                                                    placeholder={__(
+                                                                        '500mg, 1 cap, etc.',
+                                                                    )}
                                                                     value={
                                                                         item.dosage
                                                                     }
@@ -530,10 +547,14 @@ export default function Create({ patient, appointment }: Props) {
                                                             </div>
                                                             <div className="grid gap-1.5">
                                                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">
-                                                                    Frecuencia
+                                                                    {__(
+                                                                        'Frequency',
+                                                                    )}
                                                                 </Label>
                                                                 <Input
-                                                                    placeholder="Cada 8 horas..."
+                                                                    placeholder={__(
+                                                                        'Every 8 hours...',
+                                                                    )}
                                                                     value={
                                                                         item.frequency
                                                                     }
@@ -552,10 +573,14 @@ export default function Create({ patient, appointment }: Props) {
                                                             </div>
                                                             <div className="grid gap-1.5">
                                                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">
-                                                                    Duración
+                                                                    {__(
+                                                                        'Duration',
+                                                                    )}
                                                                 </Label>
                                                                 <Input
-                                                                    placeholder="Por 5 días..."
+                                                                    placeholder={__(
+                                                                        'For 5 days...',
+                                                                    )}
                                                                     value={
                                                                         item.duration
                                                                     }
@@ -579,14 +604,17 @@ export default function Create({ patient, appointment }: Props) {
 
                                             <div className="grid gap-1.5">
                                                 <Label htmlFor="prescription_instructions">
-                                                    Instrucciones Generales de
-                                                    la Receta
+                                                    {__(
+                                                        'General Prescription Instructions',
+                                                    )}
                                                 </Label>
                                                 <Textarea
                                                     id="prescription_instructions"
                                                     rows={2}
                                                     className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-                                                    placeholder="Ej. Guardar reposo, beber abundantes líquidos..."
+                                                    placeholder={__(
+                                                        'E.g. Rest, drink plenty of fluids...',
+                                                    )}
                                                     value={
                                                         data.prescription_instructions
                                                     }
@@ -603,37 +631,38 @@ export default function Create({ patient, appointment }: Props) {
                                         <div className="rounded-xl border border-dashed py-8 text-center text-muted-foreground">
                                             <Pill className="mx-auto mb-2 size-8 opacity-20" />
                                             <p className="text-sm">
-                                                No se han añadido medicamentos a
-                                                esta consulta.
+                                                {__(
+                                                    'No medications have been added to this consultation.',
+                                                )}
                                             </p>
                                         </div>
                                     )}
                                 </CardContent>
                             </Card>
 
-                            {/* Cobro de Consulta (Rápido) */}
                             <Card className="border-emerald-500/20 bg-emerald-500/5 shadow-sm">
                                 <CardHeader className="mb-4 border-b border-emerald-500/10 pb-3">
                                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                                         <DollarSign className="size-4" />
                                         <CardTitle className="text-lg">
-                                            Cobro de Consulta
+                                            {__('Consultation Payment')}
                                         </CardTitle>
                                     </div>
                                     <CardDescription>
-                                        Registra el pago de forma rápida si se
-                                        realiza en este momento.
+                                        {__(
+                                            'Record the payment quickly if it is made now.',
+                                        )}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-4 md:grid-cols-2">
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="payment_amount">
-                                            Monto ($)
+                                            {__('Amount ($)')}
                                         </Label>
                                         <Input
                                             id="payment_amount"
                                             type="number"
-                                            placeholder="0.00"
+                                            placeholder={__('0.00')}
                                             value={data.payment_amount}
                                             onChange={(e) =>
                                                 setData(
@@ -651,7 +680,7 @@ export default function Create({ patient, appointment }: Props) {
                                     </div>
                                     <div className="grid gap-1.5">
                                         <Label htmlFor="payment_method">
-                                            Método de Pago
+                                            {__('Payment Method')}
                                         </Label>
                                         <select
                                             id="payment_method"
@@ -665,13 +694,13 @@ export default function Create({ patient, appointment }: Props) {
                                             }
                                         >
                                             <option value="cash">
-                                                Efectivo
+                                                {__('Cash')}
                                             </option>
                                             <option value="card">
-                                                Tarjeta de Crédito/Débito
+                                                {__('Credit/Debit Card')}
                                             </option>
                                             <option value="transfer">
-                                                Transferencia Bancaria
+                                                {__('Bank Transfer')}
                                             </option>
                                         </select>
                                     </div>
@@ -681,7 +710,7 @@ export default function Create({ patient, appointment }: Props) {
                             <div className="flex justify-end gap-3">
                                 <Link href={`/patients/${patient.id}`}>
                                     <Button variant="outline" type="button">
-                                        Cancelar
+                                        {__('Cancel')}
                                     </Button>
                                 </Link>
                                 <Button
@@ -690,7 +719,7 @@ export default function Create({ patient, appointment }: Props) {
                                     className="gap-2 px-8"
                                 >
                                     <Save className="size-4" />
-                                    Guardar Consulta
+                                    {__('Save Consultation')}
                                 </Button>
                             </div>
                         </div>

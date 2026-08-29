@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Consultation {
@@ -19,23 +20,23 @@ interface Props {
     consultations: { data: Consultation[] };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Consultas', href: '/consultations' },
-];
-
 export default function Index({ consultations }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Consultations'), href: '/consultations' },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Consultas" />
+            <Head title={__('Consultations')} />
             <div className="flex w-full max-w-6xl flex-col gap-6 p-4">
                 <div>
                     <h1 className="flex items-center gap-2 text-2xl font-bold">
                         <Activity className="size-6" />
-                        Consultas
+                        {__('Consultations')}
                     </h1>
                     <p className="text-sm text-muted-foreground">
-                        Historial de atenciones clínicas registradas.
+                        {__('History of registered clinical visits.')}
                     </p>
                 </div>
                 <div className="grid gap-4">
@@ -75,14 +76,14 @@ export default function Index({ consultations }: Props) {
                                         href={`/consultations/${consultation.id}`}
                                         className="text-sm font-medium text-primary hover:underline"
                                     >
-                                        Ver detalles
+                                        {__('View details')}
                                     </Link>
                                 </CardContent>
                             </Card>
                         ))
                     ) : (
                         <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center text-muted-foreground">
-                            No hay consultas registradas.
+                            {__('No consultations recorded.')}
                         </div>
                     )}
                 </div>

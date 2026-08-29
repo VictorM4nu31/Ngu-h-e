@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate, formatStoredTime } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Consultation {
@@ -54,29 +55,35 @@ interface Props {
 
 export default function Show({ consultation }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Pacientes', href: '/patients' },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
         {
             title: consultation.patient.full_name,
             href: `/patients/${consultation.patient.id}`,
         },
-        { title: 'Detalle de Consulta', href: '#' },
+        { title: __('Consultation Detail'), href: '#' },
     ];
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Consulta: ${consultation.patient.full_name}`} />
+            <Head
+                title={`${__('Consultation')}: ${consultation.patient.full_name}`}
+            />
 
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center gap-4">
                     <Link href={`/patients/${consultation.patient.id}`}>
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
                     <div>
                         <h1 className="text-2xl font-bold">
-                            Detalle de Consulta
+                            {__('Consultation Detail')}
                         </h1>
                         <p className="text-sm text-muted-foreground">
                             {formatStoredDate(consultation.created_at)} -{' '}
@@ -91,29 +98,31 @@ export default function Show({ consultation }: Props) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-lg">
                                 <Activity className="size-4 text-primary" />
-                                Signos Vitales
+                                {__('Vital Signs')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-4 text-sm">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="flex items-center gap-1.5 text-muted-foreground">
-                                        <Weight className="size-3" /> Peso
+                                        <Weight className="size-3" />{' '}
+                                        {__('Weight')}
                                     </p>
                                     <p className="font-medium">
                                         {consultation.weight
                                             ? `${consultation.weight} kg`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="flex items-center gap-1.5 text-muted-foreground">
-                                        <Ruler className="size-3" /> Talla
+                                        <Ruler className="size-3" />{' '}
+                                        {__('Height')}
                                     </p>
                                     <p className="font-medium">
                                         {consultation.height
                                             ? `${consultation.height} cm`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </p>
                                 </div>
                             </div>
@@ -121,43 +130,44 @@ export default function Show({ consultation }: Props) {
                             <div className="space-y-3">
                                 <div className="flex justify-between">
                                     <span className="flex items-center gap-1.5 text-muted-foreground">
-                                        <Thermometer className="size-3" /> Temp.
+                                        <Thermometer className="size-3" />{' '}
+                                        {__('Temp.')}
                                     </span>
                                     <span className="font-medium">
                                         {consultation.temperature
                                             ? `${consultation.temperature} °C`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">
-                                        Presión A.
+                                        {__('Blood Pressure')}
                                     </span>
                                     <span className="font-medium">
                                         {consultation.bp_systolic &&
                                         consultation.bp_diastolic
                                             ? `${consultation.bp_systolic}/${consultation.bp_diastolic}`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">
-                                        F. Cardíaca
+                                        {__('Heart Rate')}
                                     </span>
                                     <span className="font-medium">
                                         {consultation.heart_rate
                                             ? `${consultation.heart_rate} lpm`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">
-                                        Sat. O2
+                                        {__('O2 Sat.')}
                                     </span>
                                     <span className="font-medium">
                                         {consultation.oxygen_saturation
                                             ? `${consultation.oxygen_saturation} %`
-                                            : 'N/A'}
+                                            : __('N/A')}
                                     </span>
                                 </div>
                             </div>
@@ -171,7 +181,7 @@ export default function Show({ consultation }: Props) {
                                 <div className="flex items-start justify-between">
                                     <CardTitle className="flex items-center gap-2 text-xl">
                                         <ClipboardList className="size-5 text-primary" />
-                                        Registro Clínico
+                                        {__('Clinical Record')}
                                     </CardTitle>
                                     <Badge variant="secondary">
                                         {consultation.doctor.name}
@@ -181,7 +191,7 @@ export default function Show({ consultation }: Props) {
                             <CardContent className="space-y-6">
                                 <div>
                                     <h3 className="mb-2 text-sm font-bold text-muted-foreground uppercase">
-                                        Motivo de Consulta
+                                        {__('Reason for visit')}
                                     </h3>
                                     <p className="text-foreground">
                                         {consultation.reason_for_visit}
@@ -191,7 +201,7 @@ export default function Show({ consultation }: Props) {
                                 {consultation.clinical_findings && (
                                     <div>
                                         <h3 className="mb-2 text-sm font-bold text-muted-foreground uppercase">
-                                            Hallazgos / Examen Físico
+                                            {__('Findings / Physical Exam')}
                                         </h3>
                                         <p className="rounded-lg border bg-muted/30 p-4 whitespace-pre-wrap text-foreground">
                                             {consultation.clinical_findings}
@@ -201,7 +211,7 @@ export default function Show({ consultation }: Props) {
 
                                 <div>
                                     <h3 className="mb-2 text-sm font-bold text-indigo-600 uppercase dark:text-indigo-400">
-                                        Diagnóstico
+                                        {__('Diagnosis')}
                                     </h3>
                                     <p className="text-lg font-medium">
                                         {consultation.diagnosis}
@@ -212,7 +222,7 @@ export default function Show({ consultation }: Props) {
                                     <div className="rounded-lg border bg-muted/50 p-4">
                                         <h3 className="mb-2 flex items-center gap-2 text-sm font-bold text-muted-foreground uppercase">
                                             <FileText className="size-4" />
-                                            Notas de Seguimiento
+                                            {__('Follow-up Notes')}
                                         </h3>
                                         <p className="whitespace-pre-wrap text-foreground">
                                             {consultation.treatment_plan}
@@ -225,7 +235,9 @@ export default function Show({ consultation }: Props) {
                                         <div className="mb-4 flex items-center justify-between">
                                             <h3 className="flex items-center gap-2 text-sm font-bold text-primary uppercase">
                                                 <Pill className="size-4" />
-                                                Receta Médica (Rp.)
+                                                {__(
+                                                    'Medical Prescription (Rp.)',
+                                                )}
                                             </h3>
                                             <div className="flex gap-2">
                                                 <a
@@ -238,7 +250,7 @@ export default function Show({ consultation }: Props) {
                                                         className="gap-2 text-xs"
                                                     >
                                                         <Eye className="size-3" />{' '}
-                                                        Ver PDF
+                                                        {__('View PDF')}
                                                     </Button>
                                                 </a>
                                                 <a
@@ -249,7 +261,7 @@ export default function Show({ consultation }: Props) {
                                                         className="gap-2 bg-primary text-xs shadow-lg shadow-primary/20"
                                                     >
                                                         <Download className="size-3" />{' '}
-                                                        Descargar
+                                                        {__('Download')}
                                                     </Button>
                                                 </a>
                                             </div>
@@ -285,7 +297,7 @@ export default function Show({ consultation }: Props) {
                                             .general_instructions && (
                                             <div className="mt-4 border-t border-primary/10 pt-4">
                                                 <p className="mb-1 text-[10px] font-bold text-muted-foreground uppercase">
-                                                    Instrucciones Generales
+                                                    {__('General Instructions')}
                                                 </p>
                                                 <p className="text-sm text-foreground italic">
                                                     {

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Patient {
@@ -40,7 +41,7 @@ export default function Edit({ patient }: Props) {
         full_name: patient.full_name || '',
         document_id: patient.document_id || '',
         birth_date: patient.birth_date ? patient.birth_date.split('T')[0] : '',
-        gender: patient.gender || '',
+        gender: patient.gender || null,
         phone: patient.phone || '',
         email: patient.email || '',
         address: patient.address || '',
@@ -52,10 +53,10 @@ export default function Edit({ patient }: Props) {
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Pacientes', href: '/patients' },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
         { title: patient.full_name, href: `/patients/${patient.id}` },
-        { title: 'Editar', href: '#' },
+        { title: __('Edit'), href: '#' },
     ];
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -65,17 +66,21 @@ export default function Edit({ patient }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Editar ${patient.full_name}`} />
+            <Head title={`${__('Edit')} ${patient.full_name}`} />
 
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/patients">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
                     <h1 className="text-2xl font-bold">
-                        Editar Paciente: {patient.full_name}
+                        {__('Edit Patient')}: {patient.full_name}
                     </h1>
                 </div>
 
@@ -83,12 +88,14 @@ export default function Edit({ patient }: Props) {
                     <div className="grid gap-6 md:grid-cols-2">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Información Personal</CardTitle>
+                                <CardTitle>
+                                    {__('Personal Information')}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="full_name">
-                                        Nombre Completo *
+                                        {__('Full Name')} *
                                     </Label>
                                     <Input
                                         id="full_name"
@@ -108,7 +115,7 @@ export default function Edit({ patient }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="document_id">
-                                            Cédula / ID
+                                            {__('Document / ID')}
                                         </Label>
                                         <Input
                                             id="document_id"
@@ -127,25 +134,31 @@ export default function Edit({ patient }: Props) {
                                         )}
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="gender">Género</Label>
+                                        <Label htmlFor="gender">
+                                            {__('Gender')}
+                                        </Label>
                                         <Select
                                             onValueChange={(val) =>
                                                 setData('gender', val)
                                             }
-                                            value={data.gender}
+                                            value={data.gender ?? undefined}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Seleccionar..." />
+                                                <SelectValue
+                                                    placeholder={__(
+                                                        'Select...',
+                                                    )}
+                                                />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="male">
-                                                    Masculino
+                                                    {__('Male')}
                                                 </SelectItem>
                                                 <SelectItem value="female">
-                                                    Femenino
+                                                    {__('Female')}
                                                 </SelectItem>
                                                 <SelectItem value="other">
-                                                    Otro
+                                                    {__('Other')}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -160,7 +173,7 @@ export default function Edit({ patient }: Props) {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="grid gap-2">
                                         <Label htmlFor="birth_date">
-                                            Fecha de Nacimiento
+                                            {__('Birth Date')}
                                         </Label>
                                         <Input
                                             id="birth_date"
@@ -180,7 +193,9 @@ export default function Edit({ patient }: Props) {
                                         )}
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="phone">Teléfono</Label>
+                                        <Label htmlFor="phone">
+                                            {__('Phone')}
+                                        </Label>
                                         <Input
                                             id="phone"
                                             value={data.phone}
@@ -197,9 +212,7 @@ export default function Edit({ patient }: Props) {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">
-                                        Correo Electrónico
-                                    </Label>
+                                    <Label htmlFor="email">{__('Email')}</Label>
                                     <Input
                                         id="email"
                                         type="email"
@@ -216,7 +229,9 @@ export default function Edit({ patient }: Props) {
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="address">Dirección</Label>
+                                    <Label htmlFor="address">
+                                        {__('Address')}
+                                    </Label>
                                     <Input
                                         id="address"
                                         value={data.address}
@@ -235,11 +250,15 @@ export default function Edit({ patient }: Props) {
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Información Médica Base</CardTitle>
+                                <CardTitle>
+                                    {__('Basic Medical Information')}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="allergies">Alergias</Label>
+                                    <Label htmlFor="allergies">
+                                        {__('Allergies')}
+                                    </Label>
                                     <Textarea
                                         id="allergies"
                                         className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -252,7 +271,7 @@ export default function Edit({ patient }: Props) {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="chronic_diseases">
-                                        Enfermedades Crónicas
+                                        {__('Chronic Diseases')}
                                     </Label>
                                     <Textarea
                                         id="chronic_diseases"
@@ -269,7 +288,7 @@ export default function Edit({ patient }: Props) {
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="medical_antecedents">
-                                        Antecedentes
+                                        {__('Medical Background')}
                                     </Label>
                                     <Textarea
                                         id="medical_antecedents"
@@ -289,12 +308,12 @@ export default function Edit({ patient }: Props) {
 
                     <Card>
                         <CardHeader>
-                            <CardTitle>Notas y Medicación</CardTitle>
+                            <CardTitle>{__('Notes and Medication')}</CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="current_medication">
-                                    Medicación Actual
+                                    {__('Current Medication')}
                                 </Label>
                                 <Input
                                     id="current_medication"
@@ -308,7 +327,9 @@ export default function Edit({ patient }: Props) {
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="notes">Notas Internas</Label>
+                                <Label htmlFor="notes">
+                                    {__('Internal Notes')}
+                                </Label>
                                 <Textarea
                                     id="notes"
                                     className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -324,7 +345,7 @@ export default function Edit({ patient }: Props) {
                     <div className="flex justify-end gap-3">
                         <Link href="/patients">
                             <Button variant="outline" type="button">
-                                Cancelar
+                                {__('Cancel')}
                             </Button>
                         </Link>
                         <Button
@@ -333,7 +354,7 @@ export default function Edit({ patient }: Props) {
                             className="flex items-center gap-2"
                         >
                             <Save className="size-4" />
-                            Actualizar Paciente
+                            {__('Update Patient')}
                         </Button>
                     </div>
                 </form>

@@ -4,6 +4,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface StaffMember {
@@ -22,11 +23,6 @@ interface Props {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Gestión de Personal', href: '/staff' },
-];
-
 const decodeLabel = (label: string) =>
     label
         .replace(/&laquo;/g, '«')
@@ -35,21 +31,28 @@ const decodeLabel = (label: string) =>
         .replace(/&rsaquo;/g, '›');
 
 export default function Index({ staff }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Staff Management'), href: '/staff' },
+    ];
+
     const handleDelete = (id: number) => {
         router.delete(`/staff/${id}`);
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Gestión de Personal" />
+            <Head title={__('Staff Management')} />
 
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="flex items-center justify-between gap-4">
-                    <h1 className="text-2xl font-bold">Gestión de Personal</h1>
+                    <h1 className="text-2xl font-bold">
+                        {__('Staff Management')}
+                    </h1>
                     <Link href="/staff/create">
                         <Button className="flex items-center gap-2">
                             <Plus className="size-4" />
-                            Nuevo Miembro
+                            {__('New Member')}
                         </Button>
                     </Link>
                 </div>
@@ -57,7 +60,7 @@ export default function Index({ staff }: Props) {
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-lg">
-                            Médicos y Administrativos
+                            {__('Doctors and Administrative Staff')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0">
@@ -66,16 +69,16 @@ export default function Index({ staff }: Props) {
                                 <thead className="bg-muted/50 text-muted-foreground">
                                     <tr>
                                         <th className="px-4 py-3 font-medium">
-                                            Nombre
+                                            {__('Name')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Email
+                                            {__('Email')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Rol
+                                            {__('Role')}
                                         </th>
                                         <th className="px-4 py-3 font-medium">
-                                            Acciones
+                                            {__('Actions')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -99,12 +102,14 @@ export default function Index({ staff }: Props) {
                                                         'doctor' ? (
                                                             <>
                                                                 <Stethoscope className="size-3.5 text-blue-500" />
-                                                                Doctor
+                                                                {__('Doctor')}
                                                             </>
                                                         ) : (
                                                             <>
                                                                 <UserCog className="size-3.5 text-orange-500" />
-                                                                Recepcionista
+                                                                {__(
+                                                                    'Receptionist',
+                                                                )}
                                                             </>
                                                         )}
                                                     </div>
@@ -117,16 +122,24 @@ export default function Index({ staff }: Props) {
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
-                                                                aria-label="Editar"
+                                                                aria-label={__(
+                                                                    'Edit',
+                                                                )}
                                                                 className="text-muted-foreground hover:text-primary"
                                                             >
                                                                 <Pencil className="size-4" />
                                                             </Button>
                                                         </Link>
                                                         <ConfirmDialog
-                                                            title="Eliminar miembro"
-                                                            description="¿Estás seguro de eliminar a este miembro del personal?"
-                                                            confirmLabel="Eliminar"
+                                                            title={__(
+                                                                'Delete member',
+                                                            )}
+                                                            description={__(
+                                                                'Are you sure you want to delete this staff member?',
+                                                            )}
+                                                            confirmLabel={__(
+                                                                'Delete',
+                                                            )}
                                                             onConfirm={() =>
                                                                 handleDelete(
                                                                     member.id,
@@ -136,7 +149,9 @@ export default function Index({ staff }: Props) {
                                                                 <Button
                                                                     variant="ghost"
                                                                     size="icon"
-                                                                    aria-label="Eliminar"
+                                                                    aria-label={__(
+                                                                        'Delete',
+                                                                    )}
                                                                     className="text-destructive hover:text-destructive"
                                                                 >
                                                                     <Trash2 className="size-4" />
@@ -153,7 +168,7 @@ export default function Index({ staff }: Props) {
                                                 colSpan={4}
                                                 className="px-4 py-8 text-center text-muted-foreground"
                                             >
-                                                No hay personal registrado.
+                                                {__('No staff registered.')}
                                             </td>
                                         </tr>
                                     )}

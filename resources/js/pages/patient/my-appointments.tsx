@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate, formatStoredTime } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Appointment {
@@ -22,11 +23,6 @@ interface Props {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Mis Citas', href: '/my-appointments' },
-];
-
 const statusColors: Record<string, string> = {
     scheduled:
         'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -39,27 +35,32 @@ const statusColors: Record<string, string> = {
         'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
 };
 
-const statusLabels: Record<string, string> = {
-    scheduled: 'Programada',
-    confirmed: 'Confirmada',
-    completed: 'Completada',
-    cancelled: 'Cancelada',
-    no_show: 'No asistió',
-};
-
 export default function MyAppointments({ appointments }: Props) {
     const data = Array.isArray(appointments)
         ? appointments
         : appointments?.data || [];
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('My Appointments'), href: '/my-appointments' },
+    ];
+
+    const statusLabels: Record<string, string> = {
+        scheduled: __('Scheduled'),
+        confirmed: __('Confirmed'),
+        completed: __('Completed'),
+        cancelled: __('Cancelled'),
+        no_show: __('No Show'),
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Mis Citas" />
+            <Head title={__('My Appointments')} />
 
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <h1 className="flex items-center gap-2 text-2xl font-bold">
                     <Calendar className="size-6" />
-                    Mis Citas
+                    {__('My Appointments')}
                 </h1>
 
                 <div className="grid gap-4">
@@ -110,10 +111,10 @@ export default function MyAppointments({ appointments }: Props) {
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/30 p-12">
                             <Calendar className="mb-4 size-12 text-muted-foreground/30" />
                             <h3 className="text-lg font-medium text-muted-foreground">
-                                No tienes citas registradas
+                                {__('You have no appointments registered')}
                             </h3>
                             <p className="text-sm text-muted-foreground/60">
-                                Tus próximas citas aparecerán aquí.
+                                {__('Your next appointments will appear here.')}
                             </p>
                         </div>
                     )}

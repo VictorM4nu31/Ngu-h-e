@@ -29,16 +29,17 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Pacientes', href: '/patients' },
-    { title: 'Nuevo', href: '/patients/create' },
-];
 
 export default function Create() {
     const [activeTab, setActiveTab] = useState('personal');
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
+        { title: __('New'), href: '/patients/create' },
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         full_name: '',
         document_id: '',
@@ -61,17 +62,21 @@ export default function Create() {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Nuevo Paciente" />
+            <Head title={__('New Patient')} />
 
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/patients">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
                     <h1 className="text-2xl font-bold">
-                        Registrar Nuevo Paciente
+                        {__('Register New Patient')}
                     </h1>
                 </div>
 
@@ -88,7 +93,7 @@ export default function Create() {
                             >
                                 <User className="mr-2 size-4" />
                                 <span className="hidden sm:inline">
-                                    1. Info Personal
+                                    {__('1. Personal Info')}
                                 </span>
                                 <span className="sm:hidden">1</span>
                             </TabsTrigger>
@@ -98,7 +103,7 @@ export default function Create() {
                             >
                                 <Stethoscope className="mr-2 size-4" />
                                 <span className="hidden sm:inline">
-                                    2. Historial Médico
+                                    {__('2. Medical History')}
                                 </span>
                                 <span className="sm:hidden">2</span>
                             </TabsTrigger>
@@ -108,13 +113,12 @@ export default function Create() {
                             >
                                 <FileText className="mr-2 size-4" />
                                 <span className="hidden sm:inline">
-                                    3. Adicional
+                                    {__('3. Additional')}
                                 </span>
                                 <span className="sm:hidden">3</span>
                             </TabsTrigger>
                         </TabsList>
 
-                        {/* --- TAB 1: PERSONAL --- */}
                         <TabsContent
                             value="personal"
                             className="focus-visible:ring-0 focus-visible:outline-none"
@@ -123,17 +127,18 @@ export default function Create() {
                                 <CardHeader className="border-b bg-muted/30 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-navy">
                                         <User className="size-5 text-blue-digital" />
-                                        Información Personal
+                                        {__('Personal Information')}
                                     </CardTitle>
                                     <CardDescription>
-                                        Datos básicos y de contacto del
-                                        paciente.
+                                        {__(
+                                            'Basic data and contact info of the patient.',
+                                        )}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-6 pt-6">
                                     <div className="grid gap-2">
                                         <Label htmlFor="full_name">
-                                            Nombre Completo{' '}
+                                            {__('Full Name')}{' '}
                                             <span className="text-destructive">
                                                 *
                                             </span>
@@ -159,7 +164,7 @@ export default function Create() {
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                         <div className="grid gap-2">
                                             <Label htmlFor="document_id">
-                                                Cédula / ID
+                                                {__('Document / ID')}
                                             </Label>
                                             <Input
                                                 id="document_id"
@@ -180,7 +185,7 @@ export default function Create() {
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="gender">
-                                                Género
+                                                {__('Gender')}
                                             </Label>
                                             <Select
                                                 onValueChange={(val) =>
@@ -189,17 +194,21 @@ export default function Create() {
                                                 value={data.gender ?? undefined}
                                             >
                                                 <SelectTrigger className="focus-visible:ring-blue-digital">
-                                                    <SelectValue placeholder="Seleccionar..." />
+                                                    <SelectValue
+                                                        placeholder={__(
+                                                            'Select...',
+                                                        )}
+                                                    />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="male">
-                                                        Masculino
+                                                        {__('Male')}
                                                     </SelectItem>
                                                     <SelectItem value="female">
-                                                        Femenino
+                                                        {__('Female')}
                                                     </SelectItem>
                                                     <SelectItem value="other">
-                                                        Otro
+                                                        {__('Other')}
                                                     </SelectItem>
                                                 </SelectContent>
                                             </Select>
@@ -214,7 +223,7 @@ export default function Create() {
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                         <div className="grid gap-2">
                                             <Label htmlFor="birth_date">
-                                                Fecha de Nacimiento
+                                                {__('Birth Date')}
                                             </Label>
                                             <Input
                                                 id="birth_date"
@@ -236,7 +245,7 @@ export default function Create() {
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="phone">
-                                                Teléfono
+                                                {__('Phone')}
                                             </Label>
                                             <Input
                                                 id="phone"
@@ -260,7 +269,7 @@ export default function Create() {
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                         <div className="grid gap-2">
                                             <Label htmlFor="email">
-                                                Correo Electrónico
+                                                {__('Email')}
                                             </Label>
                                             <Input
                                                 id="email"
@@ -282,7 +291,7 @@ export default function Create() {
                                         </div>
                                         <div className="grid gap-2">
                                             <Label htmlFor="address">
-                                                Dirección
+                                                {__('Address')}
                                             </Label>
                                             <Input
                                                 id="address"
@@ -311,13 +320,12 @@ export default function Create() {
                                     onClick={() => setActiveTab('medical')}
                                     className="flex items-center gap-2 bg-blue-digital text-white hover:bg-blue-digital/90"
                                 >
-                                    Siguiente{' '}
+                                    {__('Next')}{' '}
                                     <ChevronRight className="size-4" />
                                 </Button>
                             </div>
                         </TabsContent>
 
-                        {/* --- TAB 2: MEDICAL --- */}
                         <TabsContent
                             value="medical"
                             className="focus-visible:ring-0 focus-visible:outline-none"
@@ -326,17 +334,18 @@ export default function Create() {
                                 <CardHeader className="border-b bg-muted/30 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-navy">
                                         <Stethoscope className="size-5 text-mint" />
-                                        Información Médica Base
+                                        {__('Basic Medical Information')}
                                     </CardTitle>
                                     <CardDescription>
-                                        Antecedentes y condiciones críticas
-                                        relevantes.
+                                        {__(
+                                            'Background and critical relevant conditions.',
+                                        )}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-6 pt-6">
                                     <div className="grid gap-2">
                                         <Label htmlFor="allergies">
-                                            Alergias Conocidas
+                                            {__('Known Allergies')}
                                         </Label>
                                         <Textarea
                                             id="allergies"
@@ -348,13 +357,15 @@ export default function Create() {
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Ej. Penicilina, Polen... (Deje en blanco si no tiene)"
+                                            placeholder={__(
+                                                'E.g. Penicillin, Pollen... (Leave blank if none)',
+                                            )}
                                         />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="chronic_diseases">
-                                            Enfermedades Crónicas
+                                            {__('Chronic Diseases')}
                                         </Label>
                                         <Textarea
                                             id="chronic_diseases"
@@ -366,13 +377,15 @@ export default function Create() {
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Ej. Diabetes, Hipertensión..."
+                                            placeholder={__(
+                                                'E.g. Diabetes, Hypertension...',
+                                            )}
                                         />
                                     </div>
 
                                     <div className="grid gap-2">
                                         <Label htmlFor="medical_antecedents">
-                                            Antecedentes Familiares / Personales
+                                            {__('Family / Personal History')}
                                         </Label>
                                         <Textarea
                                             id="medical_antecedents"
@@ -384,7 +397,9 @@ export default function Create() {
                                                     e.target.value,
                                                 )
                                             }
-                                            placeholder="Detalles sobre historial familiar importante..."
+                                            placeholder={__(
+                                                'Details about important family history...',
+                                            )}
                                         />
                                     </div>
                                 </CardContent>
@@ -397,20 +412,20 @@ export default function Create() {
                                     onClick={() => setActiveTab('personal')}
                                     className="flex items-center gap-2 border-border text-foreground hover:bg-muted"
                                 >
-                                    <ChevronLeft className="size-4" /> Anterior
+                                    <ChevronLeft className="size-4" />{' '}
+                                    {__('Previous')}
                                 </Button>
                                 <Button
                                     type="button"
                                     onClick={() => setActiveTab('notes')}
                                     className="flex items-center gap-2 bg-blue-digital text-white hover:bg-blue-digital/90"
                                 >
-                                    Siguiente{' '}
+                                    {__('Next')}{' '}
                                     <ChevronRight className="size-4" />
                                 </Button>
                             </div>
                         </TabsContent>
 
-                        {/* --- TAB 3: NOTES & SUBMIT --- */}
                         <TabsContent
                             value="notes"
                             className="focus-visible:ring-0 focus-visible:outline-none"
@@ -419,17 +434,18 @@ export default function Create() {
                                 <CardHeader className="border-b bg-muted/30 pb-4">
                                     <CardTitle className="flex items-center gap-2 text-navy">
                                         <FileText className="size-5 text-warning" />
-                                        Notas Adicionales
+                                        {__('Additional Notes')}
                                     </CardTitle>
                                     <CardDescription>
-                                        Tratamientos actuales y observaciones
-                                        internas.
+                                        {__(
+                                            'Current treatments and internal observations.',
+                                        )}
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-6 pt-6">
                                     <div className="grid gap-2">
                                         <Label htmlFor="current_medication">
-                                            Medicación Actual
+                                            {__('Current Medication')}
                                         </Label>
                                         <Input
                                             id="current_medication"
@@ -441,12 +457,16 @@ export default function Create() {
                                                 )
                                             }
                                             className="focus-visible:ring-blue-digital"
-                                            placeholder="Ej. Losartán 50mg diario"
+                                            placeholder={__(
+                                                'E.g. Losartan 50mg daily',
+                                            )}
                                         />
                                     </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="notes">
-                                            Notas Internas de Clínica (Privadas)
+                                            {__(
+                                                'Internal Clinical Notes (Private)',
+                                            )}
                                         </Label>
                                         <Textarea
                                             id="notes"
@@ -455,7 +475,9 @@ export default function Create() {
                                             onChange={(e) =>
                                                 setData('notes', e.target.value)
                                             }
-                                            placeholder="Cualquier información relevante para el equipo de recepción o médicos..."
+                                            placeholder={__(
+                                                'Any relevant information for the reception or medical team...',
+                                            )}
                                         />
                                     </div>
                                 </CardContent>
@@ -468,7 +490,8 @@ export default function Create() {
                                     onClick={() => setActiveTab('medical')}
                                     className="flex items-center gap-2 border-border text-foreground hover:bg-muted"
                                 >
-                                    <ChevronLeft className="size-4" /> Anterior
+                                    <ChevronLeft className="size-4" />{' '}
+                                    {__('Previous')}
                                 </Button>
                                 <div className="flex items-center gap-3">
                                     <Link href="/patients">
@@ -477,7 +500,7 @@ export default function Create() {
                                             type="button"
                                             className="text-slate-500 hover:text-slate-700"
                                         >
-                                            Cancelar
+                                            {__('Cancel')}
                                         </Button>
                                     </Link>
                                     <Button
@@ -486,7 +509,7 @@ export default function Create() {
                                         className="flex items-center gap-2 bg-success font-medium text-white shadow-md hover:bg-success/90"
                                     >
                                         <Save className="size-4" />
-                                        Finalizar y Guardar
+                                        {__('Finish and Save')}
                                     </Button>
                                 </div>
                             </div>

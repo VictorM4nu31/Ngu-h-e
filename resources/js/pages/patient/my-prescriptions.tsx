@@ -3,6 +3,8 @@ import { FileText, Download, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
+import { formatStoredDate } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Prescription {
@@ -23,24 +25,24 @@ interface Props {
     };
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Mis Recetas', href: '/my-prescriptions' },
-];
-
 export default function MyPrescriptions({ prescriptions }: Props) {
     const data = Array.isArray(prescriptions)
         ? prescriptions
         : prescriptions?.data || [];
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('My Prescriptions'), href: '/my-prescriptions' },
+    ];
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Mis Recetas" />
+            <Head title={__('My Prescriptions')} />
 
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <h1 className="flex items-center gap-2 text-2xl font-bold">
                     <FileText className="size-6" />
-                    Mis Recetas
+                    {__('My Prescriptions')}
                 </h1>
 
                 <div className="grid gap-4">
@@ -56,15 +58,15 @@ export default function MyPrescriptions({ prescriptions }: Props) {
                                         <div className="flex-1 space-y-1">
                                             <p className="text-sm font-bold">
                                                 {rx.consultation?.diagnosis ||
-                                                    'Receta médica'}
+                                                    __('Medical prescription')}
                                             </p>
                                             <p className="text-xs text-muted-foreground">
-                                                Dr.{' '}
+                                                {__('Dr.')}{' '}
                                                 {rx.consultation?.doctor?.name}{' '}
                                                 —{' '}
-                                                {new Date(
+                                                {formatStoredDate(
                                                     rx.created_at,
-                                                ).toLocaleDateString()}
+                                                )}
                                             </p>
                                             {rx.instructions && (
                                                 <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
@@ -84,7 +86,7 @@ export default function MyPrescriptions({ prescriptions }: Props) {
                                                     className="gap-1.5"
                                                 >
                                                     <Eye className="size-3.5" />
-                                                    Ver
+                                                    {__('View')}
                                                 </Button>
                                             </Link>
                                             <Link
@@ -95,7 +97,7 @@ export default function MyPrescriptions({ prescriptions }: Props) {
                                                     className="gap-1.5"
                                                 >
                                                     <Download className="size-3.5" />
-                                                    Descargar
+                                                    {__('Download')}
                                                 </Button>
                                             </Link>
                                         </div>
@@ -107,11 +109,12 @@ export default function MyPrescriptions({ prescriptions }: Props) {
                         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/30 p-12">
                             <FileText className="mb-4 size-12 text-muted-foreground/30" />
                             <h3 className="text-lg font-medium text-muted-foreground">
-                                No tienes recetas registradas
+                                {__('You have no prescriptions registered')}
                             </h3>
                             <p className="text-sm text-muted-foreground/60">
-                                Tus recetas médicas aparecerán aquí cuando el
-                                doctor las emita.
+                                {__(
+                                    'Your medical prescriptions will appear here when the doctor issues them.',
+                                )}
                             </p>
                         </div>
                     )}

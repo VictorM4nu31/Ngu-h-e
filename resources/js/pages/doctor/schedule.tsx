@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { Switch } from '@/components/ui/switch';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Schedule {
@@ -27,22 +28,22 @@ interface Props {
     schedules: Schedule[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Mis Horarios', href: '/my-schedule' },
-];
-
 const DAYS_OF_WEEK = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
 ];
 
 export default function DoctorSchedule({ schedules }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('My Schedule'), href: '/my-schedule' },
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         schedules: schedules.map((s) => ({
             ...s,
@@ -69,17 +70,18 @@ export default function DoctorSchedule({ schedules }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Gestión de Horarios" />
+            <Head title={__('Schedule Management')} />
 
             <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
                 <div className="flex items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold">
-                            Mis Horarios de Atención
+                            {__('My Schedule')}
                         </h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Configura los días y horas en los que estás
-                            disponible para recibir citas.
+                            {__(
+                                'Set the days and hours you are available to receive appointments.',
+                            )}
                         </p>
                     </div>
                     <Clock className="hidden size-8 text-primary/50 sm:block" />
@@ -89,12 +91,12 @@ export default function DoctorSchedule({ schedules }: Props) {
                     <form onSubmit={handleSubmit}>
                         <CardHeader>
                             <CardTitle className="text-lg">
-                                Días de la Semana
+                                {__('Days of the Week')}
                             </CardTitle>
                             <CardDescription>
-                                Activa los días que trabajas e indica el horario
-                                de inicio y fin. Las citas tendrán una duración
-                                de 30 minutos dentro de estos rangos.
+                                {__(
+                                    'Activate the days you work and set the start and end time. Appointments will last 30 minutes within these ranges.',
+                                )}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -130,11 +132,11 @@ export default function DoctorSchedule({ schedules }: Props) {
                                                         : 'text-muted-foreground'
                                                 }`}
                                             >
-                                                {
+                                                {__(
                                                     DAYS_OF_WEEK[
                                                         schedule.day_of_week
-                                                    ]
-                                                }
+                                                    ],
+                                                )}
                                             </Label>
                                         </div>
 
@@ -143,11 +145,11 @@ export default function DoctorSchedule({ schedules }: Props) {
                                         >
                                             <div className="grid gap-2">
                                                 <Label className="hidden text-xs text-muted-foreground sm:block">
-                                                    Hora de Inicio
+                                                    {__('Start Time')}
                                                 </Label>
                                                 <div className="flex items-center gap-2">
                                                     <span className="w-8 text-xs text-muted-foreground sm:hidden">
-                                                        De:
+                                                        {__('From:')}
                                                     </span>
                                                     <Input
                                                         type="time"
@@ -177,11 +179,11 @@ export default function DoctorSchedule({ schedules }: Props) {
 
                                             <div className="grid gap-2">
                                                 <Label className="hidden text-xs text-muted-foreground sm:block">
-                                                    Hora de Fin
+                                                    {__('End Time')}
                                                 </Label>
                                                 <div className="flex items-center gap-2">
                                                     <span className="w-8 text-xs text-muted-foreground sm:hidden">
-                                                        A:
+                                                        {__('To:')}
                                                     </span>
                                                     <Input
                                                         type="time"
@@ -224,7 +226,7 @@ export default function DoctorSchedule({ schedules }: Props) {
                                     className="min-w-[150px]"
                                 >
                                     {processing && <Spinner className="mr-2" />}
-                                    Guardar Horarios
+                                    {__('Save Schedules')}
                                 </Button>
                             </div>
                         </CardContent>

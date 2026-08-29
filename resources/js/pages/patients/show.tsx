@@ -33,6 +33,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AppLayout from '@/layouts/app-layout';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Attachment {
@@ -101,8 +102,8 @@ export default function Show({ patient }: Props) {
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Pacientes', href: '/patients' },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Patients'), href: '/patients' },
         { title: patient.full_name, href: '#' },
     ];
 
@@ -160,7 +161,7 @@ export default function Show({ patient }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`Expediente: ${patient.full_name}`} />
+            <Head title={`${__('Record')}: ${patient.full_name}`} />
 
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 pb-10">
                 {/* Header Acciones */}
@@ -187,10 +188,11 @@ export default function Show({ patient }: Props) {
                                 <span>•</span>
                                 <span className="capitalize">
                                     {patient.gender === 'male'
-                                        ? 'Masculino'
+                                        ? __('Male')
                                         : patient.gender === 'female'
-                                          ? 'Femenino'
-                                          : patient.gender || 'No especificado'}
+                                          ? __('Female')
+                                          : patient.gender ||
+                                            __('Not specified')}
                                 </span>
                             </div>
                         </div>
@@ -199,7 +201,7 @@ export default function Show({ patient }: Props) {
                         <Link href={`/patients/${patient.id}/edit`}>
                             <Button variant="outline" className="gap-2">
                                 <Edit className="size-4" />
-                                Editar Perfil
+                                {__('Edit Profile')}
                             </Button>
                         </Link>
                         <Link
@@ -207,40 +209,39 @@ export default function Show({ patient }: Props) {
                         >
                             <Button className="gap-2 shadow-lg shadow-primary/20">
                                 <Activity className="size-4" />
-                                Nueva Consulta
+                                {__('New Consultation')}
                             </Button>
                         </Link>
                     </div>
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-4">
-                    {/* Lateral: Alertas y Contacto */}
+                    {/* Lateral: Alertas y {__('Contact')} */}
                     <div className="space-y-6 md:col-span-1">
                         <Card className="border-destructive/30 bg-destructive/5 shadow-sm">
                             <CardHeader className="pb-2">
                                 <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider text-destructive uppercase">
                                     <AlertCircle className="size-4" />
-                                    Alertas Médicas
+                                    {__('Medical Alerts')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4 text-sm">
                                 <div>
                                     <p className="mb-1 text-xs font-semibold text-destructive/80 uppercase">
-                                        Alergias
+                                        {__('Allergies')}
                                     </p>
                                     <p className="font-medium text-destructive">
-                                        {patient.allergies ||
-                                            'Ninguna conocida'}
+                                        {patient.allergies || __('None known')}
                                     </p>
                                 </div>
                                 <Separator className="bg-destructive/20" />
                                 <div>
                                     <p className="mb-1 text-xs font-semibold text-destructive/80 uppercase">
-                                        Curas Crónicas
+                                        {__('Chronic Diseases')}
                                     </p>
                                     <p className="font-medium text-destructive">
                                         {patient.chronic_diseases ||
-                                            'Ninguna reportada'}
+                                            __('None reported')}
                                     </p>
                                 </div>
                             </CardContent>
@@ -249,7 +250,7 @@ export default function Show({ patient }: Props) {
                         <Card>
                             <CardHeader className="pb-3">
                                 <CardTitle className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
-                                    Contacto
+                                    {__('Contact')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="grid gap-4 text-sm">
@@ -291,30 +292,30 @@ export default function Show({ patient }: Props) {
                                 >
                                     <History className="size-4" />
                                     <span className="hidden sm:inline">
-                                        Evolución
+                                        {__('Evolution')}
                                     </span>
                                 </TabsTrigger>
                                 <TabsTrigger value="vitals" className="gap-2">
                                     <TrendingUp className="size-4" />
                                     <span className="hidden sm:inline">
-                                        Tendencias
+                                        {__('Trends')}
                                     </span>
                                 </TabsTrigger>
                                 <TabsTrigger value="clinical" className="gap-2">
                                     <NotebookTabs className="size-4" />
                                     <span className="hidden sm:inline">
-                                        Resumen
+                                        {__('Summary')}
                                     </span>
                                 </TabsTrigger>
                                 <TabsTrigger value="docs" className="gap-2">
                                     <Paperclip className="size-4" />
                                     <span className="hidden sm:inline">
-                                        Documentos
+                                        {__('Documents')}
                                     </span>
                                 </TabsTrigger>
                             </TabsList>
 
-                            {/* TAB: Evolución (Timeline Unificado) */}
+                            {/* TAB: {__('Evolution')} (Timeline Unificado) */}
                             <TabsContent
                                 value="evolution"
                                 className="space-y-6"
@@ -380,7 +381,9 @@ export default function Show({ patient }: Props) {
                                                                 href={`/consultations/${item.data.id}`}
                                                                 className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                                                             >
-                                                                Ver detalles{' '}
+                                                                {__(
+                                                                    'View details',
+                                                                )}{' '}
                                                                 <Eye className="size-3" />
                                                             </Link>
                                                         </div>
@@ -419,7 +422,7 @@ export default function Show({ patient }: Props) {
                                     <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center text-muted-foreground">
                                         <History className="mx-auto mb-4 size-12 opacity-20" />
                                         <p>
-                                            No hay actividad registrada para
+                                            {__('No activity recorded')} para
                                             este paciente.
                                         </p>
                                     </div>
@@ -431,11 +434,11 @@ export default function Show({ patient }: Props) {
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>
-                                            Tendencias de Salud
+                                            {__('Trends')} de Salud
                                         </CardTitle>
                                         <CardDescription>
-                                            Evolución histórica de métricas
-                                            clave.
+                                            {__('Evolution')} histórica de
+                                            métricas clave.
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -444,20 +447,22 @@ export default function Show({ patient }: Props) {
                                 </Card>
                             </TabsContent>
 
-                            {/* TAB: Resumen Clínico */}
+                            {/* TAB: {__('Summary')} Clínico */}
                             <TabsContent value="clinical">
                                 <div className="grid gap-6">
                                     <Card>
                                         <CardHeader>
                                             <CardTitle className="flex items-center gap-2 text-lg">
                                                 <AlertCircle className="size-4 text-primary" />
-                                                Antecedentes Médicos
+                                                {__('Medical Background')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>
                                             <p className="rounded-lg border bg-muted/30 p-4 text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
                                                 {patient.medical_antecedents ||
-                                                    'No se han registrado antecedentes.'}
+                                                    __(
+                                                        'No medical history recorded.',
+                                                    )}
                                             </p>
                                         </CardContent>
                                     </Card>
@@ -466,13 +471,15 @@ export default function Show({ patient }: Props) {
                                         <CardHeader>
                                             <CardTitle className="flex items-center gap-2 text-lg">
                                                 <Activity className="size-4 text-primary" />
-                                                Medicación Actual
+                                                {__('Current Medication')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>
                                             <p className="rounded-lg border border-primary/10 bg-primary/5 p-4 text-sm leading-relaxed font-medium whitespace-pre-wrap text-muted-foreground">
                                                 {patient.current_medication ||
-                                                    'No hay medicación registrada.'}
+                                                    __(
+                                                        'No medication recorded.',
+                                                    )}
                                             </p>
                                         </CardContent>
                                     </Card>
@@ -480,26 +487,26 @@ export default function Show({ patient }: Props) {
                                     <Card>
                                         <CardHeader>
                                             <CardTitle className="text-lg">
-                                                Notas Adicionales
+                                                {__('Additional Notes')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>
                                             <p className="text-sm text-muted-foreground italic">
                                                 {patient.notes ||
-                                                    'Sin notas adicionales.'}
+                                                    __('No additional notes.')}
                                             </p>
                                         </CardContent>
                                     </Card>
                                 </div>
                             </TabsContent>
 
-                            {/* TAB: Documentos */}
+                            {/* TAB: {__('Documents')} */}
                             <TabsContent value="docs" className="space-y-6">
                                 <Card>
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2 text-lg">
                                             <Upload className="size-4" />
-                                            Subir Nuevo Documento
+                                            {__('Upload New Document')}
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent>
@@ -512,7 +519,7 @@ export default function Show({ patient }: Props) {
                                                     htmlFor="file"
                                                     className="text-xs font-bold uppercase"
                                                 >
-                                                    Archivo
+                                                    {__('File')}
                                                 </Label>
                                                 <Input
                                                     id="file"
@@ -533,7 +540,7 @@ export default function Show({ patient }: Props) {
                                                     htmlFor="label"
                                                     className="text-xs font-bold uppercase"
                                                 >
-                                                    Etiqueta
+                                                    {__('Label')}
                                                 </Label>
                                                 <Input
                                                     id="label"
@@ -553,8 +560,8 @@ export default function Show({ patient }: Props) {
                                                 className="w-full px-8 md:w-auto"
                                             >
                                                 {processing
-                                                    ? 'Subiendo...'
-                                                    : 'Subir'}
+                                                    ? __('Uploading...')
+                                                    : __('Upload')}
                                             </Button>
                                         </form>
                                     </CardContent>
@@ -590,8 +597,12 @@ export default function Show({ patient }: Props) {
                                                             </a>
                                                             <ConfirmDialog
                                                                 title="Eliminar archivo"
-                                                                description="¿Estás seguro de eliminar este archivo?"
-                                                                confirmLabel="Eliminar"
+                                                                description={__(
+                                                                    'Are you sure you want to delete this file?',
+                                                                )}
+                                                                confirmLabel={__(
+                                                                    'Delete',
+                                                                )}
                                                                 onConfirm={() =>
                                                                     router.delete(
                                                                         `/attachments/${file.id}`,
@@ -635,7 +646,9 @@ export default function Show({ patient }: Props) {
                                     ) : (
                                         <div className="col-span-full py-12 text-center text-muted-foreground">
                                             <Paperclip className="mx-auto mb-4 size-12 opacity-10" />
-                                            <p>No hay documentos adjuntos.</p>
+                                            <p>
+                                                {__('No documents attached.')}
+                                            </p>
                                         </div>
                                     )}
                                 </div>

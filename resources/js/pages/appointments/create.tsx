@@ -20,6 +20,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { localDateTimeInputValue } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Props {
@@ -28,17 +29,17 @@ interface Props {
     selected_patient_id?: string;
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Agenda', href: '/appointments' },
-    { title: 'Agendar Cita', href: '#' },
-];
-
 export default function Create({
     patients,
     doctors,
     selected_patient_id,
 }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Appointments'), href: '/appointments' },
+        { title: __('New Appointment'), href: '#' },
+    ];
+
     const { data, setData, post, processing, errors } = useForm({
         patient_id: selected_patient_id || '',
         doctor_id: '',
@@ -65,17 +66,17 @@ export default function Create({
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Agendar Cita" />
+            <Head title={__('New Appointment')} />
 
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/appointments">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button variant="ghost" size="icon" aria-label={__('Back')}>
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
                     <h1 className="text-2xl font-bold text-foreground">
-                        Agendar Nueva Cita
+                        {__('New Appointment')}
                     </h1>
                 </div>
 
@@ -84,15 +85,17 @@ export default function Create({
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="size-5" />
-                                Detalles de la Cita
+                                {__('Appointment Details')}
                             </CardTitle>
                             <CardDescription>
-                                Seleccione el paciente, médico y horario.
+                                {__('Select the patient, doctor and schedule.')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="patient_id">Paciente *</Label>
+                                <Label htmlFor="patient_id">
+                                    {__('Patient')} *
+                                </Label>
                                 <Select
                                     onValueChange={(val) =>
                                         setData('patient_id', val)
@@ -100,7 +103,7 @@ export default function Create({
                                     value={data.patient_id.toString()}
                                 >
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un paciente..." />
+                                        <SelectValue placeholder={__('Select a patient...')} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {patients.map((p) => (
@@ -122,7 +125,7 @@ export default function Create({
 
                             <div className="grid gap-2">
                                 <Label htmlFor="doctor_id">
-                                    Médico Responsable *
+                                    {__('Responsible Doctor')} *
                                 </Label>
                                 <Select
                                     onValueChange={(val) =>
@@ -131,7 +134,7 @@ export default function Create({
                                     value={data.doctor_id}
                                 >
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Seleccione un médico..." />
+                                        <SelectValue placeholder={__('Select a doctor...')} />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {doctors.map((d) => (
@@ -153,7 +156,9 @@ export default function Create({
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="start_time">Inicio *</Label>
+                                    <Label htmlFor="start_time">
+                                        {__('Start')} *
+                                    </Label>
                                     <Input
                                         id="start_time"
                                         type="datetime-local"
@@ -172,7 +177,9 @@ export default function Create({
                                     )}
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="end_time">Fin *</Label>
+                                    <Label htmlFor="end_time">
+                                        {__('End')} *
+                                    </Label>
                                     <Input
                                         id="end_time"
                                         type="datetime-local"
@@ -192,11 +199,11 @@ export default function Create({
 
                             <div className="grid gap-2">
                                 <Label htmlFor="reason">
-                                    Motivo de Consulta
+                                    {__('Reason for visit')}
                                 </Label>
                                 <Input
                                     id="reason"
-                                    placeholder="Ej. Dolor de cabeza, Seguimiento..."
+                                    placeholder={__('E.g. Headache, Follow-up...')}
                                     value={data.reason}
                                     onChange={(e) =>
                                         setData('reason', e.target.value)
@@ -210,7 +217,9 @@ export default function Create({
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="notes">Notas adicionales</Label>
+                                <Label htmlFor="notes">
+                                    {__('Additional notes')}
+                                </Label>
                                 <Textarea
                                     id="notes"
                                     className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -226,7 +235,7 @@ export default function Create({
                     <div className="flex justify-end gap-3">
                         <Link href="/appointments">
                             <Button variant="outline" type="button">
-                                Cancelar
+                                {__('Cancel')}
                             </Button>
                         </Link>
                         <Button
@@ -235,7 +244,7 @@ export default function Create({
                             className="flex items-center gap-2"
                         >
                             <Save className="size-4" />
-                            Agendar Cita
+                            {__('Schedule Appointment')}
                         </Button>
                     </div>
                 </form>

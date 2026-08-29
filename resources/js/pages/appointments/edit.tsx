@@ -11,8 +11,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { localDateTimeInputValue } from '@/lib/date';
 import AppLayout from '@/layouts/app-layout';
+import { localDateTimeInputValue } from '@/lib/date';
 import type { BreadcrumbItem } from '@/types';
 
 interface Appointment {
