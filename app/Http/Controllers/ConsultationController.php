@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Consultations\CreateConsultationAction;
-use App\Enums\PaymentMethod;
+use App\Http\Requests\Consultations\StoreConsultationRequest;
 use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Patient;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ConsultationController extends Controller
@@ -55,35 +54,9 @@ class ConsultationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CreateConsultationAction $action)
+    public function store(StoreConsultationRequest $request, CreateConsultationAction $action)
     {
-        $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:users,id',
-            'appointment_id' => 'nullable|exists:appointments,id',
-            'weight' => 'nullable|numeric|between:0,500',
-            'height' => 'nullable|numeric|between:0,300',
-            'temperature' => 'nullable|numeric|between:30,45',
-            'bp_systolic' => 'nullable|integer|between:40,250',
-            'bp_diastolic' => 'nullable|integer|between:30,150',
-            'heart_rate' => 'nullable|integer|between:30,220',
-            'respiratory_rate' => 'nullable|integer|between:8,60',
-            'oxygen_saturation' => 'nullable|integer|between:50,100',
-            'reason_for_visit' => 'required|string',
-            'clinical_findings' => 'nullable|string',
-            'diagnosis' => 'required|string',
-            'treatment_plan' => 'nullable|string',
-            // Prescription Data
-            'prescription_items' => 'nullable|array',
-            'prescription_items.*.medication' => 'required_with:prescription_items|string',
-            'prescription_items.*.dosage' => 'required_with:prescription_items|string',
-            'prescription_items.*.frequency' => 'nullable|string',
-            'prescription_items.*.duration' => 'nullable|string',
-            'prescription_instructions' => 'nullable|string',
-            // Payment Data
-            'payment_amount' => 'nullable|numeric|min:0',
-            'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
-        ]);
+        $validated = $request->validated();
 
         // Forzar doctor_id al usuario autenticado (prevenir suplantación)
         $validated['doctor_id'] = $request->user()->id;

@@ -111,3 +111,21 @@ test('staff cannot move an appointment onto a conflicting time', function () {
         ])
         ->assertSessionHasErrors(['start_time']);
 });
+
+test('staff cannot be assigned as doctor if the user lacks the doctor role', function () {
+    [$admin, , $patient] = makeStaffContext();
+
+    $nonDoctor = User::factory()->create();
+    $nonDoctor->assignRole('patient');
+
+    $start = Carbon::tomorrow()->setTime(9, 0);
+
+    $this->actingAs($admin)
+        ->post(route('appointments.store'), [
+            'patient_id' => $patient->id,
+            'doctor_id' => $nonDoctor->id,
+            'start_time' => $start->format('Y-m-d H:i'),
+            'end_time' => $start->copy()->addMinutes(30)->format('Y-m-d H:i'),
+        ])
+        ->assertSessionHasErrors(['doctor_id']);
+});

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DoctorSchedules\StoreDoctorScheduleRequest;
 use App\Models\DoctorSchedule;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,7 +15,7 @@ class DoctorScheduleController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        
+
         // Fetch existing schedules or create a default 7-day structure
         $dbSchedules = DoctorSchedule::where('user_id', $user->id)
             ->orderBy('day_of_week')
@@ -44,19 +45,13 @@ class DoctorScheduleController extends Controller
     /**
      * Update the doctor's schedule.
      */
-    public function store(Request $request)
+    public function store(StoreDoctorScheduleRequest $request)
     {
-        $request->validate([
-            'schedules' => 'required|array|size:7',
-            'schedules.*.day_of_week' => 'required|integer|min:0|max:6',
-            'schedules.*.is_working' => 'required|boolean',
-            'schedules.*.start_time' => 'nullable|date_format:H:i',
-            'schedules.*.end_time' => 'nullable|date_format:H:i|after:schedules.*.start_time',
-        ]);
+        $validated = $request->validated();
 
         $user = $request->user();
 
-        foreach ($request->schedules as $scheduleData) {
+        foreach ($validated['schedules'] as $scheduleData) {
             DoctorSchedule::updateOrCreate(
                 [
                     'user_id' => $user->id,

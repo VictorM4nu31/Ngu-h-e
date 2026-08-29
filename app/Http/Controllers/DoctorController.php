@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Doctors\StoreDoctorRequest;
+use App\Http\Requests\Doctors\UpdateDoctorRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
 class DoctorController extends Controller
@@ -32,22 +32,17 @@ class DoctorController extends Controller
     /**
      * Store a newly created staff member in storage.
      */
-    public function store(Request $request)
+    public function store(StoreDoctorRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|string|in:doctor,receptionist',
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
         ]);
 
-        $user->assignRole($request->role);
+        $user->assignRole($validated['role']);
 
         return redirect()->route('staff.index')->with('success', 'Personal registrado correctamente.');
     }
@@ -71,30 +66,25 @@ class DoctorController extends Controller
     /**
      * Update the specified staff member in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateDoctorRequest $request, User $user)
     {
         if ($user->hasRole('admin')) {
             return redirect()->back()->with('error', 'No se puede editar a un administrador.');
         }
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:users,email,'.$user->id,
-            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|string|in:doctor,receptionist',
-        ]);
+        $validated = $request->validated();
 
         $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
         ]);
 
         if ($request->filled('password')) {
-            $user->update(['password' => $request->password]);
+            $user->update(['password' => $validated['password']]);
         }
 
         // Sync role (remove old, assign new)
-        $user->syncRoles([$request->role]);
+        $user->syncRoles([$validated['role']]);
 
         return redirect()->route('staff.index')->with('success', 'Personal actualizado correctamente.');
     }

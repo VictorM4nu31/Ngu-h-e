@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Appointments\CreateAppointmentAction;
 use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Enums\AppointmentStatus;
+use App\Http\Requests\PatientPortal\StorePatientAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Prescription;
@@ -99,34 +100,29 @@ class PatientPortalController extends Controller
     /**
      * Store a new appointment booked by a patient.
      */
-    public function storeAppointment(Request $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
+    public function storeAppointment(StorePatientAppointmentRequest $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
         $patient = $this->getPatient();
         if (! $patient) {
             return redirect()->back()->with('error', 'No tienes un perfil de paciente creado.');
         }
 
-        $request->validate([
-            'doctor_id' => 'required|exists:users,id',
-            'date' => 'required|date_format:Y-m-d',
-            'time' => 'required|date_format:H:i',
-            'reason' => 'nullable|string|max:255',
-        ]);
+        $validated = $request->validated();
 
-        $start_time = Carbon::createFromFormat('Y-m-d H:i', $request->date.' '.$request->time);
+        $start_time = Carbon::createFromFormat('Y-m-d H:i', $validated['date'].' '.$validated['time']);
         $end_time = $start_time->copy()->addMinutes(30);
 
         // Verificar que el horario esté dentro del horario de atención y no se solape
-        $availability->withinSchedule((int) $request->doctor_id, $start_time, $end_time, 'time');
-        $availability->noOverlap((int) $request->doctor_id, $start_time, $end_time, errorField: 'time');
+        $availability->withinSchedule((int) $validated['doctor_id'], $start_time, $end_time, 'time');
+        $availability->noOverlap((int) $validated['doctor_id'], $start_time, $end_time, errorField: 'time');
 
         $action->execute([
             'patient_id' => $patient->id,
-            'doctor_id' => $request->doctor_id,
+            'doctor_id' => $validated['doctor_id'],
             'start_time' => $start_time,
             'end_time' => $end_time,
             'status' => AppointmentStatus::Scheduled,
-            'reason' => $request->reason,
+            'reason' => $validated['reason'] ?? null,
         ]);
 
         return redirect()->route('patient.appointments')->with('success', 'Cita agendada correctamente.');

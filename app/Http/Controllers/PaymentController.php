@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Payments\CreatePaymentAction;
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
+use App\Http\Requests\Payments\StorePaymentRequest;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class PaymentController extends Controller
@@ -35,16 +33,9 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CreatePaymentAction $action)
+    public function store(StorePaymentRequest $request, CreatePaymentAction $action)
     {
-        $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'consultation_id' => 'nullable|exists:consultations,id',
-            'amount' => 'required|numeric|min:0',
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
-            'status' => ['required', Rule::enum(PaymentStatus::class)],
-            'notes' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $action->execute($validated);
 

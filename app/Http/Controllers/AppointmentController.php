@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Actions\Appointments\CreateAppointmentAction;
 use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Actions\Appointments\UpdateAppointmentAction;
-use App\Enums\AppointmentStatus;
+use App\Http\Requests\Appointments\StoreAppointmentRequest;
+use App\Http\Requests\Appointments\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class AppointmentController extends Controller
@@ -60,16 +60,9 @@ class AppointmentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
+    public function store(StoreAppointmentRequest $request, CreateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
-        $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:users,id',
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'reason' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $availability->noOverlap(
             (int) $validated['doctor_id'],
@@ -85,14 +78,9 @@ class AppointmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
+    public function update(UpdateAppointmentRequest $request, Appointment $appointment, UpdateAppointmentAction $action, EnsureAppointmentAvailability $availability)
     {
-        $validated = $request->validate([
-            'status' => ['sometimes', Rule::enum(AppointmentStatus::class)],
-            'start_time' => 'sometimes|date',
-            'end_time' => 'sometimes|date|after:start_time',
-            'notes' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $availability->noOverlap(
             (int) $appointment->doctor_id,
