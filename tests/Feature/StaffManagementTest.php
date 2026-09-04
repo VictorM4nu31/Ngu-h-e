@@ -113,3 +113,40 @@ test('a doctor schedule must contain seven days', function () {
         ->post(route('doctor.schedule.store'), ['schedules' => $schedules])
         ->assertSessionHasErrors(['schedules']);
 });
+
+test('admin cannot delete a doctor with active consultations', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+    $patient = \App\Models\Patient::create([
+        'full_name' => 'Paciente de prueba',
+        'document_id' => 'STAFF-CONS',
+    ]);
+
+    \App\Models\Consultation::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+        'reason_for_visit' => 'Consulta de prueba',
+        'diagnosis' => 'Diagnóstico de prueba',
+    ]);
+
+    $this->actingAs($admin)
+        ->delete(route('staff.destroy', $doctor))
+        ->assertRedirect()
+        ->assertSessionHas('error');
+
+    $this->assertDatabaseHas('users', ['id' => $doctor->id, 'deleted_at' => null]);
+});
+
+test('admin can delete a doctor without active consultations', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+
+    $this->actingAs($admin)
+        ->delete(route('staff.destroy', $doctor))
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $this->assertSoftDeleted('users', ['id' => $doctor->id]);
+});

@@ -191,7 +191,7 @@ export default function Create() {
                                                 onValueChange={(val) =>
                                                     setData('gender', val)
                                                 }
-                                                value={data.gender ?? undefined}
+                                                value={data.gender ?? ''}
                                             >
                                                 <SelectTrigger className="focus-visible:ring-blue-digital">
                                                     <SelectValue

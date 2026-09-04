@@ -51,18 +51,18 @@ interface Props {
     upcomingAppointments: AppointmentSummary[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-];
-
 export default function Dashboard({
     stats,
     recentConsultations,
     upcomingAppointments,
 }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: __('Dashboard'),
+            href: '/dashboard',
+        },
+    ];
+
     const { auth } = usePage<PageProps>().props;
     const userRoles = auth.user.roles?.map((r) => r.name) || [];
 

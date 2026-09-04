@@ -46,11 +46,6 @@ interface Props {
     paymentMethods: PaymentMethod[];
 }
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Financial Reports', href: '/reports' },
-];
-
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
 
 export default function Reports({
@@ -58,6 +53,11 @@ export default function Reports({
     stats,
     paymentMethods,
 }: Props) {
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Financial Reports'), href: '/reports' },
+    ];
+
     const revenueLabel = __('Revenue');
     const methodLabels = {
         cash: __('Cash'),
@@ -182,6 +182,10 @@ export default function Reports({
                                     height="100%"
                                     minWidth={0}
                                     minHeight={300}
+                                    initialDimension={{
+                                        width: 600,
+                                        height: 350,
+                                    }}
                                 >
                                     <BarChart data={dailyRevenue}>
                                         <CartesianGrid
@@ -270,6 +274,10 @@ export default function Reports({
                                     height="100%"
                                     minWidth={0}
                                     minHeight={200}
+                                    initialDimension={{
+                                        width: 300,
+                                        height: 250,
+                                    }}
                                 >
                                     <PieChart>
                                         <Pie

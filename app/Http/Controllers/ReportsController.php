@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use App\Models\Consultation;
-use App\Models\Patient;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class ReportsController extends Controller
 {
@@ -30,6 +27,7 @@ class ReportsController extends Controller
         // Stats summary
         $stats = [
             'total_revenue_month' => Payment::where('status', 'paid')
+                ->whereYear('created_at', now()->year)
                 ->whereMonth('created_at', now()->month)
                 ->sum('amount'),
             'total_payments_today' => Payment::where('status', 'paid')

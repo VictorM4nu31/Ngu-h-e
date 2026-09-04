@@ -45,6 +45,11 @@ class ConsultationController extends Controller
             $patient = $appointment->patient;
         }
 
+        if (! $patient) {
+            return redirect()->route('patients.index')
+                ->with('error', 'Por favor seleccione un paciente para iniciar la consulta.');
+        }
+
         return Inertia::render('consultations/create', [
             'patient' => $patient,
             'appointment' => $appointment,

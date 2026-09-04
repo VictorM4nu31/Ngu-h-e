@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { localDateTimeInputValue } from '@/lib/date';
+import { __ } from '@/lib/i18n';
 import type { BreadcrumbItem } from '@/types';
 
 interface Appointment {
@@ -31,9 +32,9 @@ interface Props {
 
 export default function Edit({ appointment }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Dashboard', href: '/dashboard' },
-        { title: 'Agenda', href: '/appointments' },
-        { title: 'Editar Cita', href: '#' },
+        { title: __('Dashboard'), href: '/dashboard' },
+        { title: __('Appointments'), href: '/appointments' },
+        { title: __('Edit Appointment'), href: '#' },
     ];
 
     const { data, setData, put, processing, errors } = useForm({
@@ -136,7 +137,9 @@ export default function Edit({ appointment }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="reason">Motivo de Consulta</Label>
+                                <Label htmlFor="reason">
+                                    Motivo de Consulta
+                                </Label>
                                 <Input
                                     id="reason"
                                     placeholder="Ej. Dolor de cabeza, Seguimiento..."

@@ -71,7 +71,11 @@ export default function Create({
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/appointments">
-                        <Button variant="ghost" size="icon" aria-label={__('Back')}>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
@@ -103,7 +107,11 @@ export default function Create({
                                     value={data.patient_id.toString()}
                                 >
                                     <SelectTrigger>
-                                        <SelectValue placeholder={__('Select a patient...')} />
+                                        <SelectValue
+                                            placeholder={__(
+                                                'Select a patient...',
+                                            )}
+                                        />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {patients.map((p) => (
@@ -134,7 +142,11 @@ export default function Create({
                                     value={data.doctor_id}
                                 >
                                     <SelectTrigger>
-                                        <SelectValue placeholder={__('Select a doctor...')} />
+                                        <SelectValue
+                                            placeholder={__(
+                                                'Select a doctor...',
+                                            )}
+                                        />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {doctors.map((d) => (
@@ -203,7 +215,9 @@ export default function Create({
                                 </Label>
                                 <Input
                                     id="reason"
-                                    placeholder={__('E.g. Headache, Follow-up...')}
+                                    placeholder={__(
+                                        'E.g. Headache, Follow-up...',
+                                    )}
                                     value={data.reason}
                                     onChange={(e) =>
                                         setData('reason', e.target.value)

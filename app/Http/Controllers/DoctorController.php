@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Doctors\StoreDoctorRequest;
 use App\Http\Requests\Doctors\UpdateDoctorRequest;
+use App\Models\Consultation;
+use App\Models\Prescription;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -99,9 +101,22 @@ class DoctorController extends Controller
      */
     public function destroy(User $user)
     {
-        // Prevent deleting yourself or other admins through this controller
+        // Prevent deleting yourself
+        if (auth()->id() === $user->id) {
+            return redirect()->back()->with('error', 'No puedes eliminar tu propia cuenta.');
+        }
+
+        // Prevent deleting other admins through this controller
         if ($user->hasRole('admin')) {
             return redirect()->back()->with('error', 'No se puede eliminar a un administrador.');
+        }
+
+        // Check if doctor has consultations or prescriptions
+        $hasConsultations = Consultation::where('doctor_id', $user->id)->exists();
+        $hasPrescriptions = Prescription::where('doctor_id', $user->id)->exists();
+
+        if ($hasConsultations || $hasPrescriptions) {
+            return redirect()->back()->with('error', 'No se puede eliminar a este miembro del personal porque tiene historiales clínicos (consultas o recetas) vinculados. Por favor, desactívelo en su lugar.');
         }
 
         $user->delete();

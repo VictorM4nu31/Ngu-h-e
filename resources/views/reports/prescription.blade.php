@@ -22,7 +22,7 @@
 
         .clinic-name {
             font-size: 24px;
-            font-bold: bold;
+            font-weight: bold;
             color: #1e40af;
             margin: 0;
         }

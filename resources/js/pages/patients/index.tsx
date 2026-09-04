@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Search, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useState } from 'react';
 import { ConfirmDialog } from '@/components/confirm-dialog';
@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
 import { __ } from '@/lib/i18n';
-import type { BreadcrumbItem, PaginationLink } from '@/types';
+import type { BreadcrumbItem, PaginationLink, PageProps } from '@/types';
 
 interface Patient {
     id: number;
@@ -40,6 +40,8 @@ const decodeLabel = (label: string) =>
         .replace(/<[^>]*>/g, '');
 
 export default function Index({ patients, filters }: Props) {
+    const { auth } = usePage<PageProps>().props;
+    const userRoles = auth.user.roles?.map((r) => r.name) || [];
     const [search, setSearch] = useState(filters.search || '');
 
     const breadcrumbs: BreadcrumbItem[] = [
@@ -162,37 +164,41 @@ export default function Index({ patients, filters }: Props) {
                                                                 <Edit className="size-4" />
                                                             </Button>
                                                         </Link>
-                                                        <ConfirmDialog
-                                                            title={__(
-                                                                'Delete patient',
-                                                            )}
-                                                            description={__(
-                                                                'Are you sure you want to delete this patient?',
-                                                            )}
-                                                            confirmLabel={__(
-                                                                'Delete',
-                                                            )}
-                                                            onConfirm={() =>
-                                                                router.delete(
-                                                                    `/patients/${patient.id}`,
-                                                                )
-                                                            }
-                                                            trigger={
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="icon"
-                                                                    title={__(
-                                                                        'Delete',
-                                                                    )}
-                                                                    aria-label={__(
-                                                                        'Delete',
-                                                                    )}
-                                                                    className="text-destructive hover:text-destructive"
-                                                                >
-                                                                    <Trash2 className="size-4" />
-                                                                </Button>
-                                                            }
-                                                        />
+                                                        {userRoles.includes(
+                                                            'admin',
+                                                        ) && (
+                                                            <ConfirmDialog
+                                                                title={__(
+                                                                    'Delete patient',
+                                                                )}
+                                                                description={__(
+                                                                    'Are you sure you want to delete this patient?',
+                                                                )}
+                                                                confirmLabel={__(
+                                                                    'Delete',
+                                                                )}
+                                                                onConfirm={() =>
+                                                                    router.delete(
+                                                                        `/patients/${patient.id}`,
+                                                                    )
+                                                                }
+                                                                trigger={
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        title={__(
+                                                                            'Delete',
+                                                                        )}
+                                                                        aria-label={__(
+                                                                            'Delete',
+                                                                        )}
+                                                                        className="text-destructive hover:text-destructive"
+                                                                    >
+                                                                        <Trash2 className="size-4" />
+                                                                    </Button>
+                                                                }
+                                                            />
+                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>

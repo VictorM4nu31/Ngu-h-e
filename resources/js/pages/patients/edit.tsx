@@ -141,7 +141,7 @@ export default function Edit({ patient }: Props) {
                                             onValueChange={(val) =>
                                                 setData('gender', val)
                                             }
-                                            value={data.gender ?? undefined}
+                                            value={data.gender ?? ''}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue

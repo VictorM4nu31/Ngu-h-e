@@ -54,7 +54,7 @@ export default function Create({ patient, appointment }: Props) {
     const { auth } = usePage<PageProps>().props;
 
     const { data, setData, post, processing, errors } = useForm({
-        patient_id: patient.id,
+        patient_id: patient?.id || '',
         doctor_id: auth.user.id,
         appointment_id: appointment?.id || '',
         weight: '',
@@ -106,7 +106,10 @@ export default function Create({ patient, appointment }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: __('Dashboard'), href: '/dashboard' },
         { title: __('Patients'), href: '/patients' },
-        { title: patient.full_name, href: `/patients/${patient.id}` },
+        {
+            title: patient?.full_name || __('Unknown'),
+            href: `/patients/${patient?.id || ''}`,
+        },
         { title: __('New Consultation'), href: '#' },
     ];
 
@@ -117,12 +120,14 @@ export default function Create({ patient, appointment }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={`${__('Consultation')}: ${patient.full_name}`} />
+            <Head
+                title={`${__('Consultation')}: ${patient?.full_name || ''}`}
+            />
 
             <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 pb-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Link href={`/patients/${patient.id}`}>
+                        <Link href={`/patients/${patient?.id || ''}`}>
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -138,7 +143,7 @@ export default function Create({ patient, appointment }: Props) {
                             <p className="text-sm text-muted-foreground">
                                 {__('Patient:')}{' '}
                                 <span className="font-semibold text-foreground">
-                                    {patient.full_name}
+                                    {patient?.full_name || ''}
                                 </span>
                             </p>
                         </div>
@@ -718,7 +723,7 @@ export default function Create({ patient, appointment }: Props) {
                             </Card>
 
                             <div className="flex justify-end gap-3">
-                                <Link href={`/patients/${patient.id}`}>
+                                <Link href={`/patients/${patient?.id || ''}`}>
                                     <Button variant="outline" type="button">
                                         {__('Cancel')}
                                     </Button>
