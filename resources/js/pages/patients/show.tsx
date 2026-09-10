@@ -144,15 +144,21 @@ export default function Show({ patient }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`${__('Record')}: ${patient.full_name}`} />
 
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 pb-10">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 p-4 pb-10 sm:p-6">
                 {/* Header Acciones */}
-                <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+                <div className="flex flex-col justify-between gap-5 border-b border-border/80 pb-6 md:flex-row md:items-center">
                     <div className="flex items-center gap-4">
-                        <div className="rounded-2xl border border-primary/20 bg-primary/10 p-3 shadow-sm">
-                            <User className="size-8 text-primary" />
+                        <div className="rounded-xl border border-primary/25 bg-primary/10 p-3">
+                            <User
+                                className="size-8 text-primary"
+                                strokeWidth={1.75}
+                            />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold tracking-tight">
+                            <p className="mb-1 text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                                {__('Patient record')}
+                            </p>
+                            <h1 className="text-3xl font-bold tracking-[-0.04em]">
                                 {patient.full_name}
                             </h1>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -190,7 +196,7 @@ export default function Show({ patient }: Props) {
                         <Link
                             href={`/consultations/create?patient_id=${patient.id}`}
                         >
-                            <Button className="gap-2 shadow-lg shadow-primary/20">
+                            <Button className="gap-2">
                                 <Activity className="size-4" />
                                 {__('New Consultation')}
                             </Button>
@@ -201,7 +207,7 @@ export default function Show({ patient }: Props) {
                 <div className="grid gap-6 md:grid-cols-4">
                     {/* Lateral: Alertas y {__('Contact')} */}
                     <div className="space-y-6 md:col-span-1">
-                        <Card className="border-destructive/30 bg-destructive/5 shadow-sm">
+                        <Card className="border-destructive/30 bg-destructive/5 shadow-none">
                             <CardHeader className="pb-2">
                                 <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider text-destructive uppercase">
                                     <AlertCircle className="size-4" />
@@ -230,7 +236,7 @@ export default function Show({ patient }: Props) {
                             </CardContent>
                         </Card>
 
-                        <Card>
+                        <Card className="shadow-none">
                             <CardHeader className="pb-3">
                                 <CardTitle className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
                                     {__('Contact')}
@@ -268,7 +274,7 @@ export default function Show({ patient }: Props) {
                     {/* Principal con Tabs */}
                     <div className="md:col-span-3">
                         <Tabs defaultValue="evolution" className="w-full">
-                            <TabsList className="mb-6 grid w-full grid-cols-4">
+                            <TabsList className="mb-6 grid h-auto w-full grid-cols-4 bg-muted/70 p-1">
                                 <TabsTrigger
                                     value="evolution"
                                     className="gap-2"
@@ -304,14 +310,14 @@ export default function Show({ patient }: Props) {
                                 className="space-y-6"
                             >
                                 {timelineItems.length > 0 ? (
-                                    <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:-translate-x-px before:bg-linear-to-b before:from-transparent before:via-slate-300 before:to-transparent md:before:mx-auto md:before:translate-x-0">
+                                    <div className="relative space-y-4 before:absolute before:inset-0 before:ml-5 before:h-full before:w-px before:-translate-x-px before:bg-border md:before:mx-auto md:before:translate-x-0">
                                         {timelineItems.map((item) => (
                                             <div
                                                 key={item.id}
                                                 className="group is-active relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse"
                                             >
                                                 {/* Icono Central */}
-                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-slate-300 text-slate-500 shadow group-[.is-active]:bg-primary group-[.is-active]:text-white md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-background bg-primary text-primary-foreground md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
                                                     {item.type ===
                                                     'consultation' ? (
                                                         <Activity className="size-5" />
@@ -320,7 +326,7 @@ export default function Show({ patient }: Props) {
                                                     )}
                                                 </div>
                                                 {/* Contendio */}
-                                                <div className="w-[calc(100%-4rem)] rounded border border-slate-200 bg-white p-4 shadow md:w-[45%]">
+                                                <div className="w-[calc(100%-4rem)] rounded-xl border border-border/80 bg-card p-4 shadow-none transition-colors group-hover:border-primary/40 md:w-[45%]">
                                                     <div className="mb-1 flex items-center justify-between space-x-2">
                                                         <time className="text-xs font-bold text-slate-900">
                                                             {new Date(

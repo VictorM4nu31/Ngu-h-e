@@ -126,7 +126,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                 title={`${__('Consultation')}: ${patient?.full_name || ''}`}
             />
 
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 pb-10">
+            <div className="mx-auto flex w-full max-w-5xl flex-col gap-7 p-4 pb-10 sm:p-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href={`/patients/${patient?.id || ''}`}>
@@ -139,7 +139,10 @@ export default function Create({ patient, appointment, doctors }: Props) {
                             </Button>
                         </Link>
                         <div>
-                            <h1 className="text-2xl font-bold">
+                            <p className="mb-1 text-xs font-semibold tracking-[0.16em] text-primary uppercase">
+                                {__('Clinical workflow')}
+                            </p>
+                            <h1 className="text-3xl font-bold tracking-[-0.04em]">
                                 {__('Consultation Record')}
                             </h1>
                             <p className="text-sm text-muted-foreground">
@@ -150,6 +153,15 @@ export default function Create({ patient, appointment, doctors }: Props) {
                             </p>
                         </div>
                     </div>
+                </div>
+
+                <div className="grid grid-cols-4 gap-2 rounded-xl border border-border/80 bg-card p-2 text-center text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+                    <div className="rounded-lg bg-primary/10 px-2 py-2 text-primary">
+                        1. {__('Vitals')}
+                    </div>
+                    <div className="px-2 py-2">2. {__('Findings')}</div>
+                    <div className="px-2 py-2">3. {__('Treatment')}</div>
+                    <div className="px-2 py-2">4. {__('Close')}</div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid gap-6">
@@ -193,7 +205,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                         </Card>
                     )}
                     <div className="grid gap-6 md:grid-cols-3">
-                        <Card className="md:col-span-1">
+                        <Card className="shadow-none md:col-span-1">
                             <CardHeader className="pb-3">
                                 <CardTitle className="flex items-center gap-2 text-lg">
                                     <Activity className="size-4 text-primary" />
@@ -380,7 +392,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                         </Card>
 
                         <div className="space-y-6 md:col-span-2">
-                            <Card>
+                            <Card className="shadow-none">
                                 <CardHeader className="pb-3">
                                     <CardTitle className="flex items-center gap-2 text-lg">
                                         <ClipboardList className="size-4 text-primary" />
@@ -435,7 +447,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                                 </CardContent>
                             </Card>
 
-                            <Card>
+                            <Card className="shadow-none">
                                 <CardHeader className="pb-3 text-indigo-600 dark:text-indigo-400">
                                     <CardTitle className="flex items-center gap-2 text-lg">
                                         <FileText className="size-4" />
@@ -494,7 +506,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                                 </CardContent>
                             </Card>
 
-                            <Card className="border-primary/20 bg-primary/5">
+                            <Card className="border-primary/20 bg-primary/5 shadow-none">
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-1">
@@ -694,7 +706,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                             </Card>
 
                             <Card className="border-emerald-500/20 bg-emerald-500/5 shadow-sm">
-                                <CardHeader className="mb-4 border-b border-emerald-500/10 pb-3">
+                                <CardHeader className="mb-4 border-b border-success/20 pb-3">
                                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                                         <DollarSign className="size-4" />
                                         <CardTitle className="text-lg">
@@ -763,7 +775,7 @@ export default function Create({ patient, appointment, doctors }: Props) {
                                 </CardContent>
                             </Card>
 
-                            <div className="flex justify-end gap-3">
+                            <div className="sticky bottom-3 z-10 flex justify-end gap-3 rounded-xl border border-border/80 bg-card/95 p-3 shadow-lg backdrop-blur supports-[backdrop-filter]:bg-card/80">
                                 <Link href={`/patients/${patient?.id || ''}`}>
                                     <Button variant="outline" type="button">
                                         {__('Cancel')}
