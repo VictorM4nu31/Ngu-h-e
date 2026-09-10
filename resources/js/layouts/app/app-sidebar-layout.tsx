@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { Toaster, sileo } from 'sileo';
+import { CommandPalette } from '@/components/command-palette';
 import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -26,7 +27,10 @@ export default function AppSidebarLayout({
         <AppShell variant="sidebar">
             <AppSidebar />
             <AppContent variant="sidebar" className="overflow-x-hidden">
-                <AppSidebarHeader breadcrumbs={breadcrumbs} />
+                <div className="flex items-center justify-between border-b border-border/70 px-4 sm:px-6">
+                    <AppSidebarHeader breadcrumbs={breadcrumbs} />
+                    <CommandPalette />
+                </div>
                 {children}
             </AppContent>
             <Toaster />
