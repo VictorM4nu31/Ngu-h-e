@@ -7,7 +7,9 @@ use App\Http\Requests\Consultations\StoreConsultationRequest;
 use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ConsultationController extends Controller
@@ -50,9 +52,16 @@ class ConsultationController extends Controller
                 ->with('error', 'Por favor seleccione un paciente para iniciar la consulta.');
         }
 
+        // Admins must pick the attending doctor; doctors always record under
+        // their own id (selected client-side, enforced again on store).
+        $doctors = $request->user()->hasRole('admin')
+            ? User::role('doctor')->oldest('name')->get(['id', 'name'])
+            : null;
+
         return Inertia::render('consultations/create', [
             'patient' => $patient,
             'appointment' => $appointment,
+            'doctors' => $doctors,
         ]);
     }
 
@@ -63,8 +72,23 @@ class ConsultationController extends Controller
     {
         $validated = $request->validated();
 
-        // Forzar doctor_id al usuario autenticado (prevenir suplantación)
-        $validated['doctor_id'] = $request->user()->id;
+        if ($request->user()->hasRole('admin')) {
+            // Admins record consultations on behalf of a doctor: the id must
+            // belong to a user with the doctor role (prevents attributing
+            // clinical records to non-doctors).
+            $doctor = User::role('doctor')->find($validated['doctor_id'] ?? null);
+
+            if (! $doctor) {
+                throw ValidationException::withMessages([
+                    'doctor_id' => 'Seleccione un médico válido.',
+                ]);
+            }
+
+            $validated['doctor_id'] = $doctor->id;
+        } else {
+            // Doctors always record under their own id (prevenir suplantación)
+            $validated['doctor_id'] = $request->user()->id;
+        }
 
         $action->execute($validated);
 

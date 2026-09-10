@@ -160,3 +160,11 @@ test('an owner can edit an appointment', function () {
         'reason' => 'Motivo actualizado',
     ]);
 });
+
+test('appointment detail url that does not exist returns not found', function () {
+    [$admin] = makeStaffContext();
+
+    // `show` was removed from the resource: no controller crash (500).
+    // 405 is returned because PUT/DELETE share the URI pattern.
+    $this->actingAs($admin)->get('/appointments/999999')->assertStatus(405);
+});

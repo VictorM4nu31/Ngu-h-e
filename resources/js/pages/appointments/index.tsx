@@ -32,8 +32,8 @@ import type { BreadcrumbItem, PaginationLink } from '@/types';
 
 interface Appointment {
     id: number;
-    patient: { id: number; full_name: string };
-    doctor: { id: number; name: string };
+    patient: { id: number; full_name: string } | null;
+    doctor: { id: number; name: string } | null;
     start_time: string;
     end_time: string;
     status: 'scheduled' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
@@ -102,12 +102,12 @@ export default function Index({ appointments, doctors, filters }: Props) {
             <Head title={__('Appointments')} />
 
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="flex items-center gap-2 text-2xl font-bold">
                         <Calendar className="size-6" />
                         {__('Appointments')}
                     </h1>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                         <Link href="/patients">
                             <Button variant="outline" className="gap-2">
                                 <UserSearch className="size-4" />
@@ -238,12 +238,18 @@ export default function Index({ appointments, doctors, filters }: Props) {
 
                                     <div className="flex-1 space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <Link
-                                                href={`/patients/${app.patient.id}`}
-                                                className="text-lg font-bold hover:underline"
-                                            >
-                                                {app.patient.full_name}
-                                            </Link>
+                                            {app.patient ? (
+                                                <Link
+                                                    href={`/patients/${app.patient.id}`}
+                                                    className="text-lg font-bold hover:underline"
+                                                >
+                                                    {app.patient.full_name}
+                                                </Link>
+                                            ) : (
+                                                <span className="text-lg font-bold text-muted-foreground">
+                                                    {__('Unassigned patient')}
+                                                </span>
+                                            )}
                                             <Badge
                                                 variant="outline"
                                                 className={
@@ -256,7 +262,8 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                                             <span className="flex items-center gap-1.5">
                                                 <User className="size-3.5" />
-                                                {app.doctor.name}
+                                                {app.doctor?.name ??
+                                                    __('Unassigned')}
                                             </span>
                                             {app.reason && (
                                                 <span className="flex items-center gap-1.5">
@@ -267,7 +274,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2 self-end md:self-center">
+                                    <div className="flex flex-wrap items-center justify-end gap-2 self-end md:self-center">
                                         {app.status === 'scheduled' && (
                                             <Button
                                                 variant="ghost"
@@ -312,31 +319,37 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                     </Button>
                                                 </Link>
                                             )}
-                                        {app.status !== 'completed' && (
-                                            <ConfirmDialog
-                                                title={__('Cancel appointment')}
-                                                description={__(
-                                                    'Are you sure you want to cancel this appointment?',
-                                                )}
-                                                confirmLabel={__('Cancel')}
-                                                onConfirm={() =>
-                                                    updateStatus(
-                                                        app.id,
-                                                        'cancelled',
-                                                    )
-                                                }
-                                                trigger={
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="text-destructive"
-                                                    >
-                                                        <XCircle className="mr-1.5 size-4" />
-                                                        {__('Cancel')}
-                                                    </Button>
-                                                }
-                                            />
-                                        )}
+                                        {app.status !== 'completed' &&
+                                            app.status !== 'cancelled' && (
+                                                <ConfirmDialog
+                                                    title={__(
+                                                        'Cancel appointment',
+                                                    )}
+                                                    description={__(
+                                                        'Are you sure you want to cancel this appointment?',
+                                                    )}
+                                                    confirmLabel={__(
+                                                        'Yes, cancel it',
+                                                    )}
+                                                    cancelLabel={__('Keep it')}
+                                                    onConfirm={() =>
+                                                        updateStatus(
+                                                            app.id,
+                                                            'cancelled',
+                                                        )
+                                                    }
+                                                    trigger={
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-destructive"
+                                                        >
+                                                            <XCircle className="mr-1.5 size-4" />
+                                                            {__('Cancel')}
+                                                        </Button>
+                                                    }
+                                                />
+                                            )}
                                     </div>
                                 </div>
                             </Card>

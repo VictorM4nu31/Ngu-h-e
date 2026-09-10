@@ -48,14 +48,16 @@ interface Appointment {
 interface Props {
     patient: Patient;
     appointment?: Appointment;
+    doctors?: { id: number; name: string }[] | null;
 }
 
-export default function Create({ patient, appointment }: Props) {
+export default function Create({ patient, appointment, doctors }: Props) {
     const { auth } = usePage<PageProps>().props;
+    const isAdmin = doctors !== null && doctors !== undefined;
 
     const { data, setData, post, processing, errors } = useForm({
         patient_id: patient?.id || '',
-        doctor_id: auth.user.id,
+        doctor_id: isAdmin ? '' : auth.user.id,
         appointment_id: appointment?.id || '',
         weight: '',
         height: '',
@@ -151,6 +153,45 @@ export default function Create({ patient, appointment }: Props) {
                 </div>
 
                 <form onSubmit={handleSubmit} className="grid gap-6">
+                    {isAdmin && (
+                        <Card>
+                            <CardContent className="grid gap-2 pt-6">
+                                <Label htmlFor="doctor_id">
+                                    {__('Attending Doctor')}{' '}
+                                    <span className="text-destructive">*</span>
+                                </Label>
+                                <Select
+                                    value={String(data.doctor_id || '')}
+                                    onValueChange={(val) =>
+                                        setData('doctor_id', Number(val))
+                                    }
+                                >
+                                    <SelectTrigger id="doctor_id">
+                                        <SelectValue
+                                            placeholder={__(
+                                                'Select a doctor...',
+                                            )}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {doctors?.map((doctor) => (
+                                            <SelectItem
+                                                key={doctor.id}
+                                                value={String(doctor.id)}
+                                            >
+                                                {doctor.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.doctor_id && (
+                                    <p className="text-xs text-destructive">
+                                        {errors.doctor_id}
+                                    </p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    )}
                     <div className="grid gap-6 md:grid-cols-3">
                         <Card className="md:col-span-1">
                             <CardHeader className="pb-3">

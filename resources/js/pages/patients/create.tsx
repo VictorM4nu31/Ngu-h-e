@@ -55,9 +55,33 @@ export default function Create() {
         notes: '',
     });
 
+    // Client-side guard for the only required field, so the wizard cannot
+    // advance silently with invalid data.
+    const [nameError, setNameError] = useState<string | null>(null);
+    // NOTE: __() reads Inertia page props via a hook, so it may only run
+    // during render — never inside event handlers.
+    const nameRequiredMessage = __('The full name is required.');
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/patients');
+        post('/patients', {
+            // When the server rejects the payload, jump back to the tab
+            // holding the invalid fields so the messages are visible.
+            onError: (formErrors) => {
+                if (Object.keys(formErrors).length > 0) {
+                    setActiveTab('personal');
+                }
+            },
+        });
+    };
+
+    const goToMedical = () => {
+        if (!data.full_name.trim()) {
+            setNameError(nameRequiredMessage);
+            return;
+        }
+        setNameError(null);
+        setActiveTab('medical');
     };
 
     return (
@@ -146,17 +170,20 @@ export default function Create() {
                                         <Input
                                             id="full_name"
                                             value={data.full_name}
-                                            onChange={(e) =>
+                                            onChange={(e) => {
                                                 setData(
                                                     'full_name',
                                                     e.target.value,
-                                                )
-                                            }
+                                                );
+                                                if (nameError) {
+                                                    setNameError(null);
+                                                }
+                                            }}
                                             className="focus-visible:ring-blue-digital"
                                         />
-                                        {errors.full_name && (
+                                        {(nameError || errors.full_name) && (
                                             <p className="text-xs text-destructive">
-                                                {errors.full_name}
+                                                {nameError || errors.full_name}
                                             </p>
                                         )}
                                     </div>
@@ -317,7 +344,7 @@ export default function Create() {
                             <div className="mt-6 flex justify-end">
                                 <Button
                                     type="button"
-                                    onClick={() => setActiveTab('medical')}
+                                    onClick={goToMedical}
                                     className="flex items-center gap-2 bg-blue-digital text-white hover:bg-blue-digital/90"
                                 >
                                     {__('Next')}{' '}

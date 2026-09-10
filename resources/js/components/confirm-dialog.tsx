@@ -23,10 +23,10 @@ interface ConfirmDialogProps {
 }
 
 export function ConfirmDialog({
-    title = '¿Estás seguro?',
-    description = 'Esta acción no se puede deshacer.',
-    confirmLabel = 'Confirmar',
-    cancelLabel = 'Cancelar',
+    title = 'Are you sure?',
+    description = 'This action cannot be undone.',
+    confirmLabel = 'Confirm',
+    cancelLabel = 'Cancel',
     onConfirm,
     busy = false,
     trigger,

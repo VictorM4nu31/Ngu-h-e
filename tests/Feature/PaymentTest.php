@@ -73,3 +73,15 @@ test('payments index filters by patient name', function () {
         ->component('payments/index')
         ->has('payments.data', 1));
 });
+
+test('payments index exposes the patient list for standalone registration', function () {
+    $receptionist = paymentUser('pay3@ngu.com');
+    $patient = Patient::create(['full_name' => 'Paciente lista', 'document_id' => 'PAY-003']);
+
+    $this->withoutVite()->actingAs($receptionist)->get(route('payments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('payments/index')
+            ->has('patients')
+            ->where('patients.0.full_name', $patient->full_name));
+});

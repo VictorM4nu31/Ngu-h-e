@@ -24,7 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // ═══ Admin + Doctor + Receptionist ═══
     Route::middleware(['role:admin|doctor|receptionist'])->group(function () {
         Route::resource('patients', PatientController::class);
-        Route::resource('appointments', \App\Http\Controllers\AppointmentController::class);
+        // NOTE: appointments has no detail view; `show` is excluded so the
+        // URL returns 404 instead of a 500 (missing controller method).
+        Route::resource('appointments', \App\Http\Controllers\AppointmentController::class)->except(['show']);
 
         // Attachments
         Route::post('patients/{patient}/attachments', [App\Http\Controllers\AttachmentController::class, 'storePatient'])->name('patients.attachments.store');

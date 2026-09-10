@@ -97,7 +97,7 @@ type TimelineItem = {
 );
 
 export default function Show({ patient }: Props) {
-    const { data, setData, post, processing, reset } = useForm({
+    const { data, setData, post, processing, reset, errors } = useForm({
         file: null as File | null,
         label: '',
     });
@@ -405,8 +405,9 @@ export default function Show({ patient }: Props) {
                                     <div className="rounded-xl border border-dashed bg-muted/30 p-12 text-center text-muted-foreground">
                                         <History className="mx-auto mb-4 size-12 opacity-20" />
                                         <p>
-                                            {__('No activity recorded')} para
-                                            este paciente.
+                                            {__(
+                                                'No activity recorded for this patient.',
+                                            )}
                                         </p>
                                     </div>
                                 )}
@@ -417,11 +418,12 @@ export default function Show({ patient }: Props) {
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>
-                                            {__('Trends')} de Salud
+                                            {__('Health Trends')}
                                         </CardTitle>
                                         <CardDescription>
-                                            {__('Evolution')} histórica de
-                                            métricas clave.
+                                            {__(
+                                                'Historical evolution of key metrics.',
+                                            )}
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>
@@ -441,12 +443,31 @@ export default function Show({ patient }: Props) {
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="rounded-lg border bg-muted/30 p-4 text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
-                                                {patient.medical_antecedents ||
-                                                    __(
-                                                        'No medical history recorded.',
-                                                    )}
-                                            </p>
+                                            {(() => {
+                                                const sections = [
+                                                    patient.medical_antecedents
+                                                        ? `${__('Family / Personal History')}: ${patient.medical_antecedents}`
+                                                        : null,
+                                                    patient.allergies
+                                                        ? `${__('Known Allergies')}: ${patient.allergies}`
+                                                        : null,
+                                                    patient.chronic_diseases
+                                                        ? `${__('Chronic Diseases')}: ${patient.chronic_diseases}`
+                                                        : null,
+                                                ].filter(Boolean);
+
+                                                return (
+                                                    <p className="rounded-lg border bg-muted/30 p-4 text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
+                                                        {sections.length > 0
+                                                            ? sections.join(
+                                                                  '\n\n',
+                                                              )
+                                                            : __(
+                                                                  'No medical history recorded.',
+                                                              )}
+                                                    </p>
+                                                );
+                                            })()}
                                         </CardContent>
                                     </Card>
 
@@ -517,6 +538,11 @@ export default function Show({ patient }: Props) {
                                                     }
                                                     required
                                                 />
+                                                {errors.file && (
+                                                    <p className="text-xs text-destructive">
+                                                        {errors.file}
+                                                    </p>
+                                                )}
                                             </div>
                                             <div className="grid w-full flex-1 gap-1.5">
                                                 <Label
@@ -536,6 +562,11 @@ export default function Show({ patient }: Props) {
                                                         )
                                                     }
                                                 />
+                                                {errors.label && (
+                                                    <p className="text-xs text-destructive">
+                                                        {errors.label}
+                                                    </p>
+                                                )}
                                             </div>
                                             <Button
                                                 type="submit"

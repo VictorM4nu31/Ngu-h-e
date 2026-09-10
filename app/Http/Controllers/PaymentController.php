@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Payments\CreatePaymentAction;
 use App\Http\Requests\Payments\StorePaymentRequest;
+use App\Models\Patient;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,6 +28,7 @@ class PaymentController extends Controller
         return Inertia::render('payments/index', [
             'payments' => $query->paginate(10)->withQueryString(),
             'filters' => $request->only(['search']),
+            'patients' => Patient::oldest('full_name')->get(['id', 'full_name']),
         ]);
     }
 

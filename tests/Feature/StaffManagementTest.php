@@ -150,3 +150,55 @@ test('admin can delete a doctor without active consultations', function () {
 
     $this->assertSoftDeleted('users', ['id' => $doctor->id]);
 });
+
+test('admin cannot delete a doctor with active appointments', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+
+    $patient = \App\Models\Patient::create([
+        'full_name' => 'Paciente Cita Activa',
+        'document_id' => 'STAFF-APPT',
+    ]);
+
+    \App\Models\Appointment::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+        'start_time' => now()->addDay(),
+        'end_time' => now()->addDay()->addMinutes(30),
+        'status' => 'scheduled',
+    ]);
+
+    $this->actingAs($admin)
+        ->delete(route('staff.destroy', $doctor))
+        ->assertRedirect()
+        ->assertSessionHas('error');
+
+    $this->assertDatabaseHas('users', ['id' => $doctor->id, 'deleted_at' => null]);
+});
+
+test('admin can delete a doctor with only cancelled appointments', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->create();
+    $doctor->assignRole('doctor');
+
+    $patient = \App\Models\Patient::create([
+        'full_name' => 'Paciente Cita Cancelada',
+        'document_id' => 'STAFF-APPT-CANC',
+    ]);
+
+    \App\Models\Appointment::create([
+        'patient_id' => $patient->id,
+        'doctor_id' => $doctor->id,
+        'start_time' => now()->addDay(),
+        'end_time' => now()->addDay()->addMinutes(30),
+        'status' => 'cancelled',
+    ]);
+
+    $this->actingAs($admin)
+        ->delete(route('staff.destroy', $doctor))
+        ->assertRedirect()
+        ->assertSessionHas('success');
+
+    $this->assertSoftDeleted('users', ['id' => $doctor->id]);
+});

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Doctors\StoreDoctorRequest;
 use App\Http\Requests\Doctors\UpdateDoctorRequest;
+use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Prescription;
 use App\Models\User;
@@ -117,6 +118,16 @@ class DoctorController extends Controller
 
         if ($hasConsultations || $hasPrescriptions) {
             return redirect()->back()->with('error', 'No se puede eliminar a este miembro del personal porque tiene historiales clínicos (consultas o recetas) vinculados. Por favor, desactívelo en su lugar.');
+        }
+
+        // Check for active appointments (scheduled or confirmed).
+        // Deleting the doctor would orphan them and break the schedule views.
+        $hasActiveAppointments = Appointment::where('doctor_id', $user->id)
+            ->whereIn('status', ['scheduled', 'confirmed'])
+            ->exists();
+
+        if ($hasActiveAppointments) {
+            return redirect()->back()->with('error', 'No se puede eliminar a este miembro del personal porque tiene citas activas (programadas o confirmadas). Cancele o reasigne sus citas primero.');
         }
 
         $user->delete();

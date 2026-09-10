@@ -1,9 +1,33 @@
-import { Head, router } from '@inertiajs/react';
-import { Search, CreditCard, Banknote, Landmark, Clock } from 'lucide-react';
+import { Head, router, useForm } from '@inertiajs/react';
+import {
+    Search,
+    CreditCard,
+    Banknote,
+    Landmark,
+    Clock,
+    Plus,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import AppLayout from '@/layouts/app-layout';
 import { formatStoredDate } from '@/lib/date';
 import { __ } from '@/lib/i18n';
@@ -27,6 +51,7 @@ interface Props {
     filters: {
         search: string;
     };
+    patients: { id: number; full_name: string }[];
 }
 
 const getMethodIcon = (method: string) => {
@@ -42,8 +67,35 @@ const getMethodIcon = (method: string) => {
     }
 };
 
-export default function Index({ payments, filters }: Props) {
+export default function Index({ payments, filters, patients }: Props) {
     const [search, setSearch] = useState(filters.search);
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const {
+        data: paymentData,
+        setData: setPaymentData,
+        post: postPayment,
+        processing: savingPayment,
+        errors: paymentErrors,
+        reset: resetPayment,
+    } = useForm({
+        patient_id: '',
+        amount: '',
+        payment_method: 'cash',
+        status: 'paid',
+        notes: '',
+    });
+
+    const submitPayment = (e: React.FormEvent) => {
+        e.preventDefault();
+        postPayment('/payments', {
+            preserveScroll: true,
+            onSuccess: () => {
+                resetPayment();
+                setDialogOpen(false);
+            },
+        });
+    };
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: __('Dashboard'), href: '/dashboard' },
@@ -77,7 +129,7 @@ export default function Index({ payments, filters }: Props) {
             <Head title={__('Payment History')} />
 
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h1 className="text-2xl font-bold">
                             {__('Payment Management')}
@@ -88,7 +140,186 @@ export default function Index({ payments, filters }: Props) {
                             )}
                         </p>
                     </div>
+                    <Button
+                        onClick={() => setDialogOpen(true)}
+                        className="gap-1.5"
+                    >
+                        <Plus className="size-4" />
+                        {__('New Payment')}
+                    </Button>
                 </div>
+
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>{__('Register Payment')}</DialogTitle>
+                            <DialogDescription>
+                                {__(
+                                    'Record a standalone payment for a patient.',
+                                )}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={submitPayment} className="grid gap-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="payment_patient">
+                                    {__('Patient')}{' '}
+                                    <span className="text-destructive">*</span>
+                                </Label>
+                                <Select
+                                    value={paymentData.patient_id}
+                                    onValueChange={(val) =>
+                                        setPaymentData('patient_id', val)
+                                    }
+                                >
+                                    <SelectTrigger id="payment_patient">
+                                        <SelectValue
+                                            placeholder={__(
+                                                'Select a patient...',
+                                            )}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {patients.map((patient) => (
+                                            <SelectItem
+                                                key={patient.id}
+                                                value={String(patient.id)}
+                                            >
+                                                {patient.full_name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {paymentErrors.patient_id && (
+                                    <p className="text-xs text-destructive">
+                                        {paymentErrors.patient_id}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="payment_amount">
+                                        {__('Amount ($)')}{' '}
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    </Label>
+                                    <Input
+                                        id="payment_amount"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={paymentData.amount}
+                                        onChange={(e) =>
+                                            setPaymentData(
+                                                'amount',
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                    {paymentErrors.amount && (
+                                        <p className="text-xs text-destructive">
+                                            {paymentErrors.amount}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="payment_method">
+                                        {__('Method')}
+                                    </Label>
+                                    <Select
+                                        value={paymentData.payment_method}
+                                        onValueChange={(val) =>
+                                            setPaymentData(
+                                                'payment_method',
+                                                val,
+                                            )
+                                        }
+                                    >
+                                        <SelectTrigger id="payment_method">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="cash">
+                                                {__('Cash')}
+                                            </SelectItem>
+                                            <SelectItem value="card">
+                                                {__('Card')}
+                                            </SelectItem>
+                                            <SelectItem value="transfer">
+                                                {__('Transfer')}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {paymentErrors.payment_method && (
+                                        <p className="text-xs text-destructive">
+                                            {paymentErrors.payment_method}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="payment_status">
+                                        {__('Status')}
+                                    </Label>
+                                    <Select
+                                        value={paymentData.status}
+                                        onValueChange={(val) =>
+                                            setPaymentData('status', val)
+                                        }
+                                    >
+                                        <SelectTrigger id="payment_status">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="paid">
+                                                {__('Completed')}
+                                            </SelectItem>
+                                            <SelectItem value="pending">
+                                                {__('Pending')}
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {paymentErrors.status && (
+                                        <p className="text-xs text-destructive">
+                                            {paymentErrors.status}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="payment_notes">
+                                        {__('Notes')}
+                                    </Label>
+                                    <Input
+                                        id="payment_notes"
+                                        value={paymentData.notes}
+                                        onChange={(e) =>
+                                            setPaymentData(
+                                                'notes',
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </div>
+
+                            <DialogFooter>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => setDialogOpen(false)}
+                                >
+                                    {__('Cancel')}
+                                </Button>
+                                <Button type="submit" disabled={savingPayment}>
+                                    {__('Save Payment')}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
 
                 <Card>
                     <CardHeader className="pb-3">

@@ -60,28 +60,32 @@ export default function Edit({ appointment }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Editar Cita" />
+            <Head title={__('Edit Appointment')} />
 
             <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
                 <div className="flex items-center gap-4">
                     <Link href="/appointments">
-                        <Button variant="ghost" size="icon" aria-label="Volver">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={__('Back')}
+                        >
                             <ArrowLeft className="size-4" />
                         </Button>
                     </Link>
                     <h1 className="text-2xl font-bold text-foreground">
-                        Editar Cita
+                        {__('Edit Appointment')}
                     </h1>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <User className="size-4" />
-                        Paciente: {appointment.patient.full_name}
+                        {__('Patient:')} {appointment.patient.full_name}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Stethoscope className="size-4" />
-                        Médico: {appointment.doctor.name}
+                        {__('Doctor:')} {appointment.doctor.name}
                     </div>
                 </div>
 
@@ -90,16 +94,18 @@ export default function Edit({ appointment }: Props) {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Calendar className="size-5" />
-                                Detalles de la Cita
+                                {__('Appointment Details')}
                             </CardTitle>
                             <CardDescription>
-                                Actualice el horario, motivo o notas.
+                                {__('Update the schedule, reason or notes.')}
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="start_time">Inicio *</Label>
+                                    <Label htmlFor="start_time">
+                                        {__('Start')} *
+                                    </Label>
                                     <Input
                                         id="start_time"
                                         type="datetime-local"
@@ -118,7 +124,9 @@ export default function Edit({ appointment }: Props) {
                                     )}
                                 </div>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="end_time">Fin *</Label>
+                                    <Label htmlFor="end_time">
+                                        {__('End')} *
+                                    </Label>
                                     <Input
                                         id="end_time"
                                         type="datetime-local"
@@ -138,11 +146,13 @@ export default function Edit({ appointment }: Props) {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="reason">
-                                    Motivo de Consulta
+                                    {__('Reason for visit')}
                                 </Label>
                                 <Input
                                     id="reason"
-                                    placeholder="Ej. Dolor de cabeza, Seguimiento..."
+                                    placeholder={__(
+                                        'E.g. Headache, Follow-up...',
+                                    )}
                                     value={data.reason}
                                     onChange={(e) =>
                                         setData('reason', e.target.value)
@@ -156,7 +166,9 @@ export default function Edit({ appointment }: Props) {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="notes">Notas adicionales</Label>
+                                <Label htmlFor="notes">
+                                    {__('Additional notes')}
+                                </Label>
                                 <Textarea
                                     id="notes"
                                     className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -172,7 +184,7 @@ export default function Edit({ appointment }: Props) {
                     <div className="flex justify-end gap-3">
                         <Link href="/appointments">
                             <Button variant="outline" type="button">
-                                Cancelar
+                                {__('Cancel')}
                             </Button>
                         </Link>
                         <Button
@@ -181,7 +193,7 @@ export default function Edit({ appointment }: Props) {
                             className="flex items-center gap-2"
                         >
                             <Save className="size-4" />
-                            Guardar Cambios
+                            {__('Save Changes')}
                         </Button>
                     </div>
                 </form>

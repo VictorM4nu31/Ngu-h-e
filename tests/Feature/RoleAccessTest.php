@@ -224,3 +224,27 @@ test('all roles can access dashboard', function () {
             ->assertOk();
     }
 });
+
+test('forbidden pages render the branded 403 view', function () {
+    $user = User::factory()->create();
+    $user->assignRole('patient');
+
+    $this->withoutVite()->actingAs($user)->get('/patients')
+        ->assertForbidden()
+        ->assertInertia(fn ($page) => $page->component('errors/403'));
+});
+
+test('unknown urls render the branded 404 view', function () {
+    $this->withoutVite()->get('/no-existe-xyz')
+        ->assertNotFound()
+        ->assertInertia(fn ($page) => $page->component('errors/404'));
+});
+
+test('authenticated users see the branded 404 view', function () {
+    $user = User::factory()->create();
+    $user->assignRole('patient');
+
+    $this->withoutVite()->actingAs($user)->get('/no-existe-xyz')
+        ->assertNotFound()
+        ->assertInertia(fn ($page) => $page->component('errors/404'));
+});
