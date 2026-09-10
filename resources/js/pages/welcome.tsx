@@ -12,15 +12,16 @@ export default function Welcome({
     return (
         <>
             <Head title="Bienvenido - Ngu hñe" />
-            <div className="min-h-screen bg-gradient-to-br from-ice via-cloud to-white dark:from-navy dark:via-gray-900 dark:to-gray-950">
+            <div className="relative min-h-screen bg-canvas dark:bg-background">
+                <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-[var(--primary)] to-[var(--canvas)] opacity-[0.3] dark:from-[var(--primary)] dark:to-[var(--background)]" />
                 {/* Header */}
-                <header className="fixed top-0 right-0 left-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-navy/80">
+                <header className="fixed top-0 right-0 left-0 z-50 border-b border-border/80 bg-card/95 backdrop-blur-md dark:border-border dark:bg-card/5">
                     <div className="container mx-auto px-6 py-4">
                         <nav className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-digital to-mint">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-card/10">
                                     <svg
-                                        className="h-6 w-6 text-white"
+                                        className="h-6 w-6 text-primary"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -34,10 +35,10 @@ export default function Welcome({
                                     </svg>
                                 </div>
                                 <div>
-                                    <h1 className="text-lg font-semibold text-navy dark:text-white">
+                                    <h1 className="text-lg font-semibold text-primary dark:text-primary-foreground">
                                         Ngu hñe
                                     </h1>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                                    <p className="text-xs text-muted-foreground">
                                         Casa de la Medicina
                                     </p>
                                 </div>
@@ -46,7 +47,7 @@ export default function Welcome({
                                 {auth.user ? (
                                     <Link
                                         href={dashboard()}
-                                        className="rounded-lg bg-blue-digital px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-600 hover:shadow-lg"
+                                        className="rounded-lg bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                     >
                                         {__('Dashboard')}
                                     </Link>
@@ -54,14 +55,14 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={login()}
-                                            className="rounded-lg px-5 py-2 text-sm font-medium text-navy transition-all hover:bg-ice dark:text-white dark:hover:bg-gray-800"
+                                            className="rounded-lg px-5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                                         >
                                             {__('Log in')}
                                         </Link>
                                         {canRegister && (
                                             <Link
                                                 href={register()}
-                                                className="rounded-lg bg-blue-digital px-5 py-2 text-sm font-medium text-white transition-all hover:bg-blue-600 hover:shadow-lg"
+                                                className="rounded-lg px-5 py-2 text-sm font-medium text-primary dark:text-primary-foreground bg-primary/10 hover:bg-primary/20 transition-colors"
                                             >
                                                 {__('Register')}
                                             </Link>
@@ -78,7 +79,7 @@ export default function Welcome({
                     <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
                         {/* Left Content */}
                         <div className="space-y-8">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-mint/20 bg-mint/10 px-4 py-2 text-sm font-medium text-mint">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
                                 <svg
                                     className="h-4 w-4"
                                     fill="currentColor"
@@ -94,13 +95,13 @@ export default function Welcome({
                             </div>
 
                             <div className="space-y-4">
-                                <h1 className="text-5xl font-bold text-navy lg:text-6xl dark:text-white">
+                                <h1 className="text-5xl font-bold text-primary lg:text-6xl dark:text-primary-foreground">
                                     Ngu hñe
                                 </h1>
-                                <p className="text-2xl font-medium text-blue-digital">
+                                <p className="text-2xl font-medium text-primary">
                                     {__('House of Medicine')}
                                 </p>
-                                <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                                <p className="text-lg leading-relaxed text-muted-foreground">
                                     {__(
                                         'A restoration space that integrates modern medical knowledge with respect for the language and traditions of the Hñähñu region (Otomí of the Mezquital Valley, Hidalgo).',
                                     )}
@@ -108,10 +109,10 @@ export default function Welcome({
                             </div>
 
                             <div className="space-y-4">
-                                <div className="flex items-start gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800/50">
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-digital/10">
+                                <div className="flex items-start gap-4 rounded-xl bg-card p-4 shadow-sm">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                         <svg
-                                            className="h-5 w-5 text-blue-digital"
+                                            className="h-5 w-5 text-primary"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -125,10 +126,10 @@ export default function Welcome({
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-navy dark:text-white">
+                                        <h3 className="font-semibold text-primary dark:text-primary-foreground">
                                             {__('Comprehensive Management')}
                                         </h3>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-muted-foreground">
                                             {__(
                                                 'Complete administration of patients, medical appointments and consultations',
                                             )}
@@ -136,10 +137,10 @@ export default function Welcome({
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800/50">
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-mint/10">
+                                <div className="flex items-start gap-4 rounded-xl bg-card p-4 shadow-sm">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                         <svg
-                                            className="h-5 w-5 text-mint"
+                                            className="h-5 w-5 text-primary"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -153,10 +154,10 @@ export default function Welcome({
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-navy dark:text-white">
+                                        <h3 className="font-semibold text-primary dark:text-primary-foreground">
                                             {__('Intercultural Care')}
                                         </h3>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-muted-foreground">
                                             {__(
                                                 'Respect and appreciation for the traditions and language of the community',
                                             )}
@@ -164,10 +165,10 @@ export default function Welcome({
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800/50">
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy/10">
+                                <div className="flex items-start gap-4 rounded-xl bg-card p-4 shadow-sm">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                         <svg
-                                            className="h-5 w-5 text-navy dark:text-blue-digital"
+                                            className="h-5 w-5 text-primary dark:text-primary"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -181,10 +182,10 @@ export default function Welcome({
                                         </svg>
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-navy dark:text-white">
+                                        <h3 className="font-semibold text-primary dark:text-primary-foreground">
                                             {__('Safe and Reliable')}
                                         </h3>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-muted-foreground">
                                             {__(
                                                 'Data protection and privacy of medical information',
                                             )}
@@ -197,7 +198,7 @@ export default function Welcome({
                                 {auth.user ? (
                                     <Link
                                         href={dashboard()}
-                                        className="inline-flex items-center gap-2 rounded-lg bg-blue-digital px-8 py-4 text-base font-semibold text-white transition-all hover:bg-blue-600 hover:shadow-xl"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90 hover:shadow-xl"
                                     >
                                         {__('Go to system')}
                                         <svg
@@ -218,7 +219,7 @@ export default function Welcome({
                                     <>
                                         <Link
                                             href={login()}
-                                            className="inline-flex items-center gap-2 rounded-lg bg-blue-digital px-8 py-4 text-base font-semibold text-white transition-all hover:bg-blue-600 hover:shadow-xl"
+                                            className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90 hover:shadow-xl"
                                         >
                                             {__('Start now')}
                                             <svg
@@ -238,7 +239,7 @@ export default function Welcome({
                                         {canRegister && (
                                             <Link
                                                 href={register()}
-                                                className="inline-flex items-center gap-2 rounded-lg border-2 border-navy px-8 py-4 text-base font-semibold text-navy transition-all hover:bg-navy hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-navy"
+                                                className="inline-flex items-center gap-2 rounded-lg border-2 border-primary/30 px-8 py-4 text-base font-semibold text-primary transition-colors hover:bg-primary/10 dark:border-primary-foreground/40 dark:text-primary-foreground"
                                             >
                                                 {__('Create account')}
                                             </Link>
@@ -250,14 +251,14 @@ export default function Welcome({
 
                         {/* Right Content - Illustration */}
                         <div className="relative">
-                            <div className="absolute -top-4 -left-4 h-72 w-72 rounded-full bg-blue-digital/20 blur-3xl"></div>
-                            <div className="absolute -right-4 -bottom-4 h-72 w-72 rounded-full bg-mint/20 blur-3xl"></div>
-                            <div className="relative rounded-2xl bg-gradient-to-br from-white to-ice p-12 shadow-2xl dark:from-gray-800 dark:to-gray-900">
+                            <div className="absolute -top-4 -left-4 h-72 w-72 rounded-full bg-primary/20 blur-3xl"></div>
+                            <div className="absolute -right-4 -bottom-4 h-72 w-72 rounded-full bg-primary/20 blur-3xl"></div>
+                            <div className="relative rounded-2xl bg-gradient-to-br from-card to-canvas p-12 shadow-2xl dark:from-card dark:to-background">
                                 {/* Medical Icon Illustration */}
                                 <div className="flex flex-col items-center justify-center space-y-8">
-                                    <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-digital to-mint shadow-lg">
+                                    <div className="flex h-32 w-32 items-center justify-center rounded-full bg-primary/10 shadow-lg">
                                         <svg
-                                            className="h-20 w-20 text-white"
+                                            className="h-20 w-20 text-primary"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -272,10 +273,10 @@ export default function Welcome({
                                     </div>
 
                                     <div className="space-y-4 text-center">
-                                        <h3 className="text-2xl font-bold text-navy dark:text-white">
+                                        <h3 className="text-2xl font-bold text-primary dark:text-primary-foreground">
                                             {__('Comprehensive System')}
                                         </h3>
-                                        <p className="max-w-sm text-gray-600 dark:text-gray-400">
+                                        <p className="max-w-sm text-muted-foreground">
                                             {__(
                                                 'Complete management of consultations, appointments, patients and medical prescriptions',
                                             )}
@@ -284,9 +285,9 @@ export default function Welcome({
 
                                     <div className="grid w-full grid-cols-3 gap-6">
                                         <div className="flex flex-col items-center space-y-2">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-blue-digital/10">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
                                                 <svg
-                                                    className="h-8 w-8 text-blue-digital"
+                                                    className="h-8 w-8 text-primary"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
                                                     stroke="currentColor"
@@ -299,15 +300,15 @@ export default function Welcome({
                                                     />
                                                 </svg>
                                             </div>
-                                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <span className="text-xs font-medium text-muted-foreground">
                                                 {__('Appointments')}
                                             </span>
                                         </div>
 
                                         <div className="flex flex-col items-center space-y-2">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-mint/10">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
                                                 <svg
-                                                    className="h-8 w-8 text-mint"
+                                                    className="h-8 w-8 text-primary"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
                                                     stroke="currentColor"
@@ -320,15 +321,15 @@ export default function Welcome({
                                                     />
                                                 </svg>
                                             </div>
-                                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <span className="text-xs font-medium text-muted-foreground">
                                                 {__('Prescriptions')}
                                             </span>
                                         </div>
 
                                         <div className="flex flex-col items-center space-y-2">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-navy/10">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10">
                                                 <svg
-                                                    className="h-8 w-8 text-navy dark:text-blue-digital"
+                                                    className="h-8 w-8 text-primary dark:text-primary"
                                                     fill="none"
                                                     viewBox="0 0 24 24"
                                                     stroke="currentColor"
@@ -341,7 +342,7 @@ export default function Welcome({
                                                     />
                                                 </svg>
                                             </div>
-                                            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                            <span className="text-xs font-medium text-muted-foreground">
                                                 {__('Reports')}
                                             </span>
                                         </div>
@@ -353,8 +354,8 @@ export default function Welcome({
                 </main>
 
                 {/* Footer */}
-                <footer className="container mx-auto border-t border-gray-200 px-6 py-8 dark:border-gray-800">
-                    <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+                <footer className="container mx-auto border-t border-border px-6 py-8">
+                    <div className="text-center text-sm text-muted-foreground">
                         <p>
                             © 2026 Ngu hñe - {__('House of Medicine')}.{' '}
                             {__('Intercultural clinical management system.')}
