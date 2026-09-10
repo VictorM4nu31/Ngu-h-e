@@ -1,11 +1,11 @@
 import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { Toaster, sileo } from 'sileo';
-import { CommandPalette } from '@/components/command-palette';
 import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import { CommandPalette } from '@/components/command-palette';
 import type { AppLayoutProps, PageProps } from '@/types';
 
 export default function AppSidebarLayout({

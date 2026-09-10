@@ -73,6 +73,7 @@ export function CommandPalette() {
                 event.key.toLowerCase() === 'k'
             ) {
                 event.preventDefault();
+                setQuery('');
                 setOpen((current) => !current);
             }
 
@@ -86,17 +87,14 @@ export function CommandPalette() {
         return () => window.removeEventListener('keydown', handleShortcut);
     }, []);
 
-    useEffect(() => {
-        if (open) {
-            setQuery('');
-        }
-    }, [open]);
-
     return (
         <>
             <button
                 type="button"
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setQuery('');
+                    setOpen(true);
+                }}
                 className="hidden items-center gap-2 rounded-lg border border-border/80 bg-background px-3 py-2 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground lg:flex"
                 aria-label="Open command palette"
             >
