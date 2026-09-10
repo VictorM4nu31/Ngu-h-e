@@ -74,15 +74,15 @@ export default function Index({ appointments, doctors, filters }: Props) {
 
     const statusColors = {
         scheduled:
-            'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300',
+            'border-clinical-blue/30 bg-accent text-clinical-blue dark:bg-accent/40',
         confirmed:
-            'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300',
+            'border-primary/30 bg-primary/10 text-primary dark:bg-primary/15',
         completed:
-            'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300',
+            'border-success/30 bg-success/10 text-clinical-green dark:bg-success/15',
         cancelled:
-            'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300',
+            'border-destructive/30 bg-destructive/10 text-destructive dark:bg-destructive/15',
         no_show:
-            'bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300',
+            'border-warning/30 bg-warning/10 text-warning dark:bg-warning/15',
     };
 
     const statusLabels: Record<Appointment['status'], string> = {
@@ -101,12 +101,22 @@ export default function Index({ appointments, doctors, filters }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={__('Appointments')} />
 
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 p-4 pb-10 sm:p-6">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="flex items-center gap-2 text-2xl font-bold">
-                        <Calendar className="size-6" />
-                        {__('Appointments')}
-                    </h1>
+                    <div>
+                        <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+                            {__('Clinical operations')}
+                        </p>
+                        <h1 className="flex items-center gap-2 text-3xl font-bold tracking-[-0.04em]">
+                            <Calendar className="size-6 text-primary" />
+                            {__('Appointments')}
+                        </h1>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            {__(
+                                'Move through the day with context, not just a list.',
+                            )}
+                        </p>
+                    </div>
                     <div className="flex flex-wrap gap-2">
                         <Link href="/patients">
                             <Button variant="outline" className="gap-2">
@@ -125,7 +135,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
 
                 {/* Filtros */}
                 <Card>
-                    <CardContent className="flex flex-wrap items-end gap-4 p-4">
+                    <CardContent className="flex flex-wrap items-end gap-4 bg-muted/20 p-4">
                         <div className="grid min-w-[200px] flex-1 gap-1.5">
                             <label className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                                 {__('Doctor')}
@@ -217,21 +227,18 @@ export default function Index({ appointments, doctors, filters }: Props) {
                     </CardContent>
                 </Card>
 
-                {/* Listado de Citas */}
-                <div className="grid gap-4">
+                {/* Timeline de citas */}
+                <div className="relative grid gap-3 before:absolute before:top-2 before:bottom-2 before:left-[3.75rem] before:w-px before:bg-border sm:before:left-[4.75rem]">
                     {appointments.data.length > 0 ? (
                         appointments.data.map((app) => (
                             <Card
                                 key={app.id}
-                                className="overflow-hidden border-l-4"
-                                style={{
-                                    borderLeftColor: 'rgb(var(--primary))',
-                                }}
+                                className="group relative border-border/80 shadow-none transition-colors hover:border-primary/45"
                             >
-                                <div className="flex flex-col items-start gap-4 p-4 md:flex-row md:items-center">
-                                    <div className="flex min-w-[80px] flex-col items-center justify-center rounded-lg bg-muted/50 p-2">
+                                <div className="flex flex-col items-start gap-4 p-4 sm:flex-row sm:items-center">
+                                    <div className="z-10 flex min-w-[4.5rem] flex-col items-center justify-center bg-card py-1 sm:min-w-[5.5rem]">
                                         <Clock className="mb-1 size-4 text-muted-foreground" />
-                                        <span className="text-sm font-bold">
+                                        <span className="font-mono text-sm font-bold tracking-tight text-primary">
                                             {formatStoredTime(app.start_time)}
                                         </span>
                                     </div>
@@ -241,7 +248,7 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                             {app.patient ? (
                                                 <Link
                                                     href={`/patients/${app.patient.id}`}
-                                                    className="text-lg font-bold hover:underline"
+                                                    className="text-lg font-semibold tracking-[-0.02em] transition-colors group-hover:text-primary"
                                                 >
                                                     {app.patient.full_name}
                                                 </Link>

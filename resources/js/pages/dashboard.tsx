@@ -83,14 +83,14 @@ export default function Dashboard({
                   label: __('Pending Appointments'),
                   value: stats.pending_appointments,
                   icon: Calendar,
-                  color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
+                  color: 'text-clinical-blue bg-accent dark:bg-accent/40',
                   description: __('Scheduled soon'),
               },
               {
                   label: __('Appointments Today'),
                   value: stats.appointments_today,
                   icon: Clock,
-                  color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
+                  color: 'text-clinical-blue bg-accent dark:bg-accent/40',
                   description: __('Scheduled for today'),
               },
           ]
@@ -99,21 +99,21 @@ export default function Dashboard({
                   label: __('Total Patients'),
                   value: stats.total_patients,
                   icon: Users,
-                  color: 'text-blue-600 bg-blue-50 dark:bg-blue-400/10',
+                  color: 'text-clinical-blue bg-accent dark:bg-accent/40',
                   description: __('Registered in the system'),
               },
               {
                   label: __('Appointments Today'),
                   value: stats.appointments_today,
                   icon: Calendar,
-                  color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-400/10',
+                  color: 'text-clinical-blue bg-accent dark:bg-accent/40',
                   description: __('Scheduled for today'),
               },
               {
                   label: __('Consultations Today'),
                   value: stats.consultations_today,
                   icon: Activity,
-                  color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-400/10',
+                  color: 'text-clinical-green bg-success/10 dark:bg-success/15',
                   description: __('Successfully attended'),
               },
           ];
@@ -122,14 +122,17 @@ export default function Dashboard({
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={__('Clinical Dashboard')} />
 
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-6">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 p-4 pb-10 sm:p-6">
                 {/* Saludo y Acción Rápida */}
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">
+                        <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+                            {__('Clinical operations')}
+                        </p>
+                        <h1 className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                             {getRoleGreeting()}
                         </h1>
-                        <p className="text-muted-foreground">
+                        <p className="mt-2 max-w-xl text-muted-foreground">
                             {isPatient
                                 ? __(
                                       'Here you can view your medical information and appointments.',
@@ -139,7 +142,7 @@ export default function Dashboard({
                                   )}
                         </p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-2">
                         {isPatient ? (
                             <>
                                 <Link href="/my-appointments">
@@ -149,7 +152,7 @@ export default function Dashboard({
                                     </Button>
                                 </Link>
                                 <Link href="/book-appointment">
-                                    <Button className="gap-2 shadow-lg shadow-primary/20">
+                                    <Button className="gap-2">
                                         <Calendar className="size-4" />
                                         {__('Book Appointment')}
                                     </Button>
@@ -164,7 +167,7 @@ export default function Dashboard({
                                     </Button>
                                 </Link>
                                 <Link href="/appointments">
-                                    <Button className="gap-2 shadow-lg shadow-primary/20">
+                                    <Button className="gap-2">
                                         <Clock className="size-4" />
                                         {__('View Schedule')}
                                     </Button>
@@ -175,19 +178,19 @@ export default function Dashboard({
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-3 md:grid-cols-3">
                     {statCards.map((stat) => (
                         <Card
                             key={stat.label}
-                            className="overflow-hidden border-none bg-card shadow-sm transition-shadow hover:shadow-md"
+                            className="group overflow-hidden border-border/80 bg-card shadow-none transition-colors hover:border-primary/50"
                         >
                             <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-start justify-between gap-4">
                                     <div>
-                                        <p className="mb-1 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+                                        <p className="mb-2 text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
                                             {stat.label}
                                         </p>
-                                        <h3 className="text-3xl font-extrabold">
+                                        <h3 className="text-3xl font-bold tracking-[-0.05em]">
                                             {stat.value}
                                         </h3>
                                         <p className="mt-1 text-xs text-muted-foreground">
@@ -195,7 +198,7 @@ export default function Dashboard({
                                         </p>
                                     </div>
                                     <div
-                                        className={`rounded-2xl p-3 ${stat.color}`}
+                                        className={`rounded-lg p-3 transition-transform group-hover:scale-105 ${stat.color}`}
                                     >
                                         <stat.icon className="size-6" />
                                     </div>
@@ -205,9 +208,9 @@ export default function Dashboard({
                     ))}
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
                     {/* Próximas Citas */}
-                    <Card className="lg:col-span-3">
+                    <Card className="border-border/80 shadow-none lg:col-span-3">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="space-y-1">
                                 <CardTitle className="flex items-center gap-2 text-lg">
@@ -218,7 +221,10 @@ export default function Dashboard({
                                     {__('Scheduled for the next hours.')}
                                 </p>
                             </div>
-                            <Badge variant="outline">
+                            <Badge
+                                variant="outline"
+                                className="border-primary/30 text-primary"
+                            >
                                 {stats.pending_appointments} {__('Pending')}
                             </Badge>
                         </CardHeader>
@@ -228,10 +234,10 @@ export default function Dashboard({
                                     upcomingAppointments.map((app) => (
                                         <div
                                             key={app.id}
-                                            className="group flex items-center justify-between rounded-xl border bg-muted/30 p-3 transition-colors hover:bg-muted/50"
+                                            className="group flex items-center justify-between rounded-lg border border-border/70 bg-muted/35 p-3 transition-colors hover:border-primary/35 hover:bg-accent/50"
                                         >
                                             <div className="flex items-center gap-4">
-                                                <div className="flex size-10 flex-col items-center justify-center rounded-lg border bg-background shadow-sm">
+                                                <div className="flex size-12 flex-col items-center justify-center rounded-lg border border-primary/25 bg-primary/5">
                                                     <span className="text-[10px] font-bold text-primary uppercase">
                                                         {formatStoredTime(
                                                             app.start_time,
@@ -273,7 +279,7 @@ export default function Dashboard({
                     </Card>
 
                     {/* Consultas Recientes */}
-                    <Card className="lg:col-span-2">
+                    <Card className="border-border/80 shadow-none lg:col-span-2">
                         <CardHeader className="flex flex-row items-center justify-between pb-2">
                             <div className="space-y-1">
                                 <CardTitle className="flex items-center gap-2 text-lg">
