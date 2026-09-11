@@ -18,8 +18,9 @@ El seeder crea un escenario de prueba (`php artisan migrate --seed`):
 |-----|-------|-----------|--------|
 | Admin | `admin@ngu.com` | `password` | Todo: pacientes, citas, consultas, pagos, reportes, gestión de staff |
 | Doctor | `doctor@ngu.com` | `password` | Sus consultas/citas, agenda propia (`my-schedule`), crear consultas + recetas |
+| Doctora | `dra.morales@ngu.com` | `password` | Lo mismo que doctor (segundo médico para agenda/disponibilidad) |
 | Recepción | `recep@ngu.com` | `password` | Pacientes, citas, registro de pagos |
-| Paciente | (se auto-registra) | — | Portal propio: agendar citas, ver sus citas/recetas (descargar PDF), **Mi perfil** (datos básicos) |
+| Paciente | `maria.h@ngu.com` (también se auto-registra) | `password` | Portal propio: agendar citas, ver sus citas/recetas (descargar PDF), **Mi perfil** (datos básicos) |
 
 Todos los roles ven la **campana de notificaciones** en la barra superior: cambios de estado de citas, recetas disponibles y pagos en tiempo real (WebSocket), más recordatorios programados (cita del día siguiente, completar perfil).
 

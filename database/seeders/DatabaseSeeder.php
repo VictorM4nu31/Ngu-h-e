@@ -3,34 +3,36 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
      */
-    public function run(): void 
+    public function run(): void
     {
         $this->call(RoleSeeder::class);
 
-        $admin = User::factory()->create([
-            'name' => 'Admin Ngu',
-            'email' => 'admin@ngu.com',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@ngu.com'],
+            ['name' => 'Admin Ngu', 'password' => Hash::make('password')],
+        );
         $admin->assignRole('admin');
 
-        $doctor = User::factory()->create([
-            'name' => 'Dr. Garcia',
-            'email' => 'doctor@ngu.com',
-        ]);
+        $doctor = User::firstOrCreate(
+            ['email' => 'doctor@ngu.com'],
+            ['name' => 'Dr. Garcia', 'password' => Hash::make('password')],
+        );
         $doctor->assignRole('doctor');
 
-        $recep = User::factory()->create([
-            'name' => 'Recep Ngu',
-            'email' => 'recep@ngu.com',
-        ]);
+        $recep = User::firstOrCreate(
+            ['email' => 'recep@ngu.com'],
+            ['name' => 'Recep Ngu', 'password' => Hash::make('password')],
+        );
         $recep->assignRole('receptionist');
+
+        $this->call(DemoSeeder::class);
     }
 }
