@@ -8,6 +8,8 @@ use App\Models\Appointment;
 use App\Models\Consultation;
 use App\Models\Patient;
 use App\Models\User;
+use App\Notifications\PaymentRegistered;
+use App\Notifications\PrescriptionIssued;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -90,7 +92,16 @@ class ConsultationController extends Controller
             $validated['doctor_id'] = $request->user()->id;
         }
 
-        $action->execute($validated);
+        $consultation = $action->execute($validated);
+        $consultation->loadMissing(['prescription', 'payment']);
+
+        if ($consultation->prescription !== null) {
+            PrescriptionIssued::dispatchFor($consultation->prescription, $request->user());
+        }
+
+        if ($consultation->payment !== null) {
+            PaymentRegistered::dispatchFor($consultation->payment, $request->user());
+        }
 
         return redirect()->route('patients.show', $validated['patient_id'])
             ->with('success', 'Consulta registrada exitosamente.');

@@ -9,6 +9,7 @@ use App\Http\Requests\Appointments\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use App\Notifications\AppointmentStatusChanged;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -40,6 +41,8 @@ class AppointmentController extends Controller
             'appointments' => $appointments,
             'doctors' => $doctors,
             'filters' => $request->only(['doctor_id', 'date']),
+            // Only clinical staff may start a consultation from an appointment.
+            'canAttend' => $request->user()->hasAnyRole(['admin', 'doctor']),
         ]);
     }
 
@@ -73,7 +76,9 @@ class AppointmentController extends Controller
 
         $validated = $request->validated();
 
-        $action->execute($validated);
+        $appointment = $action->execute($validated);
+
+        AppointmentStatusChanged::dispatchFor($appointment, null, $request->user());
 
         return redirect()->route('appointments.index')->with('success', 'Cita agendada correctamente.');
     }
@@ -86,8 +91,20 @@ class AppointmentController extends Controller
         $this->authorize('update', $appointment);
 
         $validated = $request->validated();
+        $oldStatus = $appointment->status instanceof \BackedEnum
+            ? $appointment->status->value
+            : (string) $appointment->status;
 
         $action->execute($appointment, $validated);
+        $appointment->refresh();
+
+        $newStatus = $appointment->status instanceof \BackedEnum
+            ? $appointment->status->value
+            : (string) $appointment->status;
+
+        if ($newStatus !== $oldStatus) {
+            AppointmentStatusChanged::dispatchFor($appointment, $oldStatus, $request->user());
+        }
 
         return redirect()->back()->with('success', 'Cita actualizada.');
     }

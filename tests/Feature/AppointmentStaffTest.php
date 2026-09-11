@@ -168,3 +168,22 @@ test('appointment detail url that does not exist returns not found', function ()
     // 405 is returned because PUT/DELETE share the URI pattern.
     $this->actingAs($admin)->get('/appointments/999999')->assertStatus(405);
 });
+
+test('only clinical staff may start consultations from appointments', function () {
+    [$admin, $doctor] = makeStaffContext();
+    Role::firstOrCreate(['name' => 'receptionist']);
+    $receptionist = User::factory()->create();
+    $receptionist->assignRole('receptionist');
+
+    $this->withoutVite()->actingAs($admin)->get(route('appointments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('canAttend', true));
+
+    $this->withoutVite()->actingAs($doctor)->get(route('appointments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('canAttend', true));
+
+    $this->withoutVite()->actingAs($receptionist)->get(route('appointments.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('canAttend', false));
+});

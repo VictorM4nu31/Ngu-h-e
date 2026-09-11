@@ -51,6 +51,20 @@ class HandleInertiaRequests extends Middleware
             'locale' => app()->getLocale(),
             'appTimezone' => config('app.timezone'),
             'translations' => fn () => $this->getTranslations(),
+            // Bell: latest notifications + unread badge. Lazy so polling
+            // can refresh only these keys.
+            'notifications' => fn () => $request->user()
+                ? $request->user()->notifications()->latest()->take(15)->get()->map(fn ($n) => [
+                    'id' => $n->id,
+                    'type' => class_basename($n->type),
+                    'data' => $n->data,
+                    'read_at' => $n->read_at,
+                    'created_at' => $n->created_at,
+                ])->all()
+                : [],
+            'unreadCount' => fn () => $request->user()
+                ? $request->user()->unreadNotifications()->count()
+                : 0,
         ];
     }
 

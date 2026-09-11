@@ -47,9 +47,15 @@ interface Props {
     };
     doctors: { id: number; name: string }[];
     filters: { doctor_id: string; date: string };
+    canAttend: boolean;
 }
 
-export default function Index({ appointments, doctors, filters }: Props) {
+export default function Index({
+    appointments,
+    doctors,
+    filters,
+    canAttend,
+}: Props) {
     const [date, setDate] = useState(filters.date || localDateInputValue());
     const [doctorId, setDoctorId] = useState(filters.doctor_id || 'all');
 
@@ -298,7 +304,8 @@ export default function Index({ appointments, doctors, filters }: Props) {
                                                 {__('Confirm')}
                                             </Button>
                                         )}
-                                        {app.status !== 'completed' &&
+                                        {canAttend &&
+                                            app.status !== 'completed' &&
                                             app.status !== 'cancelled' && (
                                                 <Link
                                                     href={`/consultations/create?appointment_id=${app.id}`}

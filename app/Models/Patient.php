@@ -34,6 +34,14 @@ class Patient extends Model
     ];
 
     /**
+     * The portal user linked to this patient record, if any.
+     */
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Get all of the patient's attachments.
      */
     public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany

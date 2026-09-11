@@ -17,6 +17,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard — todos los roles autenticados
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Notificaciones (campana) — todos los autenticados, alcance propio
+    Route::post('notifications/read-all', [App\Http\Controllers\NotificationController::class, 'readAll'])->name('notifications.readAll');
+    Route::post('notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'read'])->name('notifications.read');
+
     // Prescriptions — todos los autenticados (controller valida ownership)
     Route::get('prescriptions/{prescription}/download', [PrescriptionController::class, 'download'])->name('prescriptions.download');
     Route::get('prescriptions/{prescription}/preview', [PrescriptionController::class, 'show'])->name('prescriptions.preview');
@@ -66,6 +70,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['role:patient'])->group(function () {
         Route::get('my-appointments', [App\Http\Controllers\PatientPortalController::class, 'appointments'])->name('patient.appointments');
         Route::get('my-prescriptions', [App\Http\Controllers\PatientPortalController::class, 'prescriptions'])->name('patient.prescriptions');
+
+        // Datos básicos propios (identidad y datos clínicos: solo staff)
+        Route::get('my-profile', [App\Http\Controllers\PatientPortalController::class, 'editProfile'])->name('patient.profile');
+        Route::put('my-profile', [App\Http\Controllers\PatientPortalController::class, 'updateProfile'])->name('patient.profile.update');
 
         // Agendamiento de citas
         Route::get('book-appointment', [App\Http\Controllers\PatientPortalController::class, 'createAppointment'])->name('patient.appointments.create');

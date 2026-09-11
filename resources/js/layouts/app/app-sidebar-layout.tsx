@@ -6,6 +6,7 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { CommandPalette } from '@/components/command-palette';
+import { NotificationBell } from '@/components/notification-bell';
 import type { AppLayoutProps, PageProps } from '@/types';
 
 export default function AppSidebarLayout({
@@ -29,7 +30,10 @@ export default function AppSidebarLayout({
             <AppContent variant="sidebar" className="overflow-x-hidden">
                 <div className="flex items-center justify-between border-b border-border/70 px-4 sm:px-6">
                     <AppSidebarHeader breadcrumbs={breadcrumbs} />
-                    <CommandPalette />
+                    <div className="flex items-center gap-1">
+                        <NotificationBell />
+                        <CommandPalette />
+                    </div>
                 </div>
                 {children}
             </AppContent>

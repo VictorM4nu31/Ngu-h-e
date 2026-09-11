@@ -6,6 +6,7 @@ use App\Actions\Payments\CreatePaymentAction;
 use App\Http\Requests\Payments\StorePaymentRequest;
 use App\Models\Patient;
 use App\Models\Payment;
+use App\Notifications\PaymentRegistered;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -39,7 +40,9 @@ class PaymentController extends Controller
     {
         $validated = $request->validated();
 
-        $action->execute($validated);
+        $payment = $action->execute($validated);
+
+        PaymentRegistered::dispatchFor($payment, $request->user());
 
         return redirect()->back()->with('success', 'Pago registrado correctamente.');
     }

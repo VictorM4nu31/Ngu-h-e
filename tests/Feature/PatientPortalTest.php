@@ -103,3 +103,73 @@ test('a patient without a patient profile still loads the portal', function () {
         ->get(route('patient.prescriptions'))
         ->assertOk();
 });
+
+test('a patient can view their own profile form', function () {
+    [$user, $patient] = makePatient('ProfileA');
+
+    $this->withoutVite()->actingAs($user)->get(route('patient.profile'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('patient/profile')
+            ->where('patient.id', $patient->id));
+});
+
+test('a patient can update their own basic data', function () {
+    [$user, $patient] = makePatient('ProfileB');
+    [$otherUser, $other] = makePatient('ProfileC');
+
+    $this->actingAs($user)
+        ->put(route('patient.profile.update'), [
+            'phone' => '5551112233',
+            'address' => 'Calle QA 123',
+            'birth_date' => '1990-05-15',
+            'gender' => 'female',
+            'email' => 'new@test.com',
+        ])
+        ->assertRedirect();
+
+    expect($patient->fresh()->phone)->toBe('5551112233')
+        ->and($patient->fresh()->address)->toBe('Calle QA 123')
+        // Identity and other records stay untouched.
+        ->and($patient->fresh()->full_name)->toBe('ProfileB')
+        ->and($other->fresh()->phone)->toBeNull();
+});
+
+test('a patient cannot escalate disallowed fields through the profile', function () {
+    [$user, $patient] = makePatient('ProfileD');
+
+    $this->actingAs($user)
+        ->put(route('patient.profile.update'), [
+            'full_name' => 'Hacked Name',
+            'document_id' => 'HACK-1',
+            'allergies' => 'Hacked',
+            'phone' => '5550000000',
+        ])
+        ->assertRedirect();
+
+    $fresh = $patient->fresh();
+    expect($fresh->full_name)->toBe('ProfileD')
+        ->and($fresh->document_id)->toBeNull()
+        ->and($fresh->allergies)->toBeNull()
+        ->and($fresh->phone)->toBe('5550000000');
+});
+
+test('profile update validates basic data', function () {
+    [$user] = makePatient('ProfileE');
+
+    $this->actingAs($user)
+        ->put(route('patient.profile.update'), [
+            'email' => 'not-an-email',
+            'birth_date' => '2050-01-01',
+            'gender' => 'unknown',
+        ])
+        ->assertSessionHasErrors(['email', 'birth_date', 'gender']);
+});
+
+test('staff roles cannot access the patient profile', function () {
+    $receptionist = User::factory()->create();
+    $receptionist->assignRole('receptionist');
+
+    $this->actingAs($receptionist)->get(route('patient.profile'))->assertForbidden();
+    $this->actingAs($receptionist)->put(route('patient.profile.update'), ['phone' => '1'])->assertForbidden();
+});

@@ -6,10 +6,12 @@ use App\Actions\Appointments\CreateAppointmentAction;
 use App\Actions\Appointments\EnsureAppointmentAvailability;
 use App\Enums\AppointmentStatus;
 use App\Http\Requests\PatientPortal\StorePatientAppointmentRequest;
+use App\Http\Requests\PatientPortal\UpdatePatientProfileRequest;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Prescription;
 use App\Models\User;
+use App\Notifications\AppointmentStatusChanged;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -124,7 +126,7 @@ class PatientPortalController extends Controller
         $availability->withinSchedule((int) $validated['doctor_id'], $start_time, $end_time, 'time');
         $availability->noOverlap((int) $validated['doctor_id'], $start_time, $end_time, errorField: 'time');
 
-        $action->execute([
+        $appointment = $action->execute([
             'patient_id' => $patient->id,
             'doctor_id' => $validated['doctor_id'],
             'start_time' => $start_time,
@@ -132,6 +134,8 @@ class PatientPortalController extends Controller
             'status' => AppointmentStatus::Scheduled,
             'reason' => $validated['reason'] ?? null,
         ]);
+
+        AppointmentStatusChanged::dispatchFor($appointment, null, $request->user());
 
         return redirect()->route('patient.appointments')->with('success', 'Cita agendada correctamente.');
     }
@@ -180,5 +184,40 @@ class PatientPortalController extends Controller
         return Inertia::render('patient/my-prescriptions', [
             'prescriptions' => $prescriptions,
         ]);
+    }
+
+    /**
+     * Show the form for the patient to update their own basic data.
+     * Identity (full_name, document_id) and clinical data stay staff-only.
+     */
+    public function editProfile()
+    {
+        $patient = $this->getPatient();
+
+        if (! $patient) {
+            return redirect()->route('patient.appointments')
+                ->with('error', 'No tienes un perfil de paciente creado.');
+        }
+
+        return Inertia::render('patient/profile', [
+            'patient' => $patient,
+        ]);
+    }
+
+    /**
+     * Update the patient's own basic data.
+     */
+    public function updateProfile(UpdatePatientProfileRequest $request)
+    {
+        $patient = $this->getPatient();
+
+        if (! $patient) {
+            return redirect()->route('patient.appointments')
+                ->with('error', 'No tienes un perfil de paciente creado.');
+        }
+
+        $patient->update($request->validated());
+
+        return redirect()->back()->with('success', 'Datos actualizados correctamente.');
     }
 }

@@ -8,6 +8,7 @@ import {
     Stethoscope,
     FileText,
     UserCog,
+    UserRound,
     Clock,
     Activity,
 } from 'lucide-react';
@@ -96,6 +97,12 @@ export function AppSidebar() {
             title: __('My Prescriptions'),
             href: '/my-prescriptions',
             icon: FileText,
+            roles: ['patient'],
+        },
+        {
+            title: __('My Profile'),
+            href: '/my-profile',
+            icon: UserRound,
             roles: ['patient'],
         },
     ];
