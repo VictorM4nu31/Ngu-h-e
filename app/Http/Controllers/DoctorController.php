@@ -48,6 +48,7 @@ class DoctorController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
+            'professional_license' => $validated['professional_license'] ?? null,
         ]);
 
         $user->assignRole($validated['role']);
@@ -85,6 +86,7 @@ class DoctorController extends Controller
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'professional_license' => $validated['professional_license'] ?? null,
         ]);
 
         if ($request->filled('password')) {

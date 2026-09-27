@@ -36,7 +36,10 @@ export default function Create() {
         password: '',
         password_confirmation: '',
         role: 'doctor',
+        professional_license: '',
     });
+
+    const isDoctor = data.role === 'doctor';
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -125,6 +128,38 @@ export default function Create() {
                                 </Select>
                                 <InputError message={errors.role} />
                             </div>
+
+                            {isDoctor && (
+                                <div className="grid gap-2">
+                                    <Label htmlFor="professional_license">
+                                        {__('Professional License')}
+                                    </Label>
+                                    <Input
+                                        id="professional_license"
+                                        type="text"
+                                        inputMode="numeric"
+                                        name="professional_license"
+                                        value={data.professional_license}
+                                        onChange={(e) =>
+                                            setData(
+                                                'professional_license',
+                                                e.target.value,
+                                            )
+                                        }
+                                        required
+                                        placeholder="12345678"
+                                        maxLength={10}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        {__(
+                                            'Printed on every prescription this doctor issues.',
+                                        )}
+                                    </p>
+                                    <InputError
+                                        message={errors.professional_license}
+                                    />
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">

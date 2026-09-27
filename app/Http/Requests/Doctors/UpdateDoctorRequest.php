@@ -28,6 +28,26 @@ class UpdateDoctorRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$this->route('user')->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', Rule::in(['doctor', 'receptionist'])],
+            'professional_license' => [
+                Rule::requiredIf($this->input('role') === 'doctor'),
+                'nullable',
+                'string',
+                'max:32',
+                'regex:/^[0-9]{6,10}$/',
+            ],
+        ];
+    }
+
+    /**
+     * Validation messages for the professional license field.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'professional_license.required' => 'La cédula profesional es obligatoria para los médicos.',
+            'professional_license.regex' => 'La cédula profesional debe contener entre 6 y 10 dígitos.',
         ];
     }
 }

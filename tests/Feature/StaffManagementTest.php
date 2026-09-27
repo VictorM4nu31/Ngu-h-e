@@ -27,10 +27,14 @@ test('admin can register a doctor', function () {
             'password' => 'secret123',
             'password_confirmation' => 'secret123',
             'role' => 'doctor',
+            'professional_license' => '41872635',
         ])
         ->assertRedirect(route('staff.index'));
 
-    $this->assertDatabaseHas('users', ['email' => 'nuevo@ngu.com']);
+    $this->assertDatabaseHas('users', [
+        'email' => 'nuevo@ngu.com',
+        'professional_license' => '41872635',
+    ]);
     $this->assertTrue(User::where('email', 'nuevo@ngu.com')->first()->hasRole('doctor'));
 });
 
@@ -72,6 +76,85 @@ test('admin can update a doctor role', function () {
         ->assertRedirect(route('staff.index'));
 
     $this->assertTrue($doctor->fresh()->hasRole('receptionist'));
+});
+
+// ═══ Cédula profesional ═══
+
+test('registering a doctor requires a professional license', function () {
+    $this->actingAs(adminUser())
+        ->post(route('staff.store'), [
+            'name' => 'Dr. Sin Cédula',
+            'email' => 'sin-cedula@ngu.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+            'role' => 'doctor',
+        ])
+        ->assertSessionHasErrors('professional_license');
+
+    $this->assertDatabaseMissing('users', ['email' => 'sin-cedula@ngu.com']);
+});
+
+test('registering a receptionist does not require a professional license', function () {
+    $this->actingAs(adminUser())
+        ->post(route('staff.store'), [
+            'name' => 'Recep Sin Cédula',
+            'email' => 'recep-sin-cedula@ngu.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+            'role' => 'receptionist',
+        ])
+        ->assertRedirect(route('staff.index'));
+
+    $this->assertDatabaseHas('users', [
+        'email' => 'recep-sin-cedula@ngu.com',
+        'professional_license' => null,
+    ]);
+});
+
+test('professional license must be numeric', function () {
+    $this->actingAs(adminUser())
+        ->post(route('staff.store'), [
+            'name' => 'Dr. Cédula Inválida',
+            'email' => 'cedula-invalida@ngu.com',
+            'password' => 'secret123',
+            'password_confirmation' => 'secret123',
+            'role' => 'doctor',
+            'professional_license' => 'ABC-123',
+        ])
+        ->assertSessionHasErrors('professional_license');
+});
+
+test('updating a doctor persists the professional license', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->doctor()->create(['email' => 'licencia@ngu.com']);
+    $doctor->assignRole('doctor');
+
+    $this->actingAs($admin)
+        ->put(route('staff.update', $doctor), [
+            'name' => 'Dr. García',
+            'email' => 'licencia@ngu.com',
+            'role' => 'doctor',
+            'professional_license' => '90247716',
+        ])
+        ->assertRedirect(route('staff.index'));
+
+    expect($doctor->fresh()->professional_license)->toBe('90247716');
+});
+
+test('demoting a doctor to receptionist clears the professional license', function () {
+    $admin = adminUser();
+    $doctor = User::factory()->doctor()->create(['email' => 'degradado@ngu.com']);
+    $doctor->assignRole('doctor');
+
+    $this->actingAs($admin)
+        ->put(route('staff.update', $doctor), [
+            'name' => 'Recep Degradado',
+            'email' => 'degradado@ngu.com',
+            'role' => 'receptionist',
+        ])
+        ->assertRedirect(route('staff.index'));
+
+    expect($doctor->fresh()->professional_license)->toBeNull();
 });
 
 test('a doctor can save its weekly schedule', function () {

@@ -28,11 +28,22 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'professional_license' => null,
             'remember_token' => Str::random(10),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ];
+    }
+
+    /**
+     * A doctor holding a cédula profesional.
+     */
+    public function doctor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'professional_license' => (string) fake()->unique()->numberBetween(1000000, 9999999),
+        ]);
     }
 
     /**
